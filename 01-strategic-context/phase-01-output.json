@@ -1,0 +1,58 @@
+{
+  "agent": "product-manager",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-03",
+  "status": "awaiting_hitl",
+  "next_hitl": 1,
+
+  "deliverables": {
+    "objective": "Conquistar os primeiros usuários que adotam o ECP como seu banco digital principal no computador, provando que gestão financeira inteligente na web gera engajamento recorrente e confiança",
+
+    "key_results": [
+      {"kr_id": "kr-01", "descricao": "15.000 WAU-EFI", "tipo": "lagging", "prazo": "Q2 2026"},
+      {"kr_id": "kr-02", "descricao": "Taxa de ativação 40%", "tipo": "leading", "prazo": "Q2 2026"},
+      {"kr_id": "kr-03", "descricao": "Retenção D30 de 55%", "tipo": "lagging", "prazo": "Q2 2026"},
+      {"kr_id": "kr-04", "descricao": "NPS 60+", "tipo": "lagging", "prazo": "Q2 2026"},
+      {"kr_id": "kr-05", "descricao": "60% com transação semanal", "tipo": "leading", "prazo": "Q2 2026"}
+    ],
+
+    "opportunity_solution_tree": {
+      "north_star": "WAU-EFI (Usuários Ativos Semanais com Engajamento Financeiro Inteligente)",
+      "total_opportunities": 15,
+      "distribution": {"pain": 9, "need": 4, "desire": 2},
+      "kr_mapping": {
+        "kr-01": ["opp-01: Forçados a usar celular quebrando fluxo de trabalho", "opp-02: Não entendem para onde vai o dinheiro sem categorizar manualmente", "opp-03: Desejam sentir controle da vida financeira"],
+        "kr-02": ["opp-04: Onboarding longo e burocrático", "opp-05: Sem valor imediato pós-cadastro", "opp-06: Não entendem proposta web-first diferenciada"],
+        "kr-03": ["opp-07: Sem motivos recorrentes para voltar ao banco", "opp-08: Informações financeiras espalhadas em múltiplos lugares", "opp-09: Desejam antecipar situação até próximo salário"],
+        "kr-04": ["opp-10: Insegurança em operações online no computador", "opp-11: Taxas escondidas e linguagem confusa", "opp-12: Acessibilidade para deficientes"],
+        "kr-05": ["opp-13: Pix no computador impossível/burocrático", "opp-14: Gestão de boletos manual e fragmentada", "opp-15: Segurança granular em compras online"]
+      }
+    },
+
+    "product_principles": [
+      "Transparência radical sobre lucro oculto",
+      "Web-first não é mobile-less",
+      "Inteligência que educa, não que decide por você",
+      "Simplicidade é cortar funcionalidade, não esconder complexidade",
+      "Segurança perceptível, não apenas técnica",
+      "Dados do ciclo salarial como eixo central",
+      "Acessibilidade é pré-requisito, não backlog"
+    ]
+  },
+
+  "open_questions": [
+    "Validar se a demanda por web-first é real vs. percebida (assumption #1 — risco alto)",
+    "Confirmar que usuários confiarão em banco novo para conta principal (assumption #2 — risco alto)",
+    "Testar viabilidade técnica de categorização automática >90% com dados brasileiros (assumption #3 — risco alto)",
+    "Definir modelo de receita sustentável sem comprometer competitividade (assumption #12 — risco médio)",
+    "Confirmar tamanho real do segmento CLT em escritório/computador via dados PNAD/RAIS"
+  ],
+
+  "artifacts_generated": [
+    "01-strategic-context/market-research.json",
+    "01-strategic-context/product-vision.json",
+    "01-strategic-context/product-strategy.json",
+    "01-strategic-context/metrics.json",
+    "01-strategic-context/phase-01-output.json"
+  ]
+}

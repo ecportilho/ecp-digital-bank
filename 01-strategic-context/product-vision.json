@@ -1,0 +1,93 @@
+{
+  "agent": "product-manager",
+  "subagent": "product-vision",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-03",
+
+  "vision": {
+    "visao": "Ser o banco digital que transforma a relação dos brasileiros com seu dinheiro, oferecendo no computador — onde trabalham, decidem e constroem seu futuro — a experiência financeira mais inteligente, clara e integrada do país.",
+    "narrativa": "Milhões de jovens profissionais brasileiros passam oito horas por dia diante de um computador, mas são forçados a gerenciar suas finanças pelo celular, em telas pequenas, com dados fragmentados e sem contexto. O ECP Banco Digital existe para eliminar essa contradição. Ao entregar uma experiência web-first com extratos que entendem o comportamento financeiro do cliente, categorização automática e insights proativos, nós devolvemos ao profissional brasileiro o poder de enxergar, planejar e agir sobre seu dinheiro no mesmo ambiente em que ele já produz e toma decisões. Em cinco anos, queremos que 'cuidar das finanças' deixe de ser uma tarefa adiada no celular e se torne um hábito natural, integrado ao dia a dia de trabalho — transformando consciência financeira em prosperidade real para milhões de brasileiros."
+  },
+
+  "north_star": {
+    "metrica": "WAU-EFI (Usuários Ativos Semanais com Engajamento Financeiro Inteligente)",
+    "descricao": "Número de usuários únicos por semana que realizam pelo menos uma interação com funcionalidades de inteligência financeira — consulta de extrato inteligente com categorização, visualização de insights proativos ou uso do planejamento financeiro integrado.",
+    "como_medir": "Contabilizar usuários únicos por semana que executaram: (1) abrir extrato inteligente e visualizar categorização, (2) interagir com insight proativo, (3) consultar/configurar planejamento financeiro. Excluir sessões <5 segundos.",
+    "input_metrics": [
+      {
+        "metrica": "Taxa de Adoção do Extrato Inteligente",
+        "relacao": "% de MAU que consultam extrato categorizado 1x/semana. Meta: 60%"
+      },
+      {
+        "metrica": "Pix com Contexto (Taxa de Pix Categorizados)",
+        "relacao": "% de Pix enviados com categorização. Meta: 40%"
+      },
+      {
+        "metrica": "Taxa de Interação com Insights Proativos",
+        "relacao": "% de insights exibidos que recebem interação. Meta: 35%"
+      },
+      {
+        "metrica": "Frequência de Sessões Web Semanais",
+        "relacao": "Sessões web por usuário ativo por semana. Meta: 4+"
+      },
+      {
+        "metrica": "NPS de Controle Financeiro Percebido",
+        "relacao": "Score trimestral: 'O ECP te ajuda a ter controle sem outras ferramentas?'. Meta: NPS 50+"
+      }
+    ]
+  },
+
+  "product_principles": [
+    {
+      "principio": "Transparência radical sobre lucro oculto",
+      "significado": "Toda cobrança, rendimento e movimentação deve ser compreensível em até 5 segundos de leitura.",
+      "exemplo_de_uso": "Breakdown visual automático de IOF, spread e imposto antes de confirmação de compra internacional."
+    },
+    {
+      "principio": "Web-first não é mobile-less",
+      "significado": "Priorizamos produtividade no desktop antes de otimizar para mobile, nunca o contrário.",
+      "exemplo_de_uso": "Dashboard financeiro desenhado primeiro para 1280px+ com atalhos de teclado. Mobile simplificado, não ditando decisões."
+    },
+    {
+      "principio": "Inteligência que educa, não que decide por você",
+      "significado": "Contexto e recomendação clara, mas decisão final com a pessoa. Aumentar literacia, não dependência.",
+      "exemplo_de_uso": "'Você tem R$ 1.200 parados há 15 dias. Se aplicar no CDB, renderia R$ 8,40/mês a mais. Quer aplicar?' com botão de ação E 'prefiro manter'."
+    },
+    {
+      "principio": "Simplicidade é cortar funcionalidade, não esconder complexidade",
+      "significado": "Preferimos fazer 20 coisas excepcionalmente bem do que 60 de forma mediana.",
+      "exemplo_de_uso": "Oferecer apenas seguro de vida e residencial com 3 cliques, em vez de marketplace de 15 categorias."
+    },
+    {
+      "principio": "Segurança perceptível, não apenas técnica",
+      "significado": "Calibrar fricção de segurança pelo risco real: baixo risco = zero fricção, alto risco = confirmação explícita.",
+      "exemplo_de_uso": "Pix >R$1.000 para contato novo: biometria + selo 'transação protegida' com resumo do destinatário."
+    },
+    {
+      "principio": "Dados do ciclo salarial como eixo central",
+      "significado": "Todo o modelo mental se organiza entre um pagamento e o próximo, não em meses-calendário.",
+      "exemplo_de_uso": "Resumo financeiro mostra 'Ciclo 05/fev — 04/mar', não 'março 2026'. Alertas: 'Faltam 12 dias e você usou 78% do orçamento de alimentação'."
+    },
+    {
+      "principio": "Acessibilidade é pré-requisito, não backlog",
+      "significado": "Nenhuma funcionalidade vai para produção sem WCAG 2.1 AA. O prazo se move, não a acessibilidade.",
+      "exemplo_de_uso": "Gráfico de gastos entregue com tabela acessível por leitor de tela, navegação por teclado e contraste mínimo 4.5:1."
+    }
+  ],
+
+  "opportunity_brief": {
+    "problema": "Jovens profissionais brasileiros de 22 a 35 anos, que trabalham predominantemente em frente ao computador, não possuem uma experiência bancária digital que se integre ao seu fluxo de trabalho diário e que ofereça inteligência financeira real sobre suas movimentações.",
+    "contexto": "O mercado bancário digital brasileiro cresceu aceleradamente com 6+ players relevantes, mas toda a indústria convergiu para um modelo mobile-only que ignora o contexto de uso real de profissionais assalariados que passam 8-10 horas por dia no computador.",
+    "quem_e_afetado": "Jovens profissionais assalariados brasileiros 22-35 anos, CLT, R$2.500-8.000/mês. Familiaridade alta com tecnologia, já usam bancos digitais mas sentem frustração com limitação mobile-only e ausência de inteligência financeira.",
+    "evidencias": [
+      "Nenhum dos 6 principais bancos digitais oferece experiência web/desktop robusta",
+      "Extratos de todos os concorrentes são listas básicas sem categorização inteligente",
+      "79% dos adultos bancarizados 22-35 usam canais digitais como principal (FEBRABAN 2024)",
+      "Usuários recorrem a apps terceiros (Organizze, Mobills) para gestão que o banco não oferece",
+      "NPS de bancos tradicionais abaixo de 30",
+      "TAM R$ 180 bilhões com crescimento 14-18% ao ano"
+    ],
+    "outcome_esperado": "Profissionais conseguem ter clareza completa sobre sua vida financeira a partir do próprio banco, no dispositivo e momento que precisam — sem ferramentas externas, sem alternância forçada entre dispositivos.",
+    "o_que_nao_e_escopo": "Não prescreve soluções, funcionalidades ou tecnologias. Não aborda MEIs, PJ ou público fora da faixa definida. Não contempla crédito, seguros ou investimentos. Não define go-to-market ou precificação."
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "agent": "operations",
+  "subagent": "dashboard",
+  "phase": "04-product-operation",
+  "generated_at": "2026-03-04",
+  "status": "awaiting_hitl_12",
+
+  "summary": "Dashboard operacional standalone com 4 seções navegáveis + Site de documentação com 5 páginas cobrindo todas as 4 fases do ciclo de produto",
+
+  "dashboard": {
+    "location": "docs/dashboard/",
+    "files": [
+      "docs/dashboard/index.html",
+      "docs/dashboard/assets/style.css",
+      "docs/dashboard/assets/charts.js",
+      "docs/dashboard/assets/data.js",
+      "docs/dashboard/README.md"
+    ],
+    "sections": [
+      {"name": "Visão Geral", "content": "12 KPIs (6 produto + 6 SRE) lado a lado"},
+      {"name": "Uso do Produto", "content": "DAU/MAU chart, retenção por coorte, sessões, adoção por feature (7), funnels (2)"},
+      {"name": "Outcomes & KRs", "content": "OKR com 5 KRs e barras de progresso, tendência de métricas de outcome"},
+      {"name": "SRE & Técnico", "content": "6 SLOs com error budget, latência p50/p95/p99, taxa de erros, DORA (4 elite), top 5 erros, infra status"}
+    ],
+    "tech": "HTML standalone + Chart.js CDN + dados simulados em data.js",
+    "design_compliance": "100% — dark theme + lime accent conforme design_spec.md"
+  },
+
+  "documentation_site": {
+    "location": "docs/",
+    "files": [
+      "docs/index.html",
+      "docs/fase-01.html",
+      "docs/fase-02.html",
+      "docs/fase-03.html",
+      "docs/fase-04.html",
+      "docs/assets/style.css",
+      "docs/assets/nav.js"
+    ],
+    "pages": {
+      "index": "Home com visão do produto, North Star, timeline das 4 fases, quick links",
+      "fase-01": "OKRs (5 KRs), North Star, visão, 7 princípios, OST (15 oportunidades), assumption map, indicadores leading/lagging",
+      "fase-02": "10 oportunidades priorizadas, 7 insights, 10 hipóteses, protótipos (links), 3 épicos, 14 features, 25 histórias, 4 riscos Cagan, 10 RNs",
+      "fase-03": "5 bounded contexts, 7 ADRs, stack técnica, 27 endpoints, 9 tabelas DB, 10 páginas frontend, 29 testes, 10/10 quality gates, diagrama Mermaid",
+      "fase-04": "6 jobs CI/CD, GMUD-001, estratégia de deploy, 6 SLOs, DORA targets, links para instalação e dashboard"
+    },
+    "design_compliance": "100% — dark theme + lime accent, sidebar navigation, responsive"
+  },
+
+  "additional_files": {
+    "installation_guide": "docs/INSTALACAO.md",
+    "gmud_registry": "docs/gmud/registro.md"
+  },
+
+  "next_hitl": 12,
+  "next_step": "HITL #12 — Humano avalia dashboard operacional e site de documentação"
+}

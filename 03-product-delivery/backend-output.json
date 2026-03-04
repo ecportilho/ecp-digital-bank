@@ -1,0 +1,78 @@
+{
+  "agent": "backend-developer",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "status": "awaiting_hitl_8",
+
+  "summary": "API Fastify completa com 9 módulos, 27 endpoints, todas as 10 RNs implementadas",
+
+  "modules": {
+    "auth": {
+      "routes": ["POST /api/auth/register", "POST /api/auth/login", "GET /api/auth/me"],
+      "business_rules": ["RN-02 (autenticação JWT obrigatória)"],
+      "description": "Cadastro, login com bcrypt hash e JWT 7d, validação de email e CPF únicos"
+    },
+    "accounts": {
+      "routes": ["GET /api/accounts/me", "GET /api/accounts/me/balance", "PATCH /api/accounts/me/limit"],
+      "business_rules": ["RN-01 (limite diário configurável)"],
+      "description": "Consulta de conta, saldo e alteração de limite diário"
+    },
+    "pix": {
+      "routes": ["GET /api/pix/keys", "POST /api/pix/keys", "DELETE /api/pix/keys/:keyId", "POST /api/pix/transfer", "GET /api/pix/lookup"],
+      "business_rules": ["RN-01 (limite diário)", "RN-02 (limite noturno)", "RN-03 (auth reforçada >R$5k)", "RN-04 (saldo suficiente)", "RN-05 (max 5 chaves)", "RN-06 (soft delete)", "RN-10 (rate limit 5/5min)"],
+      "description": "CRUD chaves Pix, transferência atômica com débito+crédito, lookup de chave"
+    },
+    "transactions": {
+      "routes": ["GET /api/transactions", "GET /api/transactions/:id"],
+      "business_rules": ["RN-07 (valores em centavos)", "RN-09 (categorização)"],
+      "description": "Listagem paginada com filtros (tipo, categoria, período), detalhe por ID"
+    },
+    "cards": {
+      "routes": ["GET /api/cards", "GET /api/cards/:id", "PATCH /api/cards/:id/limit", "PATCH /api/cards/:id/block", "GET /api/cards/:id/invoice"],
+      "business_rules": ["RN-04 (cartão virtual)"],
+      "description": "Listagem, detalhe, alteração de limite, bloqueio/desbloqueio, fatura atual com compras"
+    },
+    "payments": {
+      "routes": ["POST /api/payments/boleto", "GET /api/payments/scheduled", "DELETE /api/payments/scheduled/:id"],
+      "business_rules": ["RN-04 (saldo suficiente)", "RN-08 (idempotência via campo)"],
+      "description": "Pagamento de boleto (imediato/agendado), listagem e cancelamento de agendados"
+    },
+    "users": {
+      "routes": ["GET /api/users/me", "PATCH /api/users/me", "POST /api/users/me/change-password"],
+      "business_rules": [],
+      "description": "Perfil do usuário, atualização de dados, troca de senha com validação"
+    },
+    "notifications": {
+      "routes": ["GET /api/notifications", "GET /api/notifications/unread-count", "PATCH /api/notifications/:id/read", "POST /api/notifications/read-all"],
+      "business_rules": [],
+      "description": "Listagem paginada com filtro unread, contagem, marcar como lida (unitário e em massa)"
+    },
+    "dashboard": {
+      "routes": ["GET /api/dashboard"],
+      "business_rules": ["RN-09 (categorização de gastos)"],
+      "description": "Endpoint agregado: saldo, gastos por categoria (mês atual/anterior), últimas 5 transações, cartão, notificações"
+    }
+  },
+
+  "shared": {
+    "error_handling": "AppError + ErrorCode enum (30+ códigos) + Errors factory + ZodError handler + Fastify validation handler",
+    "auth_middleware": "JWT verify + user enrichment (loads user+account from DB per request)",
+    "utils": "money.ts (cents↔reais), uuid.ts (UUIDv4), formatCurrency"
+  },
+
+  "database": {
+    "engine": "SQLite3 (better-sqlite3) com WAL mode + foreign keys",
+    "tables": 9,
+    "table_list": ["users", "accounts", "pix_keys", "transactions", "cards", "invoices", "card_purchases", "notifications", "pix_rate_limit"],
+    "indexes": 12,
+    "migration_runner": "server/src/database/migrations/run.ts",
+    "seed": "Marina Silva (marina@email.com / Senha@123) com R$4.235,78, 3 chaves Pix, 1 cartão virtual, 12 transações, fatura com 12 compras, 3 notificações, 2 boletos agendados"
+  },
+
+  "total_server_files": 39,
+  "total_api_endpoints": 27,
+  "business_rules_coverage": "10/10 (RN-01 a RN-10)",
+
+  "next_hitl": 8,
+  "next_step": "Frontend Developer implementa React UI pages com integração à API"
+}

@@ -1,0 +1,271 @@
+{
+  "agent": "product-manager",
+  "skill": "four-risks-assessor",
+  "phase": "02-product-discovery",
+  "generated_at": "2026-03-04",
+
+  "customer_value": {
+    "verdict": "aprovado",
+    "confidence": "alto",
+    "evidence": [
+      "Gap competitivo universal confirmado: todos os 6 concorrentes analisados (Nubank, Inter, C6, PicPay, Mercado Pago, Neon) são 100% mobile-only ou possuem web extremamente limitada. Nenhum oferece dashboard financeiro, extrato inteligente ou Pix funcional no desktop — sinalizado como INS-01 com confiança 'alta'.",
+      "Demanda latente comprovada por comportamento: usuários recorrem a apps terceiros (Organizze, Mobills) para obter categorização que o banco não oferece. Esse comportamento de workaround é evidência direta de demanda não atendida (INS-02).",
+      "79% dos adultos bancarizados 22-35 usam canais digitais como canal principal de relacionamento com banco (FEBRABAN 2024), e o segmento-alvo passa 8-10h/dia no computador — criando o contexto de uso que justifica web-first.",
+      "NPS de bancos tradicionais abaixo de 30 e insatisfação documentada com opacidade de taxas (opp-11, score 24.0) e processos fragmentados confirmam frustração real no mercado.",
+      "Suposição crítica #1 (profissionais CLT 22-35 sentem frustração real com mobile, preferindo web/desktop) está correlacionada com evidência competitiva — ausência de qualquer oferta web-first em mercado com 100M+ usuários indica demanda reprimida.",
+      "10 oportunidades priorizadas são confirmadas ou amplificadas pela síntese de insights — nenhuma foi descartada após análise competitiva aprofundada.",
+      "4 hipóteses selecionadas (H1–H4) foram aprovadas em dois rounds de prototipação (low-fi: 17 telas, HITL #4 aprovado; high-fi: 17 telas em dark theme, HITL #5 aprovado) sem solicitação de mudanças — validação de adequação perceptível da solução ao problema.",
+      "Suposição inválida identificada e descartada: 'mercado saturado' — a síntese de ideação demonstrou ser um blue ocean dentro de mercado maduro, reduzindo risco de valor por via competitiva."
+    ],
+    "open_assumptions": [
+      {
+        "id": "CA-01",
+        "descricao": "Profissionais CLT 22-35 sentem frustração real ao gerenciar finanças pelo celular, preferindo web/desktop (suposição crítica #1, risco alto)",
+        "status": "nao_testada_com_usuarios_reais",
+        "impacto_se_falsa": "O diferencial web-first perde tração; o produto vira apenas mais um banco digital sem posicionamento claro",
+        "como_mitigar": "Pesquisa quantitativa (n=300+) com usuários do segmento antes do lançamento; análise de comportamento de sessão nos primeiros cohorts (% de acesso via desktop vs. mobile)"
+      },
+      {
+        "id": "CA-02",
+        "descricao": "Usuários confiarão suas finanças a um banco digital novo e desconhecido (suposição crítica #2, risco alto)",
+        "status": "nao_testada_com_usuarios_reais",
+        "impacto_se_falsa": "Adoção como conta principal não ocorre — usuários usam o ECP como conta secundária/teste, comprometendo KR-01 e KR-05",
+        "como_mitigar": "Elementos de segurança perceptível (H8 embutida em H3/H4) reduzem o risco percebido. Monitorar taxa de depósito inicial e migração de salário nos primeiros 30 dias"
+      },
+      {
+        "id": "CA-03",
+        "descricao": "Usuários preferem visualização por ciclo salarial ao invés de mês-calendário (INS-07, confiança 'media')",
+        "status": "nao_validada_com_usuarios",
+        "impacto_se_falsa": "Feature do dashboard por ciclo salarial não gera diferenciação percebida; baixa configuração da data de salário no onboarding prejudica personalização",
+        "como_mitigar": "A/B test no dashboard entre visualização por ciclo vs. por mês nos primeiros cohorts; medir taxa de configuração de data de salário no onboarding (H2)"
+      },
+      {
+        "id": "CA-04",
+        "descricao": "Preview simulado do dashboard vazio gera 'momento aha' suficiente para reter o usuário no onboarding (H2)",
+        "status": "nao_validada_com_usuarios",
+        "impacto_se_falsa": "Drop-off elevado no onboarding sem depósito inicial; comprometimento do KR-02 (ativação 40%)",
+        "como_mitigar": "Instrumentar onboarding por etapa (Etapa 1, 2, 3) e monitorar drop-off; testar variações da tela de boas-vindas nos primeiros 500 cadastros"
+      }
+    ],
+    "mitigation_plan": "Priorizar validação das suposições CA-01 e CA-02 nas primeiras 4 semanas pós-lançamento via análise de comportamento de sessão, questionário pós-cadastro e monitoramento de taxa de migração de salário. O ciclo salarial (CA-03) pode ser testado via A/B após MVP sem riscos de desenvolvimento, pois a feature já existe. O momento aha do onboarding (CA-04) deve ser instrumentado desde o Dia 1 com eventos de analytics por etapa."
+  },
+
+  "business_value": {
+    "verdict": "aprovado",
+    "confidence": "medio",
+    "evidence": [
+      "9 das 10 oportunidades priorizadas têm cobertura direta pelas 4 hipóteses selecionadas (H1–H4) — mapa opp-hipótese documentado na ideação mostra cobertura 'alta' em todas exceto opp-14 (boletos, cobertura 'media').",
+      "Todos os 5 KRs têm pelo menos uma hipótese associada: KR-01 ← H1 e H4 (dashboard + extrato inteligente alimentam WAU-EFI), KR-02 ← H2 (onboarding progressivo), KR-04 ← H4 e H5/H8 embutidas (transparência + segurança impactam NPS), KR-05 ← H3 (Pix Express como motor de transações semanais).",
+      "North Star Metric (WAU-EFI) tem cobertura robusta: H1 (dashboard com ciclo salarial cria motivo de retorno semanal), H4 (extrato com insights cria engajamento com inteligência financeira), H3 (Pix cria hábito transacional semanal que gera contexto para categorização).",
+      "Mercado endereçável validado: SAM de R$ 72 bilhões, segmento prioritário (Jovens Profissionais Assalariados, CLT 22-35) representa 40-45% do SAM. SOM realista de R$ 360-720 milhões em 3 anos.",
+      "KR-02 (ativação 40%): H2 resolve opp-04 (onboarding burocrático) + opp-05 (sem valor imediato) + opp-06 (proposta não comunicada) — cobertura tripla do funil de ativação. Dados de mercado indicam que time-to-first-action <2h gera 3x mais ativação (INS-03).",
+      "KR-05 (60% com transação semanal): Pix é a operação mais frequente de brasileiros; posicionar o ECP como referência em Pix desktop cria hábito transacional semanal. H3 endereça opp-13 com score 22.5 (3o mais alto).",
+      "opp-nova-02 (Web Notifications) adicionada durante ideação mitiga o único gap de KR-03 — sem oportunidades diretas no MVP para retenção D30. Notificações transacionais criam loop de retorno sem depender de app mobile."
+    ],
+    "kr_impact": [
+      {
+        "kr_id": "kr-01",
+        "descricao": "15.000 WAU-EFI até Q2 2026",
+        "cobertura": "alta",
+        "hipoteses_associadas": ["H1", "H4"],
+        "mecanismo": "Dashboard com ciclo salarial (H1) e extrato inteligente com categorização e insights (H4) são as funcionalidades que definem 'engajamento financeiro inteligente' na North Star. Usuário que usa extrato 2x/semana tem 4x maior retenção de engajamento (metrics.json).",
+        "risco_residual": "KR-01 é lagging e requer volume de usuários. A meta de 15.000 WAU-EFI pressupõe aquisição suficiente — sem estratégia go-to-market definida, o risco de não atingir o volume está fora do escopo do Discovery."
+      },
+      {
+        "kr_id": "kr-02",
+        "descricao": "Taxa de ativação 40% (3+ operações em 7 dias)",
+        "cobertura": "alta",
+        "hipoteses_associadas": ["H2", "H3"],
+        "mecanismo": "H2 (onboarding em 3 etapas com valor imediato) resolve o funil de abandono triplo documentado em INS-03. H3 (Pix Express) fornece a operação mais natural e frequente para as primeiras 3 ações.",
+        "risco_residual": "Taxa de completude do onboarding em sessão única é leading indicator crítico — se <50% completam sem sair, a ativação será prejudicada independentemente da qualidade do produto."
+      },
+      {
+        "kr_id": "kr-03",
+        "descricao": "Retenção D30 de 55%",
+        "cobertura": "media",
+        "hipoteses_associadas": ["opp-nova-02 (Web Notifications)"],
+        "mecanismo": "Risco declarado explicitamente na priorização: KR-03 sem oportunidades diretas no MVP. Mitigação via opp-nova-02 (Web Notifications API) e monitoramento de D7 — D7 >65% prediz D30 >55%.",
+        "risco_residual": "Este é o KR com maior risco de não atingimento. Sem app mobile, o canal de push notifications está ausente. Web Notifications dependem de opt-in do usuário e do browser estar aberto. Se D7 <50% nas primeiras 4 semanas, aceleração imediata de opp-07 e opp-09 (planejamento e agregação) é necessária."
+      },
+      {
+        "kr_id": "kr-04",
+        "descricao": "NPS 60+ entre usuários ativos",
+        "cobertura": "alta",
+        "hipoteses_associadas": ["H4", "H5_embutida", "H8_embutida"],
+        "mecanismo": "Transparência radical (H5 embutida em H3/H4) e segurança perceptível (H8 embutida) atacam os dois maiores pain points de NPS identificados: taxas escondidas (opp-11, score 24.0) e insegurança em operações online (opp-10). Engajamento com 3+ funcionalidades distintas por semana prediz NPS 20+ pontos acima (metrics.json).",
+        "risco_residual": "NPS 60+ é ambicioso para banco novo sem histórico. Benchmarks mostram que Nubank atingiu NPS ~80 após anos de operação com 100M+ usuários. Expectativa de NPS 60+ no Q2 2026 (primeiros meses) é desafiadora e requer execução excelente."
+      },
+      {
+        "kr_id": "kr-05",
+        "descricao": "60% dos WAU com 1+ transação semanal",
+        "cobertura": "alta",
+        "hipoteses_associadas": ["H3", "H2"],
+        "mecanismo": "Pix Express Desktop (H3) é o motor de transações — Pix é a operação mais frequente de brasileiros. Onboarding (H2) inclui registro de primeira chave Pix como Etapa 2, reduzindo fricção para a primeira transação.",
+        "risco_residual": "Requer que usuários depositem saldo na conta. Sem saldo disponível, taxa de transação cai para próxima de zero (metrics.json). Estratégia de primeiro depósito não está coberta pelo Discovery."
+      }
+    ],
+    "mitigation_plan": "KR-03 é o gap mais crítico. Plano de mitigação em duas camadas: (1) Pré-lançamento — implementar Web Notifications com opt-in estratégico após primeira transação (não no onboarding), garantindo timing correto para consentimento. (2) Pós-lançamento — se D7 <50% nas primeiras 4 semanas, acionar backlog de opp-07 (motivos recorrentes de retorno) e opp-09 (antecipação de situação financeira) como prioridade de Ciclo 2. NPS 60+ requer monitoramento semanal via CSAT in-app para intervenção antes que quedas se consolidem."
+  },
+
+  "usability": {
+    "verdict": "aprovado",
+    "confidence": "alto",
+    "evidence": [
+      "Dois rounds de prototipação aprovados sem solicitação de mudanças: low-fi (17 telas, aprovado HITL #4) e high-fi (17 telas em dark theme com identidade visual completa, aprovado HITL #5). A ausência de feedback corretivo indica alinhamento entre solução proposta e expectativa do stakeholder.",
+      "Cobertura completa do fluxo primário do usuário: Login → Onboarding (3 etapas) → Dashboard → Extrato → Pix (enviar/receber/chaves) → Boletos (listar/pagar/confirmar/sucesso) → Cartão → Perfil — 17 telas cobrindo todos os caminhos felizes e estados de sucesso.",
+      "Fluxo transacional do Pix otimizado para desktop: H3 propõe 3 cliques com atalhos de teclado (Ctrl+P), autocomplete de contatos frequentes, e 3 níveis de confirmação proporcionais ao risco (RN-03) — reduzindo fricção em operações de baixo risco sem comprometer segurança.",
+      "Onboarding progressivo (H2) endereça o funil de abandono triplo: dados mínimos na Etapa 1 (2 min), configuração opcional na Etapa 2, e progressiva na Etapa 3 — padrão de UX estabelecido que maximiza completion rate.",
+      "Design web-first nativo para 1280px+: layout em grid que aproveita densidade de informação do desktop (painel lateral com donut chart no extrato, side-by-side de dados), atalhos de teclado, e multitasking — vs. adaptação de mobile que seria sub-ótima.",
+      "Todas as regras de negócio (RN-01 a RN-10) estão mapeadas nas telas: indicadores visuais de limite noturno (RN-02), confirmação reforçada para >R$2.000 (RN-03), mensagem clara de saldo insuficiente com valor faltante (RN-04), contador de limite de Pix/hora (RN-10).",
+      "Identidade visual consistente no high-fi: design spec v3.0 aplicado integralmente — dark theme (#0b0f14 bg, #131c28 surface), acento lime (#b7ff2a), cores semânticas para success/warning/danger, fonte Inter, border radius padronizados (18px card, 13px control).",
+      "Feedback visual de segurança embutido em cada transação (H8): selo 'Transação Protegida', barra de sessão no header, histórico de acessos — compensa ausência de biometria nativa no desktop.",
+      "Acessibilidade base implementada: focus-visible com outline lime (#b7ff2a), navegação por Tab/Shift+Tab nos componentes interativos, contraste mínimo garantido pelo dark theme com texto #eaf2ff."
+    ],
+    "friction_points": [
+      {
+        "id": "FP-01",
+        "descricao": "Descoberta de atalhos de teclado (Ctrl+P, Ctrl+E) por usuários que não são power users",
+        "impacto": "medio",
+        "hipotese_afetada": "H3 (Pix Express), H9 (Command Palette)",
+        "suposicao_critica": "Atalhos de teclado são descobertos e adotados pelo público-alvo (H3)",
+        "mitigacao": "Tooltip onboarding 'Dica de produtividade: Ctrl+P para Pix' na primeira sessão. Atalhos são progressivos — o fluxo via mouse funciona perfeitamente; atalhos são acelerador opcional."
+      },
+      {
+        "id": "FP-02",
+        "descricao": "Configuração de data de salário no onboarding — usuário pode pular Etapa 2 (opcional) e perder o diferencial do ciclo salarial no dashboard",
+        "impacto": "medio",
+        "hipotese_afetada": "H1 (Dashboard com ciclo salarial), H2 (Onboarding)",
+        "suposicao_critica": "Usuários configurarão a data do salário durante o onboarding",
+        "mitigacao": "Nudge contextual no dashboard vazio: 'Configure a data do seu salário para personalizar sua visão financeira'. Não bloquear onboarding, mas criar incentivo claro."
+      },
+      {
+        "id": "FP-03",
+        "descricao": "Confirmação de Pix simplificada para valores baixos pode gerar percepção de insegurança em usuários mais conservadores",
+        "impacto": "baixo",
+        "hipotese_afetada": "H3 (Pix Express), H8 (Segurança Perceptível)",
+        "suposicao_critica": "Confirmação simplificada para valores baixos não gera percepção de insegurança",
+        "mitigacao": "Elementos de segurança perceptível transversais (barra 'Sessão protegida' no header, ícone de escudo sutil) garantem contexto de segurança mesmo em confirmações de 1 clique."
+      },
+      {
+        "id": "FP-04",
+        "descricao": "Ausência de câmera no desktop para leitura de QR Code de boleto — fluxo de input por código de barras textual pode ser menos familiar",
+        "impacto": "baixo",
+        "hipotese_afetada": "H7 (Central de Boletos)",
+        "suposicao_critica": "Decodificação de código de barras por input de texto (não câmera) é aceitável no desktop",
+        "mitigacao": "Campo de entrada aceita colar o código copiado (Ctrl+V) — fluxo natural em desktop. Decodificação automática com preview instantâneo do beneficiário e valor elimina fricção pós-input."
+      },
+      {
+        "id": "FP-05",
+        "descricao": "Taxa de opt-in para Web Notifications é incerta — browsers pedem permissão explícita e usuários frequentemente rejeitam",
+        "impacto": "alto",
+        "hipotese_afetada": "H10 (Web Notifications), mitigação de KR-03",
+        "suposicao_critica": "Usuários autorizam Web Notifications no browser (taxa de opt-in >40%)",
+        "mitigacao": "Solicitar permissão após primeira transação bem-sucedida (timing estratégico, não no primeiro acesso). Explicar benefício concreto: 'Ative para receber alertas quando um Pix chegar, mesmo com a aba fechada'."
+      }
+    ],
+    "mitigation_plan": "Os friction points identificados são todos de impacto médio ou baixo, com exceção de FP-05 (Web Notifications). O risco de usabilidade principal é a taxa de opt-in de notificações — se <30%, a estratégia de retenção via Web Notifications perde eficácia. Alternativas: (1) Central de notificações in-app (já prevista) como fallback que não exige permissão; (2) Email como canal de notificação de baixa urgência para boletos próximos do vencimento. Os demais friction points são endereçáveis com instrumentação de analytics (FP-02) e decisões de UX simples (FP-01, FP-03, FP-04) que não requerem retrabalho arquitetural."
+  },
+
+  "technical_feasibility": {
+    "verdict": "aprovado",
+    "confidence": "medio",
+    "evidence": [
+      "Stack tecnológica totalmente definida e madura: React 18.3 + Vite 5.4 (SPA), Fastify 5.0 (API REST), SQLite3 (banco local), TypeScript 5.5/5.6, Tailwind CSS 3.4, Zod 3.23. Todos são frameworks estáveis com documentação ampla e ecossistema robusto.",
+      "Modelo de dados SQL completamente especificado: 7 tabelas (users, accounts, transactions, pix_keys, cards, invoices, card_purchases) + tabela notifications, com índices definidos. A arquitetura suporta todos os fluxos das hipóteses selecionadas sem extensões estruturais.",
+      "Contratos de API definidos: 25 rotas REST cobrindo auth (4), accounts (2), pix (5), transactions (3), cards (4), payments (2), users (3) — contrato completo para todos os fluxos do MVP.",
+      "13 regras invioláveis de código documentadas e justificadas: TypeScript strict, Zod como fonte de verdade, dinheiro em centavos (RIC-03 previne erros float), UUID v4 para IDs, soft delete, transações para operações compostas — padrões que garantem qualidade e manutenibilidade.",
+      "Categorização automática implementável via regex/keyword-matching na descrição da transação: abordagem determinística sem dependência de ML externo. Merchants brasileiros têm padrões reconhecíveis em descrições Pix e de cartão (ex: 'IFOOD', 'UBER', 'NETFLIX').",
+      "Todas as regras de negócio (RN-01 a RN-10) são implementáveis via lógica de servidor em SQLite: limites diários por conta (RN-01, RN-02), autenticação reforçada por valor de transação (RN-03), verificação de saldo (RN-04), rate limiting de Pix/hora via contagem de transações (RN-10), idempotência via reference_id (RN-07).",
+      "Setup de desenvolvimento definido para Windows 11: pré-requisitos documentados (Node.js 18+, Python 3.12+, VS Build Tools 2022 para better-sqlite3), scripts npm funcionais, workarounds para armadilhas comuns (CRLF, file watching, long paths).",
+      "Separação clara front/back via API REST: o front-end React+Vite consome a API Fastify via HTTP — sem acoplamento, facilitando desenvolvimento paralelo e testabilidade.",
+      "Complexidade do Pix no MVP é simulada: a spec declara explicitamente 'sem integração com APIs de Pix real' — a implementação usa dados mockados/internos. Isso elimina o risco técnico mais alto (integração com BACEN/SPI) do MVP."
+    ],
+    "constraints": [
+      {
+        "id": "TC-01",
+        "descricao": "Acurácia de categorização automática por regex/keyword — meta de >90% (suposição crítica #3) é ambiciosa para abordagem determinística sem ML",
+        "severidade": "alta",
+        "justificativa": "Categorização baseada em regex/keyword funciona bem para merchants conhecidos (iFood, Uber, Netflix), mas falha para estabelecimentos locais, Pix com descrição livre, e transações de PJ. O produto strategy registra risco alto e requer 'protótipo técnico com 5.000+ transações reais brasileiras'.",
+        "mitigacao": "Implementar com target inicial de >80% (não >90%) e expor correção de categoria com 1 clique (H4) — o usuário corrige o que for errado. Medir acurácia nos primeiros cohorts e iterar regras. Categorização ML pode ser adicionada no Ciclo 2 como melhoria incremental.",
+        "impacto_no_kr": "Se acurácia <70%, gera frustração ativa (usuário corrige constantemente) e compromete WAU-EFI (KR-01) — a funcionalidade vira detrator ao invés de driver"
+      },
+      {
+        "id": "TC-02",
+        "descricao": "SQLite não é escalável para produção multi-usuário com alta concorrência de escritas",
+        "severidade": "media",
+        "justificativa": "SQLite foi escolhido explicitamente para MVP local. Para produção com múltiplos usuários simultâneos fazendo transações, SQLite com write-locking pode ser um gargalo. A spec reconhece isso ao declarar 'para escopo de um MVP e desenvolvimento local'.",
+        "mitigacao": "Para o MVP (validação com primeiros cohorts), SQLite é adequado. Migração para PostgreSQL (mantendo Fastify + Zod + mesmo schema) é path de scaling definido. A arquitetura modular com queries SQL diretas facilita a migração sem reescrever lógica de negócio.",
+        "impacto_no_kr": "Risco apenas em produção com escala — não afeta validação das hipóteses no MVP"
+      },
+      {
+        "id": "TC-03",
+        "descricao": "Web Notifications API: taxa de opt-in incerta e dependência do browser estar aberto",
+        "severidade": "media",
+        "justificativa": "A Web Notifications API é nativa do browser, mas usuários frequentemente bloqueiam permissões. Sem app mobile, não há fallback de push notification nativo. Notificações só chegam se o browser estiver aberto — limitando o alcance como canal de re-engajamento.",
+        "mitigacao": "Implementar central de notificações in-app como fallback garantido. Email transacional como canal secundário para alertas de alta importância (boleto vencendo, login novo dispositivo). Solicitar opt-in com contexto e timing estratégico (após primeira transação).",
+        "impacto_no_kr": "Impacto direto em KR-03 (retenção D30) — se opt-in <30%, a estratégia de re-engajamento via notificações perde 70%+ do alcance potencial"
+      },
+      {
+        "id": "TC-04",
+        "descricao": "Compilação do módulo nativo better-sqlite3 em Windows requer Build Tools C++ e Python — setup mais complexo",
+        "severidade": "baixa",
+        "justificativa": "A tech spec documenta e resolve: pré-requisitos listados, scripts de instalação fornecidos, alternativa de prebuilt binaries. O risco é de ambiente de desenvolvimento, não de produção.",
+        "mitigacao": "Documentação detalhada já existente na tech spec. O CI/CD deve usar Linux (onde a compilação é mais simples) e o deploy também — o problema se limita ao setup local em Windows.",
+        "impacto_no_kr": "Sem impacto nos KRs — risco de developer experience, não de produto"
+      },
+      {
+        "id": "TC-05",
+        "descricao": "Pix real não está no escopo do MVP — a integração com APIs do BACEN (SPI/DICT) requer certificação e aprovação regulatória",
+        "severidade": "alta",
+        "justificativa": "A tech spec declara explicitamente 'sem integração com APIs de Pix real no MVP'. Para um banco real operar Pix, é necessário: participação no SPI via BACEN, certificados HSM, conformidade com Manual de Operações do Pix. Isso está fora do escopo do MVP técnico, mas é pré-requisito para o produto real.",
+        "mitigacao": "O MVP valida a hipótese de usabilidade e valor (flow de Pix em 3 cliques), não a integração real. Para go-to-market real, integração via BaaS (ex: Celcoin, Dock, Bankly) é o path mais rápido sem licença própria de instituição de pagamento.",
+        "impacto_no_kr": "Sem impacto na validação das hipóteses de Discovery. Alto impacto para go-to-market real — requer parceiro BaaS ou licença BACEN"
+      }
+    ],
+    "mitigation_plan": "Os constraints TC-04 (setup Windows) e TC-02 (SQLite escalabilidade) estão endereçados pela spec existente e são aceitáveis para o escopo do MVP. TC-03 (Web Notifications) tem plano de fallback via central in-app e email. TC-05 (Pix real) é uma decisão de negócio e regulatória — para o MVP de validação, a simulação é suficiente; para produto real, BaaS é o path. TC-01 (acurácia de categorização) é o constraint técnico mais crítico para o produto: deve-se ajustar a expectativa de >90% para >80% no lançamento, com melhoria iterativa medida por cohort, e implementar edição de categoria com 1 clique desde o Dia 1 para recuperação graceful de erros de classificação."
+  },
+
+  "overall": "aprovado_com_ressalvas",
+
+  "recommendation": "avancar",
+
+  "rationale_overall": "Os 4 riscos de Cagan foram avaliados e o produto apresenta evidência suficiente para avançar para Delivery. Customer Value é aprovado com confiança alta — o gap web-first é universal e documentado em 6 concorrentes, com demanda latente comprovada por comportamento de workaround. Business Value é aprovado com confiança média — todos os 5 KRs têm cobertura, com a ressalva explícita de que KR-03 (D30 55%) é o gap de maior risco. Usability é aprovado com confiança alta — dois rounds de prototipação aprovados sem mudanças, 17 telas cobrindo todos os fluxos, regras de negócio mapeadas nas telas. Technical Feasibility é aprovado com confiança média — stack madura e bem definida, com dois constraints de alta severidade que requerem gestão ativa: acurácia de categorização (TC-01, ajustar meta para >80%) e ausência de integração real com SPI/DICT (TC-05, path via BaaS para go-to-market). A ressalva que impede aprovação plena é a combinação de: (1) 4 suposições críticas de valor não testadas com usuários reais, (2) KR-03 sem mecanismo direto de retenção no MVP, e (3) necessidade de parceiro BaaS ou licença BACEN para produto real.",
+
+  "condicoes_para_avancar": [
+    {
+      "id": "CPA-01",
+      "condicao": "Ajustar meta de acurácia de categorização automática de >90% para >80% no launch, com plano de melhoria iterativa por cohort",
+      "responsavel": "Software Architect + Back End Developer",
+      "prazo": "Fase 03 — Sprint 1",
+      "justificativa": "Meta de >90% por regex/keyword é tecnicamente não-confiável sem ML. Ajustar expectativa e implementar edição de categoria com 1 clique (H4) como mecanismo de recuperação graceful."
+    },
+    {
+      "id": "CPA-02",
+      "condicao": "Definir parceiro BaaS (ex: Celcoin, Dock, Bankly) ou path regulatório BACEN para integração Pix real antes do go-to-market",
+      "responsavel": "Product Manager + time jurídico/compliance",
+      "prazo": "Paralelo à Fase 03 (não bloqueia desenvolvimento do MVP)",
+      "justificativa": "O MVP valida usabilidade com Pix simulado. Para produto real, parceiro BaaS é o path mais rápido para evitar processo de licenciamento de 18-24 meses no BACEN."
+    },
+    {
+      "id": "CPA-03",
+      "condicao": "Implementar instrumentação de analytics por etapa do onboarding (Etapas 1, 2, 3) desde o Dia 1 de produção",
+      "responsavel": "Front End Developer + Operations",
+      "prazo": "Fase 03 — Sprint 1 (pré-requisito para qualquer análise de funil)",
+      "justificativa": "KR-02 (ativação 40%) depende de onboarding eficiente. Sem métricas por etapa, não é possível identificar onde os usuários abandonam e intervir antes de 7 dias."
+    },
+    {
+      "id": "CPA-04",
+      "condicao": "Implementar Web Notifications com opt-in estratégico pós-primeira-transação (não no onboarding) e central de notificações in-app como fallback obrigatório",
+      "responsavel": "Front End Developer",
+      "prazo": "Fase 03 — Sprint 2",
+      "justificativa": "A mitigação de KR-03 depende de canal de re-engajamento. Timing correto do opt-in maximiza taxa de consentimento. Central in-app garante canal de notificação independente de permissão de browser."
+    },
+    {
+      "id": "CPA-05",
+      "condicao": "Definir estratégia de primeiro depósito: como o usuário coloca dinheiro na conta ECP no MVP (TED/PIX de outro banco)? Esse fluxo precisa estar no scope de Delivery",
+      "responsavel": "Product Manager + Back End Developer",
+      "prazo": "Início da Fase 03",
+      "justificativa": "KR-05 (60% com transação semanal) requer saldo disponível. Sem mecanismo de depósito inicial, usuários não terão como fazer transações — comprometendo todos os KRs transacionais."
+    }
+  ]
+}

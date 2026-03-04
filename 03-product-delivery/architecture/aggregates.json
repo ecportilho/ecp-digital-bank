@@ -1,0 +1,702 @@
+{
+  "agent": "software-architect",
+  "skill": "domain-design",
+  "artifact": "aggregates",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "version": "1.0.0",
+  "product": "ECP Digital Bank",
+
+  "overview": {
+    "description": "Definição completa dos Agregados do ECP Digital Bank. Cada agregado é uma unidade de consistência transacional. As invariantes listadas NUNCA podem ser violadas — são garantidas pelo código de domínio, não pela camada de aplicação.",
+    "total_aggregates": 4,
+    "consistency_model": "Consistência forte DENTRO de cada agregado (operação atômica no SQLite). Consistência eventual ENTRE agregados via eventos de domínio.",
+    "transaction_rule": "Uma transação de banco de dados nunca deve modificar mais de um agregado. Se parecer necessário, use eventos de domínio."
+  },
+
+  "aggregates": [
+    {
+      "id": "AGG-01",
+      "name": "User",
+      "bounded_context": "BC-01 — Identity & Access",
+      "db_table": "users",
+      "description": "Representa a identidade de uma pessoa física no sistema. É o ponto de entrada para todos os outros agregados — nenhuma operação financeira existe sem um User autenticado.",
+
+      "root_entity": {
+        "name": "User",
+        "description": "Entidade raiz. Gerencia identidade, credenciais e preferências do usuário.",
+        "attributes": [
+          {"name": "id",            "type": "INTEGER",   "constraints": "PRIMARY KEY AUTOINCREMENT",        "description": "Identificador único do usuário"},
+          {"name": "name",          "type": "TEXT",      "constraints": "NOT NULL",                        "description": "Nome completo da pessoa física"},
+          {"name": "email",         "type": "TEXT",      "constraints": "NOT NULL UNIQUE",                 "description": "E-mail único, normalizado em lowercase"},
+          {"name": "cpf",           "type": "TEXT",      "constraints": "NOT NULL UNIQUE",                 "description": "CPF sem formatação, único no sistema"},
+          {"name": "password_hash", "type": "TEXT",      "constraints": "NOT NULL",                        "description": "Hash bcryptjs da senha (salt rounds=10)"},
+          {"name": "phone",         "type": "TEXT",      "constraints": "NULLABLE",                        "description": "Telefone no formato +55DDNNNNNNNNN"},
+          {"name": "salary_day",    "type": "INTEGER",   "constraints": "NULLABLE CHECK(1<=salary_day<=31)","description": "Dia do mês de recebimento de salário"},
+          {"name": "created_at",    "type": "DATETIME",  "constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP","description": "Timestamp de criação da conta"},
+          {"name": "updated_at",    "type": "DATETIME",  "constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP","description": "Timestamp da última atualização"},
+          {"name": "deleted_at",    "type": "DATETIME",  "constraints": "NULLABLE",                        "description": "Soft delete — preenchido quando conta é encerrada"}
+        ]
+      },
+
+      "child_entities": [],
+
+      "value_objects": [
+        {
+          "name": "Email",
+          "description": "Endereço de e-mail validado e normalizado",
+          "validation": "Regex RFC 5322 + lowercase + unique check",
+          "immutable_after_creation": true,
+          "example": "marina.silva@empresa.com"
+        },
+        {
+          "name": "CPF",
+          "description": "CPF brasileiro com validação de dígitos verificadores",
+          "validation": "11 dígitos numéricos + algoritmo módulo 11",
+          "immutable_after_creation": true,
+          "example": "12345678909",
+          "storage_format": "sem pontos ou hífen"
+        },
+        {
+          "name": "HashedPassword",
+          "description": "Senha criptografada com bcryptjs",
+          "validation": "Mínimo 8 caracteres antes do hash; bcryptjs salt rounds ≥ 10",
+          "never_returned_in_api": true
+        },
+        {
+          "name": "SalaryDay",
+          "description": "Dia do mês de recebimento de salário (1-31)",
+          "validation": "Integer entre 1 e 31 inclusive; ajustado para o último dia do mês se o mês não tiver o dia especificado",
+          "example": "5 (recebe todo dia 5)"
+        }
+      ],
+
+      "invariants": [
+        {
+          "id": "INV-USER-01",
+          "description": "E-mail deve ser único no sistema",
+          "rule": "SELECT COUNT(*) FROM users WHERE email = ? AND deleted_at IS NULL deve retornar 0 antes de INSERT",
+          "violation_message": "E-mail já cadastrado no sistema"
+        },
+        {
+          "id": "INV-USER-02",
+          "description": "CPF deve ser único no sistema",
+          "rule": "SELECT COUNT(*) FROM users WHERE cpf = ? AND deleted_at IS NULL deve retornar 0 antes de INSERT",
+          "violation_message": "CPF já cadastrado no sistema"
+        },
+        {
+          "id": "INV-USER-03",
+          "description": "CPF deve ter dígitos verificadores válidos",
+          "rule": "Algoritmo módulo 11 do BACEN deve validar os 2 últimos dígitos",
+          "violation_message": "CPF inválido"
+        },
+        {
+          "id": "INV-USER-04",
+          "description": "Senha deve ter no mínimo 8 caracteres",
+          "rule": "password.length >= 8 antes de gerar o hash",
+          "violation_message": "Senha deve ter no mínimo 8 caracteres"
+        },
+        {
+          "id": "INV-USER-05",
+          "description": "salary_day deve estar entre 1 e 31",
+          "rule": "salary_day >= 1 AND salary_day <= 31",
+          "violation_message": "Dia do salário deve ser entre 1 e 31"
+        },
+        {
+          "id": "INV-USER-06",
+          "description": "Usuário com soft delete não pode fazer login",
+          "rule": "WHERE deleted_at IS NULL obrigatório em queries de autenticação",
+          "violation_message": "Conta não encontrada ou desativada"
+        }
+      ],
+
+      "domain_events_emitted": [
+        {
+          "event": "UserRegistered",
+          "when": "Novo usuário criado com sucesso (INSERT em users bem-sucedido)",
+          "payload": {"userId": "integer", "email": "string", "name": "string", "created_at": "ISO8601"}
+        },
+        {
+          "event": "UserPasswordChanged",
+          "when": "Senha alterada com sucesso via PUT /users/me/password",
+          "payload": {"userId": "integer", "changed_at": "ISO8601"}
+        },
+        {
+          "event": "UserProfileUpdated",
+          "when": "Dados de perfil atualizados via PUT /users/me",
+          "payload": {"userId": "integer", "fields_changed": "string[]", "updated_at": "ISO8601"}
+        }
+      ],
+
+      "factory_method": {
+        "name": "User.create()",
+        "inputs": ["name: string", "email: string", "cpf: string", "password: string"],
+        "validates": ["CPF format", "Email format", "Password length", "Email uniqueness", "CPF uniqueness"],
+        "outputs": "User aggregate or DomainError"
+      },
+
+      "repository_interface": {
+        "methods": [
+          "findById(id: number): User | null",
+          "findByEmail(email: string): User | null",
+          "findByCPF(cpf: string): User | null",
+          "save(user: User): void",
+          "update(user: User): void"
+        ]
+      }
+    },
+
+    {
+      "id": "AGG-02",
+      "name": "Account",
+      "bounded_context": "BC-02 — Banking Core",
+      "db_tables": ["accounts", "transactions"],
+      "description": "O agregado mais crítico do domínio financeiro. Mantém o saldo da conta corrente e o histórico de transações. Toda movimentação de dinheiro (Pix, boleto, depósito) é processada por este agregado. Garante consistência do saldo via operações atômicas no SQLite.",
+
+      "root_entity": {
+        "name": "Account",
+        "description": "Conta corrente do usuário. Centraliza saldo e operações de débito/crédito.",
+        "attributes": [
+          {"name": "id",             "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT",         "description": "ID interno da conta"},
+          {"name": "user_id",        "type": "INTEGER", "constraints": "NOT NULL UNIQUE FK users(id)",      "description": "Proprietário da conta (1:1 com User)"},
+          {"name": "balance",        "type": "INTEGER", "constraints": "NOT NULL DEFAULT 0 CHECK(balance>=0)","description": "Saldo em centavos. Nunca negativo."},
+          {"name": "account_number", "type": "TEXT",    "constraints": "NOT NULL UNIQUE",                   "description": "Número da conta (formato: 7 dígitos)"},
+          {"name": "agency",         "type": "TEXT",    "constraints": "NOT NULL DEFAULT '0001'",           "description": "Agência — fixo '0001' para todos"},
+          {"name": "created_at",     "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP","description": "Data de abertura da conta"},
+          {"name": "updated_at",     "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP","description": "Última atualização"}
+        ]
+      },
+
+      "child_entities": [
+        {
+          "name": "Transaction",
+          "description": "Registro imutável de movimentação financeira. Filho do Account. Nunca é modificado após criação.",
+          "db_table": "transactions",
+          "attributes": [
+            {"name": "id",              "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT",         "description": "ID único da transação"},
+            {"name": "account_id",      "type": "INTEGER", "constraints": "NOT NULL FK accounts(id)",         "description": "Conta à qual a transação pertence"},
+            {"name": "type",            "type": "TEXT",    "constraints": "NOT NULL",                         "description": "Tipo: pix_sent|pix_received|card_purchase|boleto_payment|deposit|fee"},
+            {"name": "amount",          "type": "INTEGER", "constraints": "NOT NULL CHECK(amount>0)",         "description": "Valor absoluto em centavos. Sempre positivo."},
+            {"name": "direction",       "type": "TEXT",    "constraints": "NOT NULL CHECK(direction IN ('credit','debit'))","description": "Direção: credit=entrada, debit=saída"},
+            {"name": "description",     "type": "TEXT",    "constraints": "NOT NULL",                         "description": "Descrição legível da transação"},
+            {"name": "category",        "type": "TEXT",    "constraints": "NULLABLE",                         "description": "Categoria: alimentacao|transporte|saude|educacao|lazer|moradia|assinaturas|pix|pagamentos|outros"},
+            {"name": "reference_id",    "type": "TEXT",    "constraints": "NULLABLE",                         "description": "ID da entidade de origem (pix_key_id, card_purchase_id, etc.)"},
+            {"name": "idempotency_key", "type": "TEXT",    "constraints": "NULLABLE UNIQUE",                  "description": "UUID para garantir idempotência de operações POST"},
+            {"name": "status",          "type": "TEXT",    "constraints": "NOT NULL DEFAULT 'completed'",     "description": "Status: pending|completed|failed|reversed"},
+            {"name": "created_at",      "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP","description": "Timestamp imutável da transação"},
+            {"name": "deleted_at",      "type": "DATETIME","constraints": "NULLABLE",                         "description": "Soft delete — raro, apenas para estorno"}
+          ]
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "Money",
+          "description": "Valor monetário em centavos (inteiro não-negativo)",
+          "validation": "Number.isInteger(value) && value >= 0",
+          "conversions": {
+            "from_brl": "Math.round(parseFloat(brl) * 100)",
+            "to_brl": "(centavos / 100).toFixed(2)"
+          },
+          "example": "R$ 1.234,56 → 123456 centavos"
+        },
+        {
+          "name": "TransactionCategory",
+          "values": ["alimentacao", "transporte", "saude", "educacao", "lazer", "moradia", "assinaturas", "pix", "pagamentos", "outros"],
+          "categorization_rules": [
+            {"keywords": ["ifood", "rappi", "uber eats", "restaurante", "padaria", "mercado", "supermercado", "açougue"], "category": "alimentacao"},
+            {"keywords": ["uber", "99", "taxi", "onibus", "metro", "combustivel", "estacionamento", "pedágio"], "category": "transporte"},
+            {"keywords": ["farmacia", "drogaria", "hospital", "clinica", "medico", "exame", "plano de saude"], "category": "saude"},
+            {"keywords": ["escola", "faculdade", "curso", "udemy", "alura", "livro", "papelaria"], "category": "educacao"},
+            {"keywords": ["cinema", "teatro", "show", "netflix", "spotify", "prime", "disney", "steam"], "category": "lazer"},
+            {"keywords": ["aluguel", "condominio", "iptu", "gas", "luz", "agua", "energia", "internet"], "category": "moradia"},
+            {"keywords": ["assinatura", "subscription", "mensalidade", "plano"], "category": "assinaturas"},
+            {"keywords": ["pix"], "category": "pix"},
+            {"keywords": ["boleto", "pagamento", "conta"], "category": "pagamentos"}
+          ]
+        },
+        {
+          "name": "TransactionStatus",
+          "values": ["pending", "completed", "failed", "reversed"],
+          "transitions": {
+            "pending": ["completed", "failed"],
+            "completed": ["reversed"],
+            "failed": [],
+            "reversed": []
+          }
+        }
+      ],
+
+      "invariants": [
+        {
+          "id": "INV-ACC-01",
+          "description": "Saldo nunca pode ser negativo",
+          "rule": "account.balance - debitAmount >= 0 antes de qualquer débito",
+          "enforcement": "Verificação no service layer + CHECK constraint no SQLite",
+          "violation_message": "Saldo insuficiente para realizar esta operação",
+          "rule_reference": "RN-04"
+        },
+        {
+          "id": "INV-ACC-02",
+          "description": "Um User tem exatamente uma Account",
+          "rule": "UNIQUE constraint em accounts.user_id",
+          "enforcement": "Database constraint",
+          "violation_message": "Usuário já possui uma conta"
+        },
+        {
+          "id": "INV-ACC-03",
+          "description": "Transaction.amount deve ser positivo e maior que zero",
+          "rule": "transaction.amount > 0",
+          "enforcement": "CHECK constraint no SQLite + validação no service",
+          "violation_message": "Valor da transação deve ser maior que zero"
+        },
+        {
+          "id": "INV-ACC-04",
+          "description": "Idempotência: mesma idempotency_key não gera transação duplicada",
+          "rule": "SELECT COUNT(*) FROM transactions WHERE idempotency_key = ? retorna 0 antes do INSERT",
+          "enforcement": "UNIQUE constraint em transactions.idempotency_key",
+          "violation_message": "Operação já foi processada (chave de idempotência duplicada)",
+          "rule_reference": "RN-08"
+        },
+        {
+          "id": "INV-ACC-05",
+          "description": "Débito e crédito devem ser atômicos (saldo + transação em uma única operação SQL)",
+          "rule": "BEGIN TRANSACTION → UPDATE accounts SET balance = ? → INSERT INTO transactions → COMMIT",
+          "enforcement": "SQLite transaction no service layer",
+          "violation_message": "N/A — falha interna; operação revertida"
+        },
+        {
+          "id": "INV-ACC-06",
+          "description": "Transações completadas nunca podem ser editadas, apenas revertidas via nova transação",
+          "rule": "Nenhum UPDATE em transactions com status = 'completed'",
+          "enforcement": "Regra de negócio no service layer",
+          "rule_reference": "RN-07"
+        }
+      ],
+
+      "domain_events_emitted": [
+        {
+          "event": "AccountCreated",
+          "when": "Account criada após UserRegistered",
+          "payload": {"accountId": "integer", "userId": "integer", "account_number": "string"}
+        },
+        {
+          "event": "BalanceDebited",
+          "when": "Débito confirmado com sucesso",
+          "payload": {"accountId": "integer", "amount": "integer", "transactionId": "integer", "new_balance": "integer"}
+        },
+        {
+          "event": "BalanceCredited",
+          "when": "Crédito confirmado com sucesso",
+          "payload": {"accountId": "integer", "amount": "integer", "transactionId": "integer", "new_balance": "integer"}
+        },
+        {
+          "event": "TransactionCategorized",
+          "when": "Categoria atribuída (automática ou manualmente) à transação",
+          "payload": {"transactionId": "integer", "category": "string", "method": "automatic|manual"}
+        }
+      ],
+
+      "methods": [
+        {
+          "name": "debit(amount: Money, description: string, type: string, idempotencyKey?: string): Transaction",
+          "description": "Debita valor da conta. Valida saldo suficiente. Cria Transaction. Atômico.",
+          "pre_conditions": ["amount > 0", "balance >= amount", "idempotency_key único se fornecido"],
+          "post_conditions": ["balance reduzido pelo amount", "Transaction criada com direction='debit'"]
+        },
+        {
+          "name": "credit(amount: Money, description: string, type: string, idempotencyKey?: string): Transaction",
+          "description": "Credita valor na conta. Cria Transaction. Atômico.",
+          "pre_conditions": ["amount > 0"],
+          "post_conditions": ["balance aumentado pelo amount", "Transaction criada com direction='credit'"]
+        },
+        {
+          "name": "getTransactions(filters): Transaction[]",
+          "description": "Retorna transações filtradas por período, tipo e/ou categoria",
+          "returns": "Lista de transações ordenadas por created_at DESC"
+        },
+        {
+          "name": "getSummary(startDate: Date, endDate: Date): AccountSummary",
+          "description": "Calcula total de créditos, débitos e breakdown por categoria no período",
+          "returns": "{ total_credit, total_debit, by_category: [] }"
+        }
+      ]
+    },
+
+    {
+      "id": "AGG-03",
+      "name": "PixKey",
+      "bounded_context": "BC-03 — Pix",
+      "db_table": "pix_keys",
+      "description": "Gerencia as chaves de endereçamento Pix de um usuário. Aplica o limite de 5 chaves por conta. Delega a execução de transferências ao agregado Account.",
+
+      "root_entity": {
+        "name": "PixKey",
+        "description": "Chave de endereçamento Pix. Imutável após criação (tipo e valor não podem ser alterados).",
+        "attributes": [
+          {"name": "id",         "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT"},
+          {"name": "user_id",    "type": "INTEGER", "constraints": "NOT NULL FK users(id)"},
+          {"name": "account_id", "type": "INTEGER", "constraints": "NOT NULL FK accounts(id)"},
+          {"name": "key_type",   "type": "TEXT",    "constraints": "NOT NULL CHECK(key_type IN ('cpf','email','phone','evp'))"},
+          {"name": "key_value",  "type": "TEXT",    "constraints": "NOT NULL UNIQUE"},
+          {"name": "is_active",  "type": "INTEGER", "constraints": "NOT NULL DEFAULT 1"},
+          {"name": "created_at", "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+          {"name": "deleted_at", "type": "DATETIME","constraints": "NULLABLE"}
+        ]
+      },
+
+      "child_entities": [],
+
+      "value_objects": [
+        {
+          "name": "PixKeyType",
+          "values": ["cpf", "email", "phone", "evp"],
+          "validation_per_type": {
+            "cpf": "CPF válido com dígitos verificadores",
+            "email": "Formato RFC 5322",
+            "phone": "Formato +55DDNNNNNNNNN (13 dígitos total)",
+            "evp": "UUID v4 gerado pelo sistema (uuidv4())"
+          }
+        },
+        {
+          "name": "PixKeyValue",
+          "description": "Valor da chave validado conforme o tipo. Imutável após criação.",
+          "normalization": {
+            "cpf": "Remove pontos e hífen",
+            "email": "Lowercase",
+            "phone": "Mantém + e dígitos apenas",
+            "evp": "UUID em lowercase sem hífens"
+          }
+        },
+        {
+          "name": "PixLimit",
+          "description": "Cálculo de limite disponível por horário",
+          "daytime_daily_limit_cents": 500000,
+          "nighttime_per_tx_limit_cents": 100000,
+          "enhanced_auth_threshold_cents": 200000,
+          "daytime_hours": "06:00 - 21:59",
+          "nighttime_hours": "22:00 - 05:59"
+        }
+      ],
+
+      "invariants": [
+        {
+          "id": "INV-PIX-01",
+          "description": "Máximo de 5 chaves Pix ativas por usuário",
+          "rule": "SELECT COUNT(*) FROM pix_keys WHERE user_id = ? AND deleted_at IS NULL deve ser < 5 antes de INSERT",
+          "enforcement": "Validação no service antes do INSERT",
+          "violation_message": "Limite máximo de 5 chaves Pix atingido",
+          "rule_reference": "RN-05"
+        },
+        {
+          "id": "INV-PIX-02",
+          "description": "Chave Pix deve ser única globalmente",
+          "rule": "key_value UNIQUE no banco de dados global",
+          "enforcement": "UNIQUE constraint na coluna pix_keys.key_value",
+          "violation_message": "Esta chave já está registrada"
+        },
+        {
+          "id": "INV-PIX-03",
+          "description": "Transferência noturna não pode exceder R$1.000 por transação",
+          "rule": "Se hora atual >= 22h OU hora < 6h: amount <= 100000 centavos",
+          "enforcement": "Validação no service antes de delegar débito ao Account",
+          "violation_message": "Limite noturno de R$1.000 por transação excedido",
+          "rule_reference": "RN-02"
+        },
+        {
+          "id": "INV-PIX-04",
+          "description": "Transferência diurna não pode exceder R$5.000 acumulados por dia",
+          "rule": "SUM de pix_sent no dia corrente (6h-22h) + nova_tx <= 500000 centavos",
+          "enforcement": "Validação no service com query de agregação no dia",
+          "violation_message": "Limite diário de Pix de R$5.000 atingido",
+          "rule_reference": "RN-01"
+        },
+        {
+          "id": "INV-PIX-05",
+          "description": "Autenticação reforçada obrigatória para Pix acima de R$2.000",
+          "rule": "Se amount > 200000: request deve conter header X-Enhanced-Auth: true (senha reconfirmada)",
+          "enforcement": "Middleware de autenticação reforçada + validação no service",
+          "violation_message": "Autenticação reforçada necessária para transações acima de R$2.000",
+          "rule_reference": "RN-03"
+        },
+        {
+          "id": "INV-PIX-06",
+          "description": "Rate limit: máximo 10 Pix por hora por usuário",
+          "rule": "SELECT COUNT(*) FROM transactions WHERE account_id=? AND type='pix_sent' AND created_at >= NOW()-1h deve ser < 10",
+          "enforcement": "Validação no service com query temporal",
+          "violation_message": "Limite de 10 Pix por hora atingido",
+          "rule_reference": "RN-10"
+        },
+        {
+          "id": "INV-PIX-07",
+          "description": "PixKey tipo não pode ser alterado após criação",
+          "rule": "Nenhum UPDATE em pix_keys.key_type ou pix_keys.key_value",
+          "enforcement": "Ausência de método de update na entidade; apenas delete (soft) + create novo"
+        }
+      ],
+
+      "domain_events_emitted": [
+        {
+          "event": "PixKeyClaimed",
+          "when": "Nova chave Pix registrada com sucesso",
+          "payload": {"pixKeyId": "integer", "userId": "integer", "key_type": "string", "created_at": "ISO8601"}
+        },
+        {
+          "event": "PixKeyDeleted",
+          "when": "Chave Pix removida via soft delete",
+          "payload": {"pixKeyId": "integer", "userId": "integer", "deleted_at": "ISO8601"}
+        },
+        {
+          "event": "PixTransferInitiated",
+          "when": "Transferência Pix validada e débito autorizado",
+          "payload": {"from_account_id": "integer", "to_key_value": "string", "amount": "integer", "transaction_id": "integer"}
+        }
+      ],
+
+      "methods": [
+        {
+          "name": "register(userId, keyType, keyValue): PixKey",
+          "description": "Registra nova chave Pix. Valida limite de 5 chaves e unicidade.",
+          "pre_conditions": ["activeKeyCount(userId) < 5", "key_value global unique", "key_value válido para o tipo"]
+        },
+        {
+          "name": "delete(pixKeyId, userId): void",
+          "description": "Soft delete da chave Pix. Preenche deleted_at.",
+          "pre_conditions": ["chave pertence ao userId"]
+        },
+        {
+          "name": "transfer(fromAccountId, toKeyValue, amount, idempotencyKey): Transaction",
+          "description": "Executa transferência Pix. Valida todos os limites. Delega débito ao AccountService.",
+          "pre_conditions": [
+            "Saldo suficiente (delegado ao Account)",
+            "Limite horário/noturno",
+            "Autenticação reforçada se > R$2.000",
+            "Rate limit < 10/hora"
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "AGG-04",
+      "name": "Card",
+      "bounded_context": "BC-04 — Cards & Payments",
+      "db_tables": ["cards", "invoices", "card_purchases"],
+      "description": "Representa o cartão virtual do usuário com seu ciclo completo de fatura. O limite do cartão é independente do saldo da conta corrente. Gerencia o ciclo aberta → fechada → paga das faturas mensais.",
+
+      "root_entity": {
+        "name": "Card",
+        "description": "Cartão virtual com limite próprio. Raiz do agregado.",
+        "attributes": [
+          {"name": "id",              "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT"},
+          {"name": "user_id",         "type": "INTEGER", "constraints": "NOT NULL FK users(id)"},
+          {"name": "account_id",      "type": "INTEGER", "constraints": "NOT NULL FK accounts(id)"},
+          {"name": "card_number",     "type": "TEXT",    "constraints": "NOT NULL UNIQUE",                  "description": "16 dígitos, exibido mascarado no front-end"},
+          {"name": "cvv",             "type": "TEXT",    "constraints": "NOT NULL",                         "description": "3 dígitos, hash bcryptjs"},
+          {"name": "expiry_date",     "type": "TEXT",    "constraints": "NOT NULL",                         "description": "MM/YYYY"},
+          {"name": "credit_limit",    "type": "INTEGER", "constraints": "NOT NULL DEFAULT 0",               "description": "Limite total em centavos"},
+          {"name": "available_limit", "type": "INTEGER", "constraints": "NOT NULL DEFAULT 0",               "description": "Limite disponível atual em centavos"},
+          {"name": "status",          "type": "TEXT",    "constraints": "NOT NULL DEFAULT 'active' CHECK(status IN ('active','blocked','cancelled'))"},
+          {"name": "created_at",      "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+          {"name": "updated_at",      "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+          {"name": "deleted_at",      "type": "DATETIME","constraints": "NULLABLE"}
+        ]
+      },
+
+      "child_entities": [
+        {
+          "name": "Invoice",
+          "description": "Fatura mensal do cartão. Filho de Card. Ciclo: open → closed → paid.",
+          "db_table": "invoices",
+          "attributes": [
+            {"name": "id",          "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT"},
+            {"name": "card_id",     "type": "INTEGER", "constraints": "NOT NULL FK cards(id)"},
+            {"name": "month",       "type": "INTEGER", "constraints": "NOT NULL CHECK(month BETWEEN 1 AND 12)"},
+            {"name": "year",        "type": "INTEGER", "constraints": "NOT NULL"},
+            {"name": "total_amount","type": "INTEGER", "constraints": "NOT NULL DEFAULT 0",    "description": "Soma das compras em centavos"},
+            {"name": "status",      "type": "TEXT",    "constraints": "NOT NULL DEFAULT 'open' CHECK(status IN ('open','closed','paid'))"},
+            {"name": "due_date",    "type": "DATE",    "constraints": "NOT NULL",              "description": "Data de vencimento (dia 25 + X dias)"},
+            {"name": "closed_at",   "type": "DATETIME","constraints": "NULLABLE",              "description": "Preenchido quando status muda para 'closed'"},
+            {"name": "paid_at",     "type": "DATETIME","constraints": "NULLABLE",              "description": "Preenchido quando fatura é paga"},
+            {"name": "created_at",  "type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP"}
+          ],
+          "child_entities": [
+            {
+              "name": "CardPurchase",
+              "description": "Compra individual no cartão. Filha de Invoice. Imutável após criação.",
+              "db_table": "card_purchases",
+              "attributes": [
+                {"name": "id",           "type": "INTEGER", "constraints": "PRIMARY KEY AUTOINCREMENT"},
+                {"name": "invoice_id",   "type": "INTEGER", "constraints": "NOT NULL FK invoices(id)"},
+                {"name": "card_id",      "type": "INTEGER", "constraints": "NOT NULL FK cards(id)"},
+                {"name": "merchant_name","type": "TEXT",    "constraints": "NOT NULL",  "description": "Nome do estabelecimento"},
+                {"name": "amount",       "type": "INTEGER", "constraints": "NOT NULL CHECK(amount>0)"},
+                {"name": "category",     "type": "TEXT",    "constraints": "NULLABLE"},
+                {"name": "purchase_date","type": "DATETIME","constraints": "NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+                {"name": "description",  "type": "TEXT",    "constraints": "NULLABLE"},
+                {"name": "deleted_at",   "type": "DATETIME","constraints": "NULLABLE"}
+              ]
+            }
+          ]
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "CardStatus",
+          "values": ["active", "blocked", "cancelled"],
+          "transitions": {
+            "active": ["blocked", "cancelled"],
+            "blocked": ["active", "cancelled"],
+            "cancelled": []
+          },
+          "note": "Cartão cancelado não pode ser reativado"
+        },
+        {
+          "name": "InvoiceStatus",
+          "values": ["open", "closed", "paid"],
+          "transitions": {
+            "open": ["closed"],
+            "closed": ["paid"],
+            "paid": []
+          },
+          "closing_rule": "Fatura fecha automaticamente todo dia 25 do mês"
+        },
+        {
+          "name": "CardNumber",
+          "description": "16 dígitos Luhn-válidos. Gerado aleatoriamente na emissão.",
+          "display_format": "****-****-****-XXXX (apenas últimos 4 visíveis por padrão)"
+        }
+      ],
+
+      "invariants": [
+        {
+          "id": "INV-CARD-01",
+          "description": "Limite disponível nunca pode ser negativo",
+          "rule": "card.available_limit - purchase.amount >= 0 antes de registrar compra",
+          "enforcement": "Validação no service antes de INSERT",
+          "violation_message": "Limite do cartão insuficiente para esta compra"
+        },
+        {
+          "id": "INV-CARD-02",
+          "description": "Cartão bloqueado ou cancelado não pode receber novas compras",
+          "rule": "card.status == 'active' antes de registrar compra",
+          "enforcement": "Validação no service",
+          "violation_message": "Cartão bloqueado ou cancelado"
+        },
+        {
+          "id": "INV-CARD-03",
+          "description": "Compra só pode ser adicionada à fatura aberta",
+          "rule": "invoice.status == 'open' antes de INSERT em card_purchases",
+          "enforcement": "Validação no service",
+          "violation_message": "Não é possível adicionar compras a fatura fechada"
+        },
+        {
+          "id": "INV-CARD-04",
+          "description": "Fatura fecha dia 25 — transição open → closed automática",
+          "rule": "Cron job ou check no momento de consulta: se dia atual > 25 e fatura está open, fechar",
+          "enforcement": "Service layer (fechamento lazy ou via job agendado)",
+          "rule_reference": "RN-06"
+        },
+        {
+          "id": "INV-CARD-05",
+          "description": "Pagamento de fatura requer débito equivalente na conta corrente",
+          "rule": "Account.debit(invoice.total_amount) deve ser chamado atomicamente com invoice.status = 'paid'",
+          "enforcement": "Transação SQLite abrangendo accounts e invoices",
+          "rule_reference": "RN-04"
+        },
+        {
+          "id": "INV-CARD-06",
+          "description": "Limite do cartão é independente do saldo da conta corrente",
+          "rule": "card.available_limit é decrementado pela compra, não account.balance",
+          "enforcement": "Lógica de negócio no service — os dois campos são atualizados separadamente",
+          "rule_reference": "RN-06"
+        }
+      ],
+
+      "domain_events_emitted": [
+        {
+          "event": "CardIssued",
+          "when": "Novo cartão virtual emitido",
+          "payload": {"cardId": "integer", "userId": "integer", "last_four": "string", "credit_limit": "integer"}
+        },
+        {
+          "event": "CardBlocked",
+          "when": "Status mudado para 'blocked'",
+          "payload": {"cardId": "integer", "userId": "integer", "blocked_at": "ISO8601"}
+        },
+        {
+          "event": "CardUnblocked",
+          "when": "Status mudado de 'blocked' para 'active'",
+          "payload": {"cardId": "integer", "userId": "integer", "unblocked_at": "ISO8601"}
+        },
+        {
+          "event": "PurchaseRegistered",
+          "when": "Nova compra adicionada à fatura aberta",
+          "payload": {"cardId": "integer", "invoiceId": "integer", "amount": "integer", "merchant_name": "string"}
+        },
+        {
+          "event": "InvoiceClosed",
+          "when": "Fatura fechada no dia 25",
+          "payload": {"invoiceId": "integer", "cardId": "integer", "total_amount": "integer", "closed_at": "ISO8601"}
+        }
+      ],
+
+      "methods": [
+        {
+          "name": "issue(userId, accountId, creditLimit): Card",
+          "description": "Emite novo cartão virtual. Gera número de 16 dígitos Luhn-válido, CVV e data de expiração."
+        },
+        {
+          "name": "block(): void",
+          "description": "Bloqueia o cartão. Transição active → blocked.",
+          "pre_conditions": ["status == 'active'"]
+        },
+        {
+          "name": "unblock(): void",
+          "description": "Desbloqueia o cartão. Transição blocked → active.",
+          "pre_conditions": ["status == 'blocked'"]
+        },
+        {
+          "name": "registerPurchase(merchantName, amount, category?): CardPurchase",
+          "description": "Registra compra na fatura aberta atual. Reduz available_limit.",
+          "pre_conditions": ["status == 'active'", "available_limit >= amount", "fatura aberta existe"]
+        },
+        {
+          "name": "getCurrentInvoice(): Invoice",
+          "description": "Retorna a fatura aberta atual. Cria uma nova se não existir."
+        },
+        {
+          "name": "closeInvoice(invoiceId): void",
+          "description": "Fecha a fatura. Transição open → closed. Chamado no dia 25."
+        }
+      ]
+    }
+  ],
+
+  "aggregate_interactions": {
+    "description": "Como os agregados se comunicam sem violar fronteiras",
+    "interactions": [
+      {
+        "from": "AGG-03 (PixKey)",
+        "to": "AGG-02 (Account)",
+        "pattern": "Direct method call via AccountService",
+        "reason": "Pix transfer precisa debitar Account — chamada síncrona dentro do mesmo processo (MVP)",
+        "code_pattern": "accountService.debit(fromAccountId, amount, 'pix_sent', idempotencyKey)"
+      },
+      {
+        "from": "AGG-04 (Card / Payment)",
+        "to": "AGG-02 (Account)",
+        "pattern": "Direct method call via AccountService",
+        "reason": "Pagamento de boleto e fatura precisam debitar Account",
+        "code_pattern": "accountService.debit(accountId, amount, 'boleto_payment', idempotencyKey)"
+      },
+      {
+        "from": "AGG-01 (User)",
+        "to": "AGG-02 (Account)",
+        "pattern": "Event: UserRegistered → AccountService.createForUser(userId)",
+        "reason": "Account é criado automaticamente ao registrar User"
+      }
+    ]
+  }
+}

@@ -1,0 +1,566 @@
+{
+  "agent": "software-architect",
+  "skill": "domain-design",
+  "artifact": "architecture-decision-records",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "version": "1.0.0",
+  "product": "ECP Digital Bank",
+
+  "overview": {
+    "description": "Architecture Decision Records (ADRs) para o ECP Digital Bank. Cada ADR documenta uma decisão arquitetural significativa: o contexto que levou à decisão, as alternativas consideradas, a decisão tomada e as consequências (positivas e negativas). ADRs são imutáveis após aprovação — novas decisões criam novos ADRs que podem superseder os anteriores.",
+    "total_adrs": 7,
+    "format": "MADR (Markdown Architectural Decision Records) adaptado para JSON",
+    "status_values": ["proposed", "accepted", "deprecated", "superseded"]
+  },
+
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Uso de SQLite3 como banco de dados do MVP em vez de PostgreSQL",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Necessidade de escolher o banco de dados para o MVP do ECP Digital Bank, balanceando simplicidade de setup, portabilidade e adequação à escala inicial.",
+
+      "context": {
+        "situation": "O ECP Digital Bank MVP precisa de um banco de dados relacional para persistir usuários, contas, transações, chaves Pix, cartões e notificações. O produto ainda está em fase de validação com primeiros usuários (target: 15.000 WAU até Q2 2026).",
+        "drivers": [
+          "Velocidade de desenvolvimento: o MVP precisa ser entregável rapidamente",
+          "Zero configuração de infraestrutura: banco de dados como arquivo único, sem servidor separado",
+          "Portabilidade: deve rodar em qualquer máquina sem Docker, sem serviços externos",
+          "Dados estruturados relacionais com suporte a transações ACID",
+          "Sem necessidade de escala horizontal no MVP"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "PostgreSQL",
+            "pros": ["Producao-grade", "Escala para milhões de registros", "Features avançadas (JSON, arrays, full-text search)", "Pool de conexões", "Replicação"],
+            "cons": ["Requer servidor separado (Docker ou serviço cloud)", "Configuração de conexão (host, port, user, password)", "Aumenta complexidade de setup para novos devs", "Custo de infraestrutura em cloud para MVP"]
+          },
+          {
+            "option": "MySQL/MariaDB",
+            "pros": ["Amplamente usado", "Boa performance"],
+            "cons": ["Mesmos problemas de infraestrutura do PostgreSQL", "Menos features que PostgreSQL"]
+          },
+          {
+            "option": "SQLite3 (via better-sqlite3)",
+            "pros": ["Zero configuração — arquivo único database.sqlite", "Sem servidor separado", "Transações ACID completas", "Síncrono (better-sqlite3) — compatível com Fastify", "Portabilidade total: funciona em qualquer OS sem instalar nada além do npm install", "Performance excelente para cargas < 100 writes/segundo"],
+            "cons": ["Sem escalonamento horizontal nativo", "Sem pool de conexões (single writer)", "Não adequado para múltiplas instâncias simultâneas", "Concorrência limitada em alta carga de escrita"]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "SQLite3 via biblioteca better-sqlite3 (Node.js)",
+        "rationale": "Para um MVP em fase de validação com meta de 15.000 usuários ativos semanais, SQLite3 é suficiente e elimina toda a complexidade de infraestrutura. A biblioteca better-sqlite3 oferece API síncrona que se integra perfeitamente com Fastify sem callbacks ou Promises, suporta transações ACID e WAL mode para melhor performance de leitura concorrente. Quando o produto atingir escala que justifique migração para PostgreSQL, a camada de SQL direto facilita a portabilidade sem reescrita de ORM.",
+        "configuration": {
+          "library": "better-sqlite3",
+          "file": "database.sqlite",
+          "location": "/server/database.sqlite",
+          "wal_mode": true,
+          "foreign_keys": true
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Setup em 0 segundos — npm install é suficiente para ter o banco funcionando",
+          "Repositório git pode incluir o schema completo como migration SQL",
+          "Onboarding de novos devs sem configurar servidor de banco de dados",
+          "Performance de leitura excelente com WAL mode",
+          "Transações ACID garantem consistência de saldo + transação"
+        ],
+        "negative": [
+          "Não suporta múltiplas instâncias da aplicação escrevendo simultaneamente",
+          "Sem pool de conexões — single connection, mas better-sqlite3 é síncrono e eficiente",
+          "Migração para PostgreSQL necessária quando escala horizontal for requisito"
+        ],
+        "mitigation": "A camada de SQL direto (sem ORM) facilita migração futura. Queries escritas em SQL padrão ANSI com mínimas extensões SQLite-specific."
+      },
+
+      "rule_references": [],
+      "tags": ["database", "infrastructure", "mvp", "sqlite"]
+    },
+
+    {
+      "id": "ADR-002",
+      "title": "SQL direto via better-sqlite3 em vez de ORM (Prisma, TypeORM, Drizzle)",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Escolha da estratégia de acesso ao banco de dados: ORM com mapeamento objeto-relacional versus SQL direto.",
+
+      "context": {
+        "situation": "Com SQLite3 escolhido como banco de dados (ADR-001), é necessário definir como a aplicação Node.js interage com o banco: via ORM que abstrai SQL ou via SQL direto.",
+        "drivers": [
+          "Simplicidade de debugging — SQL no log é imediatamente legível",
+          "Performance — sem overhead de ORM para queries simples e agregações",
+          "Controle total sobre queries — especialmente importante para transações financeiras atômicas (débito + transação)",
+          "Sem magic — comportamento 100% previsível e auditável",
+          "Schema já definido no tech_spec.md — ORM seria mapeamento bidirecional desnecessário"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "Prisma ORM",
+            "pros": ["Type-safe queries", "Auto-generated types", "Migration system", "Schema-first"],
+            "cons": ["Não suporta SQLite com better-sqlite3 em modo síncrono nativamente", "Prisma Client gera ~1MB de código", "Queries complexas com raw SQL dentro do ORM anulam a abstração", "Camada extra de abstração para debugar"]
+          },
+          {
+            "option": "TypeORM",
+            "pros": ["Suporte a SQLite", "Active Record pattern", "Migrations"],
+            "cons": ["Configuração verbosa", "Bugs históricos com SQLite", "Queries geradas não são transparentes"]
+          },
+          {
+            "option": "Drizzle ORM",
+            "pros": ["Type-safe", "Mais leve que Prisma", "Suporte a SQLite"],
+            "cons": ["Camada de abstração adicional", "Schema duplicado (Drizzle + banco real)", "Ainda relativamente novo"]
+          },
+          {
+            "option": "SQL direto via better-sqlite3",
+            "pros": ["Zero abstração — query exata vai ao banco", "Performance máxima", "Debugging trivial (log da query = query executada)", "Controle total de transações", "Sem tipos gerados automaticamente para manter sincronizados"],
+            "cons": ["SQL escrito manualmente — mais verboso", "Sem migrations automáticas", "Risco de SQL injection se prepared statements não forem usados (mitigado com better-sqlite3 que força prepared statements)"]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "SQL direto via better-sqlite3 com prepared statements obrigatórios",
+        "rationale": "Para um produto financeiro onde cada query de débito/crédito precisa ser exata e auditável, SQL direto garante controle total. better-sqlite3 força o uso de prepared statements eliminando risco de SQL injection. Transações financeiras (UPDATE accounts SET balance = ? + INSERT INTO transactions) são escritas como BEGIN/COMMIT explícitos, com semântica clara e sem magic de ORM.",
+        "conventions": {
+          "pattern": "3-file por módulo: schema.sql + routes.ts + service.ts",
+          "schema": "DDL em /server/db/schema.sql — única fonte de verdade do schema",
+          "prepared_statements": "Toda query parametrizada usa db.prepare().run()/.get()/.all()",
+          "transactions": "db.transaction(fn)() do better-sqlite3 para operações atômicas multi-tabela"
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Queries de domínio financeiro (débito + registro de transação) são explícitas e auditáveis",
+          "Zero overhead de ORM — performance máxima para queries simples",
+          "Prepared statements automáticos via better-sqlite3 — SQL injection impossível com uso correto",
+          "Debugging direto: log da query é exatamente o que vai ao banco"
+        ],
+        "negative": [
+          "Mais código boilerplate — cada query escrita manualmente",
+          "Sem migrations automáticas — schema gerenciado manualmente via schema.sql",
+          "Sem type-safety automática das queries (mitigado com TypeScript no service layer)"
+        ],
+        "mitigation": "TypeScript no service layer garante type-safety dos inputs antes de chegar ao SQL. Prepared statements são a única forma de passar parâmetros — sem interpolação de string."
+      },
+
+      "rule_references": [],
+      "tags": ["database", "orm", "sql", "better-sqlite3"]
+    },
+
+    {
+      "id": "ADR-003",
+      "title": "Autenticação JWT local com bcryptjs em vez de provedor externo (Auth0, Clerk, Firebase Auth)",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Definir a estratégia de autenticação do ECP Digital Bank: implementação própria com JWT ou delegação a provedor externo de identidade.",
+
+      "context": {
+        "situation": "O produto precisa de autenticação segura para proteger operações financeiras. A escolha impacta: dependências externas, custo, complexidade de desenvolvimento e controle sobre dados do usuário.",
+        "drivers": [
+          "Zero dependências de serviços externos — produto deve funcionar sem internet exceto para o servidor da aplicação",
+          "Controle total sobre dados de identidade (CPF, e-mail) — dados sensíveis não devem sair do servidor",
+          "Simplicidade: JWT stateless é amplamente entendido e mantido",
+          "Custo: provedores externos têm custos por usuário que escalam",
+          "Autenticação reforçada (RN-03) requer lógica customizada que provedores externos dificultam"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "Auth0",
+            "pros": ["Pronto para uso", "MFA, Social Login", "Compliance"],
+            "cons": ["Dependência externa crítica", "CPF e e-mail saem do servidor", "Custo por MAU escala", "Autenticação reforçada customizada é complexa"]
+          },
+          {
+            "option": "Clerk",
+            "pros": ["DX excelente", "UI components prontos"],
+            "cons": ["Mesmos problemas de Auth0", "Vendor lock-in", "Custo"]
+          },
+          {
+            "option": "Firebase Authentication",
+            "pros": ["Gratuito até certa escala", "Google infrastructure"],
+            "cons": ["Dependência do Google", "CPF e dados saem do servidor", "Lógica de autenticação reforçada requer workarounds"]
+          },
+          {
+            "option": "JWT local + bcryptjs",
+            "pros": ["Zero dependência externa", "Controle total dos dados", "Autenticação reforçada implementada nativamente (RN-03)", "Sem custo por usuário", "Implementação padrão da indústria"],
+            "cons": ["Sem MFA out-of-the-box", "Sem Social Login", "Responsabilidade de segurança da implementação"]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "JWT (jsonwebtoken) + bcryptjs para hashing de senhas",
+        "rationale": "Para o MVP de um banco digital, manter dados de identidade (CPF, e-mail) exclusivamente no servidor é requisito de privacidade e compliance. JWT stateless elimina necessidade de session store. bcryptjs (pure JS, sem dependências nativas) garante hashing seguro compatível com qualquer ambiente. A autenticação reforçada (RN-03) é implementada nativamente como middleware de verificação de senha adicional.",
+        "implementation": {
+          "hashing": "bcryptjs com saltRounds = 10",
+          "token_type": "JWT HS256",
+          "token_expiry": "24h",
+          "token_payload": "{ sub: userId, iat, exp }",
+          "token_location": "Authorization: Bearer <token> header",
+          "enhanced_auth": "Middleware que re-verifica senha para transações > R$2.000 (RN-03)"
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Zero dependência externa para autenticação — produto funciona de forma completamente autônoma",
+          "CPF e e-mail nunca saem do servidor da aplicação",
+          "Autenticação reforçada (RN-03) implementada como middleware nativo Fastify",
+          "bcryptjs é pure JS — sem problemas de compilação de módulos nativos em diferentes ambientes",
+          "Sem custo adicional por usuário autenticado"
+        ],
+        "negative": [
+          "JWT não pode ser invalidado antes do expiry sem session blacklist (simplificação aceitável no MVP)",
+          "Sem MFA no MVP — aumento de risco para contas comprometidas",
+          "Responsabilidade de segurança da implementação recai sobre a equipe"
+        ],
+        "mitigation": "JWT com expiry de 24h minimiza janela de tokens comprometidos. Roadmap inclui MFA via TOTP na versão pós-MVP."
+      },
+
+      "rule_references": ["RN-03"],
+      "tags": ["auth", "jwt", "bcryptjs", "security"]
+    },
+
+    {
+      "id": "ADR-004",
+      "title": "SPA com React+Vite em vez de SSR com Next.js para o front-end",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Escolha da arquitetura do front-end do ECP Digital Bank: SPA (Single Page Application) ou SSR (Server-Side Rendering).",
+
+      "context": {
+        "situation": "O ECP Digital Bank é um produto web-first voltado para usuários logados (autenticados). O produto não tem páginas públicas além do login/cadastro que precisem de SEO.",
+        "drivers": [
+          "Produto web-first desktop — todas as telas são autenticadas e não precisam de SEO",
+          "Experiência desktop otimizada — React controlado pelo cliente oferece UX mais fluida para app-like behavior",
+          "Simplicidade de deploy — SPA é um conjunto de arquivos estáticos servidos pelo próprio Fastify ou CDN",
+          "Stack tech_spec.md: React 18.3 + Vite 5.4 + React Router 6.26 já definidos",
+          "Sem necessidade de SSR para performance percebida — dashboard carrega via API após autenticação"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "Next.js (SSR/SSG)",
+            "pros": ["SSR para SEO", "App Router com Server Components", "Streaming", "Vercel integration"],
+            "cons": ["SEO irrelevante para app autenticado", "Complexidade de runtime SSR (server + client)", "Overhead de configuração", "Não alinhado com tech_spec.md já aprovado"]
+          },
+          {
+            "option": "Remix",
+            "pros": ["SSR moderno", "Form handling nativo"],
+            "cons": ["Mesmos problemas de SSR", "Curva de aprendizado adicional", "Não no tech_spec.md"]
+          },
+          {
+            "option": "React + Vite (SPA)",
+            "pros": ["Build ultra-rápido com Vite HMR", "Deploy como arquivos estáticos", "React Router 6.26 para client-side routing", "Sem servidor adicional para renderização", "Alinhado com tech_spec.md aprovado"],
+            "cons": ["SEO limitado (mas irrelevante para produto autenticado)", "First contentful paint depende do JS bundle (mitigado com code splitting)"]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "SPA com React 18.3 + Vite 5.4 + React Router 6.26",
+        "rationale": "O ECP Digital Bank é um aplicativo financeiro web autenticado — nenhuma tela crítica precisa de SEO. SPA oferece a experiência mais próxima de um desktop app, o que é central para a proposta de valor web-first. Vite oferece o melhor DX atual (HMR < 50ms). O bundle pode ser servido pelo próprio Fastify como arquivos estáticos, eliminando necessidade de servidor de renderização separado.",
+        "structure": {
+          "build_tool": "Vite 5.4",
+          "routing": "React Router 6.26 (client-side)",
+          "styling": "Tailwind CSS 3.4",
+          "icons": "Lucide React",
+          "state": "React hooks + Context (sem Redux no MVP)",
+          "api_calls": "fetch nativo com custom hook"
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "DX excelente com Vite HMR — feedback de desenvolvimento instantâneo",
+          "Deploy simplificado: build gera /web/dist com arquivos estáticos",
+          "Fastify serve /web/dist como static files — servidor único",
+          "Client-side routing oferece transições sem recarregamento de página",
+          "Tailwind CSS 3.4 com design system do design_spec.md sem configuração extra"
+        ],
+        "negative": [
+          "First load depende de download do bundle JS (mitigado com Vite code splitting automático)",
+          "Sem SSR — se no futuro houver necessidade de SEO (ex: landing page pública), será necessário criar rota separada ou migrar parcialmente"
+        ],
+        "mitigation": "Vite code splitting automático por rota. Preload de chunks críticos (dashboard). Landing page de marketing pode ser servida como HTML estático separado."
+      },
+
+      "rule_references": [],
+      "tags": ["frontend", "react", "vite", "spa", "architecture"]
+    },
+
+    {
+      "id": "ADR-005",
+      "title": "Valores monetários armazenados como INTEGER em centavos em vez de DECIMAL/FLOAT",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Definir o tipo de dado para representar valores monetários no banco de dados e na lógica de negócio.",
+
+      "context": {
+        "situation": "Valores monetários em sistemas financeiros são críticos — erros de arredondamento em ponto flutuante causam inconsistências graves. É necessário escolher uma representação que garanta precisão absoluta.",
+        "drivers": [
+          "Precisão absoluta — operações financeiras não aceitam erro de arredondamento",
+          "Comparações exatas — limites de Pix (RN-01, RN-02, RN-03) devem ser verificados sem ambiguidade",
+          "Simplicidade de implementação — inteiros são trivialmente comparáveis e somáveis",
+          "Padrão da indústria fintech — centavos como integer é o padrão do Stripe, Adyen e outros"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "FLOAT / REAL (IEEE 754 double)",
+            "pros": ["Nenhum"],
+            "cons": [
+              "Erros de representação: 0.1 + 0.2 = 0.30000000000000004 em JavaScript",
+              "Somas de muitas transações acumulam erro",
+              "Comparação de igualdade não confiável (0.10 !== 0.1000000001)",
+              "Bug financeiro clássico — proibido em sistemas financeiros"
+            ]
+          },
+          {
+            "option": "DECIMAL / NUMERIC (PostgreSQL)",
+            "pros": ["Precisão arbitrária", "Padrão SQL"],
+            "cons": [
+              "SQLite não tem tipo DECIMAL nativo — armazenado como TEXT ou REAL",
+              "Operações aritméticas em Node.js ainda convertem para float"
+            ]
+          },
+          {
+            "option": "INTEGER em centavos",
+            "pros": [
+              "Precisão absoluta — sem ponto flutuante em nenhuma operação",
+              "SQLite INTEGER é 64-bit — suporta até ~92 quadrilhões de centavos",
+              "Comparações exatas e triviais",
+              "Aritmética simples: R$10,50 → 1050; R$1.000,00 → 100000",
+              "Padrão Stripe/Adyen/PagSeguro"
+            ],
+            "cons": [
+              "Conversão para exibição no front-end (centavos ÷ 100 com formatação BRL)",
+              "Desenvolvedores precisam lembrar que valores da API são sempre em centavos"
+            ]
+          },
+          {
+            "option": "String (ex: '10.50')",
+            "pros": ["Preserva precisão decimal"],
+            "cons": ["Aritmética requer parsing", "Sem suporte a operações diretas no SQL", "Pior performance"]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "INTEGER em centavos para todos os valores monetários",
+        "rationale": "Centavos como INTEGER é o padrão da indústria fintech (Stripe, Adyen, PagSeguro) por razão matemática simples: operações com inteiros são exatas por definição. R$1.234,56 = 123456 centavos. Limites de Pix (R$5.000 = 500000, R$1.000 = 100000, R$2.000 = 200000) são verificados com comparação inteira sem margem de erro. SQLite INTEGER é 8 bytes (int64), suportando valores até R$92.233.720.368.547.758 — mais que suficiente.",
+        "convention": {
+          "storage": "SQLite INTEGER (centavos)",
+          "api_input": "Clientes enviam valores em centavos (integer) — documentado na API",
+          "api_output": "API retorna valores em centavos (integer)",
+          "display": "Front-end formata com Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })",
+          "value_object": "Classe Money(cents: number) encapsula conversões"
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Zero erros de ponto flutuante em toda a aplicação",
+          "Limites de Pix (RN-01, RN-02, RN-03) verificados com comparação inteira confiável",
+          "CHECK constraint no SQLite: balance >= 0 garante saldo nunca negativo",
+          "Somas de transações em SQL (SUM(amount)) são exatas"
+        ],
+        "negative": [
+          "Convenção deve ser documentada claramente na API — clientes sempre enviam/recebem centavos",
+          "Conversão para exibição requer cuidado (divisão por 100 e formatação BRL)"
+        ],
+        "mitigation": "Value Object Money(cents) encapsula todas as conversões. Nenhum código fora do VO deve fazer divisão por 100 diretamente. API documentation declara explicitamente que todos os valores são em centavos."
+      },
+
+      "rule_references": ["RN-09", "RN-01", "RN-02", "RN-03"],
+      "tags": ["money", "financial", "integer", "precision", "cents"]
+    },
+
+    {
+      "id": "ADR-006",
+      "title": "Estratégia de soft delete com coluna deleted_at em vez de deleção física",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Definir a estratégia de exclusão de registros em um sistema financeiro que tem requisitos de auditoria e rastreabilidade.",
+
+      "context": {
+        "situation": "Usuários e operações precisam poder 'deletar' dados (ex: remover chave Pix, cancelar cartão). Em um sistema financeiro, deleção física destrói o histórico de auditoria e pode violar compliance bancário.",
+        "drivers": [
+          "Auditoria — todo registro deve ser rastreável mesmo após 'exclusão' pelo usuário",
+          "Rastreabilidade — transações referenciadas por chaves Pix deletadas ainda precisam ser consultáveis",
+          "Integridade referencial — soft delete evita violação de foreign keys",
+          "Compliance bancário — instituições financeiras devem manter histórico por anos",
+          "Reversibilidade — operações equivocadas podem ser revertidas (ex: restaurar chave Pix)"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "DELETE físico (hard delete)",
+            "pros": ["Simplicidade de query (sem WHERE deleted_at IS NULL)", "Tamanho de banco reduzido"],
+            "cons": [
+              "Destrói histórico de auditoria permanentemente",
+              "Viola integridade referencial (transação referencia chave Pix deletada)",
+              "Impossível reverter erros",
+              "Não atende compliance bancário",
+              "RN-07 proíbe explicitamente"
+            ]
+          },
+          {
+            "option": "Tabela de arquivo (archive table)",
+            "pros": ["Banco principal mais limpo", "Histórico separado"],
+            "cons": ["Complexidade de manter duas tabelas sincronizadas", "Queries de auditoria cruzam tabelas"]
+          },
+          {
+            "option": "Soft delete com coluna deleted_at (timestamp)",
+            "pros": [
+              "Registro preservado integralmente",
+              "deleted_at = NULL indica registro ativo",
+              "deleted_at != NULL indica registro 'deletado' com timestamp exato",
+              "Queries simples: WHERE deleted_at IS NULL",
+              "Auditoria completa: quem deletou, quando",
+              "Reversível: UPDATE SET deleted_at = NULL"
+            ],
+            "cons": [
+              "Todas as queries de listagem precisam de WHERE deleted_at IS NULL",
+              "Banco cresce mesmo com registros 'deletados'"
+            ]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "Soft delete com coluna deleted_at (DATETIME NULLABLE) em todas as entidades de negócio",
+        "rationale": "RN-07 define explicitamente soft delete como requisito. Para um banco digital, manter histórico completo é requisito de compliance — BACEN exige rastreabilidade de operações financeiras. A coluna deleted_at é simples de implementar, autodescritiva e permite queries de auditoria diretas.",
+        "implementation": {
+          "column": "deleted_at DATETIME NULLABLE DEFAULT NULL",
+          "tables_affected": ["users", "pix_keys", "cards", "card_purchases", "transactions (reversals only)"],
+          "convention": "Todos os SELECTs de listagem incluem WHERE deleted_at IS NULL",
+          "index": "Índice em deleted_at para queries que buscam deletados",
+          "display": "Registros com deleted_at != NULL não aparecem na UI — são invisíveis para o usuário"
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Histórico de auditoria 100% preservado — chave Pix deletada ainda aparece em registros históricos",
+          "Compliance bancário: registros nunca destruídos",
+          "Reversibilidade: UPDATE users SET deleted_at = NULL restaura conta encerrada",
+          "Debugabilidade: sempre possível investigar o estado passado de qualquer registro"
+        ],
+        "negative": [
+          "Todas as queries de listagem precisam de filtro WHERE deleted_at IS NULL — omissão é bug",
+          "Banco cresce continuamente — não há limpeza de registros antigos",
+          "UNIQUE constraints (ex: email, CPF, key_value) precisam tratar soft-deleted records"
+        ],
+        "mitigation": "Convenção documentada: nenhuma query de listagem é escrita sem WHERE deleted_at IS NULL. Para UNIQUE constraints com soft delete: verificar unicidade apenas entre registros com deleted_at IS NULL na camada de service."
+      },
+
+      "rule_references": ["RN-07"],
+      "tags": ["database", "soft-delete", "audit", "compliance"]
+    },
+
+    {
+      "id": "ADR-007",
+      "title": "Convenção de 3 arquivos por módulo: schema.ts + routes.ts + service.ts",
+      "status": "accepted",
+      "date": "2026-03-04",
+      "deciders": ["Software Architect"],
+      "technical_story": "Definir a estrutura interna de cada módulo do servidor Fastify para garantir consistência, testabilidade e separação clara de responsabilidades.",
+
+      "context": {
+        "situation": "O servidor Fastify do ECP Digital Bank tem 7 módulos (auth, accounts, pix, transactions, cards, payments, users). Cada módulo precisa de uma estrutura consistente que separe validação, roteamento e lógica de negócio.",
+        "drivers": [
+          "Consistência — qualquer dev deve saber exatamente onde encontrar qualquer coisa",
+          "Separação de responsabilidades — validação, roteamento e lógica de negócio isolados",
+          "Testabilidade — service.ts pode ser testado sem HTTP server",
+          "Tipo-segurança — Zod em schema.ts gera tipos TypeScript automaticamente",
+          "Alinhamento com Fastify — plugin pattern nativo do framework"
+        ],
+        "alternatives_considered": [
+          {
+            "option": "Arquivo único por módulo (ex: pix.ts com tudo)",
+            "pros": ["Menos arquivos"],
+            "cons": ["Arquivo único cresce sem limite", "Difícil de navegar e manter", "Mistura de responsabilidades"]
+          },
+          {
+            "option": "Clean Architecture completa (controllers, use-cases, repositories, entities separados)",
+            "pros": ["Máxima separação de responsabilidades", "Alta testabilidade"],
+            "cons": ["Excesso de indireção para MVP", "4-6 arquivos por feature", "Aumenta tempo de desenvolvimento"]
+          },
+          {
+            "option": "3 arquivos por módulo: schema.ts + routes.ts + service.ts",
+            "pros": [
+              "schema.ts: Zod schemas para validação de input/output + tipos TypeScript inferidos",
+              "routes.ts: Fastify plugin com rotas, middlewares e chamadas ao service",
+              "service.ts: lógica de negócio pura com acesso direto ao banco (better-sqlite3)",
+              "Equilíbrio entre simplicidade e separação de responsabilidades",
+              "Service testável sem servidor HTTP"
+            ],
+            "cons": [
+              "Service ainda acessa banco diretamente (sem repository pattern formal)",
+              "Sem injeção de dependência formal (passa db como parâmetro)"
+            ]
+          }
+        ]
+      },
+
+      "decision": {
+        "chosen": "3 arquivos obrigatórios por módulo: schema.ts, routes.ts, service.ts",
+        "rationale": "Para um MVP com 7 módulos e 25 endpoints, a convenção de 3 arquivos oferece o melhor equilíbrio entre organização e velocidade de desenvolvimento. Zod em schema.ts garante validação e tipos em um único lugar. Routes.ts é puro HTTP — sem lógica de negócio. Service.ts contém toda a lógica de domínio e pode ser testado unitariamente.",
+        "structure": {
+          "module_template": "/server/modules/{module}/",
+          "files": [
+            {
+              "file": "schema.ts",
+              "responsibility": "Zod schemas para validação de request/response. Exporta tipos inferidos pelo TypeScript.",
+              "exports": ["CreateUserSchema", "CreateUserInput (type)", "UserResponse (type)"],
+              "example": "export const PixTransferSchema = z.object({ to_key: z.string(), amount: z.number().int().positive() })"
+            },
+            {
+              "file": "routes.ts",
+              "responsibility": "Fastify plugin com definição de rotas, autenticação via preHandler, e chamadas ao service. Zero lógica de negócio.",
+              "exports": ["default: FastifyPluginAsync"],
+              "example": "fastify.post('/pix/transfer', { preHandler: [authenticate, checkPixLimit] }, handler)"
+            },
+            {
+              "file": "service.ts",
+              "responsibility": "Lógica de negócio pura. Acesso direto ao banco via better-sqlite3. Validação de invariantes. Emissão de eventos. Retorna dados ou lança DomainError.",
+              "exports": ["PixService class ou exported functions"],
+              "example": "export async function transferPix(db, userId, toKey, amount, idempotencyKey): Transaction"
+            }
+          ],
+          "optional_files": [
+            {
+              "file": "schema.sql",
+              "responsibility": "DDL do módulo — incluído no schema principal em /server/db/schema.sql"
+            }
+          ]
+        }
+      },
+
+      "consequences": {
+        "positive": [
+          "Qualquer dev sabe exatamente onde colocar e onde encontrar qualquer código",
+          "Service.ts é testável sem servidor HTTP — testes unitários diretos da lógica de negócio",
+          "Schema.ts é única fonte de verdade para tipos de request/response — sem duplicação",
+          "Routes.ts limpo — apenas HTTP wiring, sem lógica que polua o entendimento do fluxo"
+        ],
+        "negative": [
+          "Service acessa DB diretamente — acoplamento ao better-sqlite3 (sem repository interface formal)",
+          "Sem injeção de dependência — db é passado como parâmetro ou singleton"
+        ],
+        "mitigation": "Database é inicializado como singleton em /server/db/index.ts e importado nos services. A interface do service (inputs/outputs TypeScript) permanece estável mesmo se a implementação mudar."
+      },
+
+      "rule_references": [],
+      "tags": ["architecture", "modules", "fastify", "zod", "conventions"]
+    }
+  ]
+}

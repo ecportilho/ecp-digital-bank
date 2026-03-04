@@ -1,0 +1,378 @@
+{
+  "agent": "software-architect",
+  "skill": "domain-design",
+  "artifact": "ubiquitous-language",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "version": "1.0.0",
+  "product": "ECP Digital Bank",
+  "language": "pt-BR",
+
+  "overview": {
+    "description": "Glossário da Linguagem Ubíqua do ECP Digital Bank. Todos os termos estão em português brasileiro — a língua do negócio. Desenvolvedores, designers, PMs e stakeholders DEVEM usar esses termos precisamente e consistentemente em código, documentação, reuniões e interfaces.",
+    "total_terms": 38,
+    "guiding_principle": "Um termo = um significado. Quando um termo tem significados diferentes em contextos distintos, o contexto é explicitado. Ambiguidade de linguagem é um bug de domínio."
+  },
+
+  "glossary": [
+    {
+      "id": "UL-001",
+      "term": "Conta",
+      "english": "Account",
+      "context": "Banking Core (BC-02)",
+      "definition": "A conta bancária digital de um usuário no ECP. Representa a custódia de saldo e o histórico de movimentações. Cada usuário possui exatamente uma conta. Identificada por número de conta e agência.",
+      "example": "Marina abriu sua conta e recebeu R$1.500 de salário. O saldo da conta agora é R$1.500.",
+      "related_terms": ["Saldo", "Extrato", "Transação"],
+      "never_confuse_with": "Cartão — a conta é a conta corrente; o cartão tem limite próprio separado"
+    },
+    {
+      "id": "UL-002",
+      "term": "Saldo disponível",
+      "english": "Available Balance",
+      "context": "Banking Core (BC-02)",
+      "definition": "O valor em reais que o usuário pode gastar imediatamente via Pix ou pagamento de boleto. É o saldo da conta corrente já descontando quaisquer reservas ou bloqueios pendentes.",
+      "example": "Saldo disponível: R$1.200,00. Marina pode fazer um Pix de até R$1.200.",
+      "related_terms": ["Conta", "Saldo reservado"],
+      "never_confuse_with": "Limite do cartão — o limite de crédito é independente do saldo disponível"
+    },
+    {
+      "id": "UL-003",
+      "term": "Extrato",
+      "english": "Statement / Transaction History",
+      "context": "Banking Core (BC-02)",
+      "definition": "Lista cronológica reversa de todas as transações da conta. Cada item mostra: data, descrição, valor (positivo = crédito, negativo = débito), categoria e saldo resultante.",
+      "example": "No extrato, Marina vê que 'IFOOD*RESTAURANTE' de R$42,00 foi categorizado como 'Alimentação' automaticamente.",
+      "related_terms": ["Transação", "Categorização automática", "Ciclo salarial"]
+    },
+    {
+      "id": "UL-004",
+      "term": "Transação",
+      "english": "Transaction",
+      "context": "Banking Core (BC-02)",
+      "definition": "Registro imutável de qualquer movimentação financeira na conta. Pode ser crédito (entrada) ou débito (saída). Tipos: pix_sent, pix_received, card_purchase, boleto_payment, deposit, fee.",
+      "example": "Cada Pix enviado, cada compra no cartão e cada boleto pago gera uma transação no extrato.",
+      "related_terms": ["Extrato", "Categorização automática"],
+      "immutability_note": "Transações NUNCA são editadas ou deletadas após criação — apenas marcadas com status diferente via soft delete"
+    },
+    {
+      "id": "UL-005",
+      "term": "Ciclo salarial",
+      "english": "Salary Cycle",
+      "context": "Intelligence (BC-05)",
+      "definition": "Período entre dois recebimentos de salário, definido pelo dia do mês configurado pelo usuário. Usado para agrupar gastos e mostrar quanto resta para o próximo salário. Ex.: ciclo do dia 5 ao dia 4 do próximo mês.",
+      "example": "Marina recebe no dia 5. Seu ciclo salarial vai de 5/março a 4/abril. No dashboard, ela vê que já gastou 68% do ciclo com 12 dias restantes.",
+      "related_terms": ["Data de salário", "Dashboard", "Saldo disponível"]
+    },
+    {
+      "id": "UL-006",
+      "term": "Data de salário",
+      "english": "Salary Day",
+      "context": "Identity & Access (BC-01) / Intelligence (BC-05)",
+      "definition": "Dia do mês configurado pelo usuário que representa quando ele recebe seu salário. Valor de 1 a 31. Usado para calcular o ciclo salarial e personalizar o dashboard.",
+      "example": "Marina configurou data de salário = 5. O sistema automaticamente ajusta o ciclo para meses com 28, 29, 30 ou 31 dias.",
+      "related_terms": ["Ciclo salarial", "Onboarding"]
+    },
+    {
+      "id": "UL-007",
+      "term": "Chave Pix",
+      "english": "Pix Key",
+      "context": "Pix (BC-03)",
+      "definition": "Identificador que permite receber transferências Pix sem informar dados bancários completos. Tipos: CPF, e-mail, telefone ou EVP (chave aleatória). Máximo de 5 chaves por conta.",
+      "example": "Marina registrou seu CPF como Chave Pix. Agora pode receber salário digitando apenas o CPF.",
+      "related_terms": ["Pix", "Transferência Pix", "EVP"],
+      "rule_reference": "RN-05: máximo 5 chaves por conta"
+    },
+    {
+      "id": "UL-008",
+      "term": "EVP",
+      "english": "Random Pix Key (EVP - Endereço Virtual de Pagamentos)",
+      "context": "Pix (BC-03)",
+      "definition": "Chave Pix no formato UUID gerada aleatoriamente pelo sistema. Usado quando o usuário não quer expor CPF, e-mail ou telefone. Também chamada de 'chave aleatória'.",
+      "example": "Marina gerou uma EVP para vender produtos online sem expor seu CPF: 'a3f9c2d1-...'.",
+      "related_terms": ["Chave Pix"]
+    },
+    {
+      "id": "UL-009",
+      "term": "Transferência Pix",
+      "english": "Pix Transfer",
+      "context": "Pix (BC-03)",
+      "definition": "Operação de transferência instantânea de dinheiro via sistema Pix do Banco Central. Debitada da conta do remetente e creditada na conta do destinatário. Sujeita a limites por horário.",
+      "example": "Marina fez uma Transferência Pix de R$300 para pagar o aluguel às 15h (horário comercial, dentro do limite diário de R$5.000).",
+      "related_terms": ["Chave Pix", "Limite Pix", "Autenticação reforçada"],
+      "rule_references": ["RN-01", "RN-02", "RN-03", "RN-04", "RN-10"]
+    },
+    {
+      "id": "UL-010",
+      "term": "Limite Pix diurno",
+      "english": "Daytime Pix Limit",
+      "context": "Pix (BC-03)",
+      "definition": "Valor máximo acumulado de Transferências Pix permitidas por dia no horário comercial (6h às 22h). Fixado em R$5.000 por dia útil.",
+      "example": "Às 14h, Marina enviou R$3.000 via Pix. Seu limite diurno restante é R$2.000.",
+      "related_terms": ["Limite Pix noturno", "Transferência Pix"],
+      "rule_reference": "RN-01"
+    },
+    {
+      "id": "UL-011",
+      "term": "Limite Pix noturno",
+      "english": "Nighttime Pix Limit",
+      "context": "Pix (BC-03)",
+      "definition": "Valor máximo por transação Pix permitido no horário noturno (22h às 6h). Fixado em R$1.000 por transação, independentemente do limite diurno.",
+      "example": "À meia-noite, Marina tentou enviar R$1.500 via Pix. A operação foi bloqueada — limite noturno é R$1.000 por transação.",
+      "related_terms": ["Limite Pix diurno", "Transferência Pix"],
+      "rule_reference": "RN-02"
+    },
+    {
+      "id": "UL-012",
+      "term": "Autenticação reforçada",
+      "english": "Enhanced Authentication",
+      "context": "Pix (BC-03)",
+      "definition": "Verificação adicional de identidade exigida para Transferências Pix acima de R$2.000. O usuário deve confirmar a senha antes de autorizar a operação.",
+      "example": "Marina tenta enviar R$2.500 via Pix. O sistema exige que ela digite a senha novamente antes de confirmar.",
+      "related_terms": ["Transferência Pix", "JWT"],
+      "rule_reference": "RN-03"
+    },
+    {
+      "id": "UL-013",
+      "term": "QR Code Pix",
+      "english": "Pix QR Code",
+      "context": "Pix (BC-03)",
+      "definition": "Código visual gerado a partir de uma Chave Pix que permite ao pagador escanear e preencher automaticamente os dados da transferência. Pode ser estático (sem valor definido) ou dinâmico (com valor definido).",
+      "example": "Marina gerou um QR Code da sua chave CPF. O cliente dela escaneou e fez o Pix sem precisar digitar nenhum dado.",
+      "related_terms": ["Chave Pix", "Transferência Pix"]
+    },
+    {
+      "id": "UL-014",
+      "term": "Cartão virtual",
+      "english": "Virtual Card",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Cartão de crédito digital (sem forma física) emitido instantaneamente. Possui número, CVV e data de validade. Limite independente do saldo da conta corrente. Pode ser bloqueado e desbloqueado pelo usuário.",
+      "example": "Marina usou o cartão virtual para assinar um serviço de streaming, colocando o número na tela do computador.",
+      "related_terms": ["Limite do cartão", "Fatura", "Bloqueio de cartão"],
+      "rule_reference": "RN-06"
+    },
+    {
+      "id": "UL-015",
+      "term": "Limite do cartão",
+      "english": "Card Limit",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Valor máximo disponível para compras no cartão virtual. Independente do saldo da conta corrente. Controlado pelo banco. Não reduz o Saldo disponível.",
+      "example": "Marina tem saldo de R$500 e limite do cartão de R$2.000. Ela pode comprar até R$2.000 no cartão sem afetar o saldo.",
+      "related_terms": ["Cartão virtual", "Fatura"],
+      "rule_reference": "RN-06"
+    },
+    {
+      "id": "UL-016",
+      "term": "Fatura",
+      "english": "Invoice / Credit Card Bill",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Consolidação mensal das compras realizadas no cartão virtual. Abre no início do ciclo e fecha no dia 25. Após fechada, gera o valor a pagar. Ciclos: aberta → fechada → paga.",
+      "example": "A fatura de março fechou com R$850 no dia 25. Marina tem até o vencimento para pagar.",
+      "related_terms": ["Compra no cartão", "Cartão virtual", "Fechamento de fatura"],
+      "rule_reference": "RN-06"
+    },
+    {
+      "id": "UL-017",
+      "term": "Fechamento de fatura",
+      "english": "Invoice Closing",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Evento automático que ocorre todo dia 25 e transforma a fatura de 'aberta' para 'fechada', calculando o valor total a pagar. Nenhuma nova compra é adicionada à fatura fechada.",
+      "example": "No dia 25/03, o sistema fechou automaticamente a fatura de Marina com R$850. Novas compras entram na fatura de abril.",
+      "related_terms": ["Fatura", "Cartão virtual"],
+      "rule_reference": "RN-06"
+    },
+    {
+      "id": "UL-018",
+      "term": "Compra no cartão",
+      "english": "Card Purchase",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Transação realizada utilizando o cartão virtual. Registrada na fatura aberta do mês vigente. Reduz o limite disponível do cartão mas NÃO reduz o saldo da conta corrente imediatamente.",
+      "example": "Marina comprou R$120 no iFood pelo cartão virtual. A compra apareceu na fatura aberta e o limite disponível reduziu R$120.",
+      "related_terms": ["Fatura", "Cartão virtual", "Limite do cartão"]
+    },
+    {
+      "id": "UL-019",
+      "term": "Bloqueio de cartão",
+      "english": "Card Block",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Ação do usuário que impede temporariamente qualquer nova compra com o cartão virtual. Reversível (o usuário pode desbloquear). Compras em andamento não são afetadas.",
+      "example": "Marina perdeu o controle das senhas salvas. Ela bloqueou o cartão virtual em 2 cliques enquanto investigava.",
+      "related_terms": ["Cartão virtual", "Desbloqueio de cartão"]
+    },
+    {
+      "id": "UL-020",
+      "term": "Boleto",
+      "english": "Boleto (Brazilian Bank Slip)",
+      "context": "Cards & Payments (BC-04)",
+      "definition": "Documento de cobrança bancária brasileira com código de barras. Pago via débito direto na conta corrente. O sistema valida o código e executa o pagamento com débito imediato no saldo.",
+      "example": "Marina colou o código de barras da conta de luz no campo de boleto. O sistema identificou o valor (R$180) e debitou da conta.",
+      "related_terms": ["Saldo disponível", "Conta"]
+    },
+    {
+      "id": "UL-021",
+      "term": "Categorização automática",
+      "english": "Automatic Categorization",
+      "context": "Intelligence (BC-05)",
+      "definition": "Processo que atribui uma categoria de gasto (alimentação, transporte, saúde, etc.) a cada transação automaticamente, com base em palavras-chave na descrição da transação. Acurácia alvo: ≥ 85%.",
+      "example": "'UBER TRIP' → Transporte. 'IFOOD*RESTAURANTE' → Alimentação. 'NETFLIX.COM' → Assinaturas.",
+      "related_terms": ["Extrato", "Insights", "Transação"],
+      "rule_reference": "Target de acurácia ≥ 85% (critério de satisfação EP-003)"
+    },
+    {
+      "id": "UL-022",
+      "term": "Categoria de gasto",
+      "english": "Spending Category",
+      "context": "Intelligence (BC-05)",
+      "definition": "Classificação semântica de uma transação para fins de análise de gastos. Categorias: alimentação, transporte, saúde, educação, lazer, moradia, assinaturas, pix, pagamentos, outros.",
+      "example": "Marina vê no dashboard que 35% dos seus gastos no ciclo são 'Alimentação'.",
+      "related_terms": ["Categorização automática", "Insights"]
+    },
+    {
+      "id": "UL-023",
+      "term": "Insights",
+      "english": "Insights / Financial Insights",
+      "context": "Intelligence (BC-05)",
+      "definition": "Análises proativas geradas pelo sistema sobre o comportamento financeiro do usuário. Exemplos: 'Você gastou 20% mais em alimentação este mês', 'Faltam 8 dias para o salário e você tem R$800 disponíveis'.",
+      "example": "Marina vê o insight: 'Você já usou 78% do ciclo salarial. Média de gastos: R$85/dia.' e sente que está no controle.",
+      "related_terms": ["Ciclo salarial", "Categorização automática", "Dashboard"]
+    },
+    {
+      "id": "UL-024",
+      "term": "Dashboard",
+      "english": "Dashboard",
+      "context": "Intelligence (BC-05) / Banking Core (BC-02)",
+      "definition": "Tela principal do ECP Digital Bank. Exibe: saldo disponível, ciclo salarial (dias restantes, % gasto), últimas transações, insights do período e atalhos para Pix e pagamentos. Otimizado para uso desktop.",
+      "example": "Ao abrir o ECP no computador às 9h, Marina vê imediatamente o dashboard com saldo, ciclo salarial e o insight do dia.",
+      "related_terms": ["Saldo disponível", "Ciclo salarial", "Insights", "Extrato"]
+    },
+    {
+      "id": "UL-025",
+      "term": "Onboarding",
+      "english": "Onboarding",
+      "context": "Identity & Access (BC-01)",
+      "definition": "Processo progressivo de 3 etapas para criação de conta: (1) dados mínimos (nome, e-mail, CPF, senha), (2) configuração inicial (data de salário, chave Pix), (3) exploração guiada do dashboard. Cada etapa libera funcionalidades adicionais.",
+      "example": "Marina completou a Etapa 1 em 90 segundos e já viu o dashboard. A Etapa 2 foi opcional e feita no dia seguinte.",
+      "related_terms": ["Data de salário", "Chave Pix", "Dashboard"]
+    },
+    {
+      "id": "UL-026",
+      "term": "Ativação",
+      "english": "User Activation",
+      "context": "Identity & Access (BC-01) / Intelligence (BC-05)",
+      "definition": "Evento que marca a conclusão bem-sucedida do onboarding, definida como: usuário realizou 3 ou mais operações dentro de 7 dias após o cadastro. Métrica-chave do KR-02.",
+      "example": "Marina fez um Pix, pagou um boleto e configurou uma chave Pix nos primeiros 3 dias. Ela foi contada como usuária ativada.",
+      "related_terms": ["Onboarding", "KR-02"]
+    },
+    {
+      "id": "UL-027",
+      "term": "Rate limit Pix",
+      "english": "Pix Rate Limit",
+      "context": "Pix (BC-03)",
+      "definition": "Restrição operacional que limita o número máximo de Transferências Pix a 10 por hora por usuário. Proteção anti-fraude e anti-spam.",
+      "example": "Marina tentou fazer o 11º Pix em uma hora. O sistema bloqueou com mensagem 'Limite de Pix por hora atingido. Tente novamente em X minutos.'",
+      "related_terms": ["Transferência Pix"],
+      "rule_reference": "RN-10"
+    },
+    {
+      "id": "UL-028",
+      "term": "Idempotência",
+      "english": "Idempotency",
+      "context": "Banking Core (BC-02) / Pix (BC-03) / Cards & Payments (BC-04)",
+      "definition": "Garantia de que uma operação POST executada múltiplas vezes com a mesma chave de idempotência produz o mesmo resultado sem duplicação. Implementada via campo idempotency_key.",
+      "example": "A conexão de Marina caiu após confirmar um Pix. O front-end reenviou a mesma requisição com o mesmo idempotency_key. O sistema reconheceu e não duplicou o débito.",
+      "related_terms": ["Transferência Pix", "Boleto"],
+      "rule_reference": "RN-08"
+    },
+    {
+      "id": "UL-029",
+      "term": "Soft delete",
+      "english": "Soft Delete / Logical Deletion",
+      "context": "Todos os contextos",
+      "definition": "Estratégia de exclusão onde o registro nunca é deletado fisicamente do banco de dados. Em vez disso, o campo deleted_at é preenchido com o timestamp. Registros com deleted_at não são retornados nas consultas padrão.",
+      "example": "Marina deletou sua Chave Pix do tipo e-mail. O registro continua no banco com deleted_at = '2026-03-04T10:30:00Z', mas não aparece mais para a Marina.",
+      "related_terms": ["Transação", "Chave Pix"],
+      "rule_reference": "RN-07"
+    },
+    {
+      "id": "UL-030",
+      "term": "Centavos",
+      "english": "Cents / Integer Cents",
+      "context": "Todos os contextos financeiros",
+      "definition": "Unidade interna de armazenamento de valores monetários. Todos os valores são armazenados como inteiros em centavos para evitar erros de ponto flutuante. R$10,50 = 1050 centavos.",
+      "example": "O banco de dados armazena o saldo de R$1.234,56 como 123456 (INTEGER). O front-end converte e exibe 'R$ 1.234,56'.",
+      "related_terms": ["Money", "Saldo disponível"],
+      "rule_reference": "RN-09"
+    },
+    {
+      "id": "UL-031",
+      "term": "Notificação",
+      "english": "Notification",
+      "context": "Intelligence (BC-05)",
+      "definition": "Alerta em tempo real exibido na interface para informar o usuário sobre eventos financeiros relevantes: Pix enviado/recebido, compra no cartão, fatura fechada, boleto pago, alertas de segurança.",
+      "example": "Instantes após receber um Pix de R$500, Marina vê a notificação: 'Você recebeu R$500,00 de João Silva via Pix'.",
+      "related_terms": ["Insights", "Transferência Pix", "Fatura"]
+    },
+    {
+      "id": "UL-032",
+      "term": "JWT",
+      "english": "JSON Web Token",
+      "context": "Identity & Access (BC-01)",
+      "definition": "Token de autenticação assinado digitalmente enviado no header Authorization de cada requisição à API. Válido por 24 horas. Contém userId como subject.",
+      "example": "Ao fazer login, Marina recebe um JWT. O front-end armazena no localStorage e envia em toda requisição: 'Authorization: Bearer eyJ...'.",
+      "related_terms": ["Autenticação reforçada", "Sessão"]
+    },
+    {
+      "id": "UL-033",
+      "term": "Agência",
+      "english": "Bank Branch",
+      "context": "Banking Core (BC-02)",
+      "definition": "Número da agência bancária do ECP Digital Bank. Fixo para todos os usuários (banco digital sem agências físicas). Exibido junto ao número da conta para transferências bancárias convencionais.",
+      "example": "Marina informa Agência 0001, Conta 1234567-8 para receber transferência TED de outro banco.",
+      "related_terms": ["Conta"]
+    },
+    {
+      "id": "UL-034",
+      "term": "Saldo reservado",
+      "english": "Reserved Balance / Pending",
+      "context": "Banking Core (BC-02)",
+      "definition": "Valor temporariamente bloqueado no saldo enquanto uma operação está sendo processada. Reduz o Saldo disponível mas ainda não foi debitado definitivamente.",
+      "example": "Marina iniciou um Pix de R$500. Por 2 segundos, o saldo reservado foi R$500 enquanto o sistema processava.",
+      "related_terms": ["Saldo disponível", "Transferência Pix"]
+    },
+    {
+      "id": "UL-035",
+      "term": "Pix Express",
+      "english": "Express Pix",
+      "context": "Pix (BC-03)",
+      "definition": "Nome do fluxo de Transferência Pix otimizado para uso desktop no ECP. Completo em 3 cliques ou menos, com suporte a atalhos de teclado. Meta: concluir em menos de 45 segundos.",
+      "example": "O usuário pressiona Alt+P, digita a chave destino, confirma o valor com Enter. Pix enviado em 15 segundos.",
+      "related_terms": ["Transferência Pix"]
+    },
+    {
+      "id": "UL-036",
+      "term": "CPF",
+      "english": "CPF (Brazilian Individual Taxpayer Registry)",
+      "context": "Identity & Access (BC-01) / Pix (BC-03)",
+      "definition": "Cadastro de Pessoa Física — documento de identificação fiscal brasileiro de 11 dígitos. Usado como identificador primário do usuário e como um dos tipos de Chave Pix.",
+      "example": "CPF 123.456.789-09 é validado pelo algoritmo de dígitos verificadores antes de aceito no cadastro.",
+      "related_terms": ["Chave Pix", "User"]
+    },
+    {
+      "id": "UL-037",
+      "term": "Depósito",
+      "english": "Deposit",
+      "context": "Banking Core (BC-02)",
+      "definition": "Crédito de valor na conta do usuário. No MVP, representa o recebimento de Pix ou transferência TED/DOC de outros bancos. Registrado como transação de tipo 'credit' com descrição do remetente.",
+      "example": "O salário de R$4.500 de Marina foi creditado como depósito via TED do RH da empresa.",
+      "related_terms": ["Transação", "Saldo disponível"]
+    },
+    {
+      "id": "UL-038",
+      "term": "Transparência radical",
+      "english": "Radical Transparency",
+      "context": "Produto / Intelligence (BC-05)",
+      "definition": "Princípio de design do ECP que exige que toda operação mostre explicitamente: valor exato, destinatário/remetente, taxa cobrada (se houver), data/hora e confirmação. Sem taxas escondidas ou linguagem confusa.",
+      "example": "Ao pagar um boleto de R$150, Marina vê: Valor: R$150,00 | Taxa: R$0,00 | Débito: R$150,00 do saldo disponível | Processado: agora.",
+      "related_terms": ["Notificação", "Extrato"]
+    }
+  ]
+}

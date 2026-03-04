@@ -1,0 +1,386 @@
+---
+title: ECP Digital Bank — Class Diagram
+---
+classDiagram
+    %% ============================================================
+    %% BOUNDED CONTEXT: Identity & Access (BC-01)
+    %% ============================================================
+
+    class User {
+        <<AggregateRoot>>
+        +number id
+        +string name
+        +Email email
+        +CPF cpf
+        +HashedPassword passwordHash
+        +string phone
+        +SalaryDay salaryDay
+        +Date createdAt
+        +Date updatedAt
+        +Date deletedAt
+        +create(name, email, cpf, password) User$
+        +changePassword(current, new) void
+        +updateProfile(name, phone, salaryDay) void
+        +isActive() boolean
+        +softDelete() void
+    }
+
+    class Email {
+        <<ValueObject>>
+        +string value
+        +create(raw) Email$
+        +equals(other) boolean
+        +toString() string
+    }
+
+    class CPF {
+        <<ValueObject>>
+        +string value
+        +create(raw) CPF$
+        +format() string
+        +isValid(cpf) boolean$
+        +equals(other) boolean
+    }
+
+    class HashedPassword {
+        <<ValueObject>>
+        -string hash
+        +create(plaintext) HashedPassword$
+        +verify(plaintext) boolean
+    }
+
+    class SalaryDay {
+        <<ValueObject>>
+        +number day
+        +create(day) SalaryDay$
+        +resolveForMonth(month, year) Date
+    }
+
+    class JwtToken {
+        <<ValueObject>>
+        +string token
+        +number userId
+        +Date expiresAt
+        +create(userId, secret) JwtToken$
+        +verify(token, secret) JwtToken$
+        +isExpired() boolean
+    }
+
+    %% ============================================================
+    %% BOUNDED CONTEXT: Banking Core (BC-02)
+    %% ============================================================
+
+    class Account {
+        <<AggregateRoot>>
+        +number id
+        +number userId
+        +Money balance
+        +string accountNumber
+        +string agency
+        +Date createdAt
+        +Date updatedAt
+        +create(userId) Account$
+        +debit(amount, desc, type, key) Transaction
+        +credit(amount, desc, type, key) Transaction
+        +getBalance() Money
+        +getTransactions(filters) Transaction[]
+        +getSummary(start, end) AccountSummary
+    }
+
+    class Transaction {
+        <<Entity>>
+        +number id
+        +number accountId
+        +TransactionType type
+        +Money amount
+        +TransactionDirection direction
+        +string description
+        +TransactionCategory category
+        +string referenceId
+        +string idempotencyKey
+        +TransactionStatus status
+        +Date createdAt
+        +Date deletedAt
+    }
+
+    class Money {
+        <<ValueObject>>
+        +number cents
+        +fromCents(cents) Money$
+        +fromBRL(brl) Money$
+        +toBRL() string
+        +toDisplay() string
+        +add(other) Money
+        +subtract(other) Money
+        +isGreaterThan(other) boolean
+        +equals(other) boolean
+    }
+
+    class TransactionType {
+        <<Enumeration>>
+        pix_sent
+        pix_received
+        card_purchase
+        boleto_payment
+        deposit
+        fee
+        reversal
+    }
+
+    class TransactionStatus {
+        <<Enumeration>>
+        pending
+        completed
+        failed
+        reversed
+    }
+
+    class TransactionCategory {
+        <<Enumeration>>
+        alimentacao
+        transporte
+        saude
+        educacao
+        lazer
+        moradia
+        assinaturas
+        pix
+        pagamentos
+        outros
+    }
+
+    %% ============================================================
+    %% BOUNDED CONTEXT: Pix (BC-03)
+    %% ============================================================
+
+    class PixKey {
+        <<AggregateRoot>>
+        +number id
+        +number userId
+        +number accountId
+        +PixKeyType keyType
+        +PixKeyValue keyValue
+        +boolean isActive
+        +Date createdAt
+        +Date deletedAt
+        +register(userId, accountId, type, value) PixKey$
+        +delete() void
+        +generateQRCode(amount) string
+    }
+
+    class PixKeyType {
+        <<Enumeration>>
+        cpf
+        email
+        phone
+        evp
+    }
+
+    class PixKeyValue {
+        <<ValueObject>>
+        +string value
+        +PixKeyType type
+        +create(type, raw) PixKeyValue$
+        -validate() void
+        -normalize() string
+    }
+
+    class PixLimit {
+        <<ValueObject>>
+        +number daytimeDailyLimitCents
+        +number nighttimePerTxLimitCents
+        +number enhancedAuthThresholdCents
+        +isNighttime(date) boolean$
+        +requiresEnhancedAuth(amount) boolean$
+        +validateAmount(amount, dailyUsed, date) void$
+    }
+
+    %% ============================================================
+    %% BOUNDED CONTEXT: Cards & Payments (BC-04)
+    %% ============================================================
+
+    class Card {
+        <<AggregateRoot>>
+        +number id
+        +number userId
+        +number accountId
+        +CardNumber cardNumber
+        +string cvv
+        +string expiryDate
+        +Money creditLimit
+        +Money availableLimit
+        +CardStatus status
+        +Date createdAt
+        +Date updatedAt
+        +Date deletedAt
+        +issue(userId, accountId, limit) Card$
+        +block() void
+        +unblock() void
+        +cancel() void
+        +registerPurchase(merchant, amount, cat) CardPurchase
+        +getCurrentInvoice() Invoice
+        +getMaskedNumber() string
+    }
+
+    class Invoice {
+        <<Entity>>
+        +number id
+        +number cardId
+        +number month
+        +number year
+        +Money totalAmount
+        +InvoiceStatus status
+        +Date dueDate
+        +Date closedAt
+        +Date paidAt
+        +Date createdAt
+        +close() void
+        +pay() void
+        +addPurchase(purchase) void
+        +isOpen() boolean
+    }
+
+    class CardPurchase {
+        <<Entity>>
+        +number id
+        +number invoiceId
+        +number cardId
+        +string merchantName
+        +Money amount
+        +TransactionCategory category
+        +Date purchaseDate
+        +string description
+        +Date deletedAt
+    }
+
+    class CardStatus {
+        <<Enumeration>>
+        active
+        blocked
+        cancelled
+    }
+
+    class InvoiceStatus {
+        <<Enumeration>>
+        open
+        closed
+        paid
+    }
+
+    class CardNumber {
+        <<ValueObject>>
+        +string value
+        +generate() CardNumber$
+        +mask() string
+        +lastFour() string
+    }
+
+    %% ============================================================
+    %% BOUNDED CONTEXT: Intelligence (BC-05)
+    %% ============================================================
+
+    class Notification {
+        <<AggregateRoot>>
+        +number id
+        +number userId
+        +NotificationType type
+        +string title
+        +string message
+        +object data
+        +boolean isRead
+        +Date createdAt
+        +Date readAt
+        +create(userId, type, title, msg) Notification$
+        +markAsRead() void
+        +isUnread() boolean
+    }
+
+    class NotificationType {
+        <<Enumeration>>
+        pix_sent
+        pix_received
+        card_purchase
+        invoice_closed
+        boleto_paid
+        security_alert
+        salary_cycle
+        limit_warning
+    }
+
+    class SalaryCycle {
+        <<ValueObject>>
+        +Date startDate
+        +Date endDate
+        +number salaryDay
+        +current(salaryDay) SalaryCycle$
+        +daysRemaining() number
+        +percentElapsed() number
+        +containsDate(date) boolean
+    }
+
+    class CategoryRule {
+        <<ValueObject>>
+        +string[] keywords
+        +TransactionCategory category
+        +number priority
+        +matches(description) boolean
+        +classify(desc, rules) TransactionCategory$
+    }
+
+    %% ============================================================
+    %% RELATIONSHIPS — Identity & Access
+    %% ============================================================
+
+    User "1" --> "1" Email : has
+    User "1" --> "1" CPF : has
+    User "1" --> "1" HashedPassword : has
+    User "1" --> "0..1" SalaryDay : configures
+
+    %% ============================================================
+    %% RELATIONSHIPS — Banking Core
+    %% ============================================================
+
+    Account "1" --> "0..*" Transaction : contains
+    Account "1" --> "1" Money : balance
+    Transaction "1" --> "1" Money : amount
+    Transaction "1" --> "1" TransactionType : has
+    Transaction "1" --> "1" TransactionStatus : has
+    Transaction "0..1" --> "1" TransactionCategory : classified as
+
+    %% ============================================================
+    %% RELATIONSHIPS — Pix
+    %% ============================================================
+
+    PixKey "1" --> "1" PixKeyType : has
+    PixKey "1" --> "1" PixKeyValue : identified by
+
+    %% ============================================================
+    %% RELATIONSHIPS — Cards & Payments
+    %% ============================================================
+
+    Card "1" --> "0..*" Invoice : has
+    Card "1" --> "1" CardStatus : has
+    Card "1" --> "1" CardNumber : has
+    Card "1" --> "1" Money : creditLimit
+    Card "1" --> "1" Money : availableLimit
+    Invoice "1" --> "0..*" CardPurchase : contains
+    Invoice "1" --> "1" InvoiceStatus : has
+    Invoice "1" --> "1" Money : totalAmount
+    CardPurchase "1" --> "1" Money : amount
+
+    %% ============================================================
+    %% RELATIONSHIPS — Intelligence
+    %% ============================================================
+
+    Notification "1" --> "1" NotificationType : has
+
+    %% ============================================================
+    %% CROSS-CONTEXT RELATIONSHIPS (via IDs, not direct references)
+    %% ============================================================
+
+    User "1" -- "1" Account : owns (userId FK)
+    User "1" -- "0..5" PixKey : owns (userId FK)
+    User "1" -- "0..1" Card : owns (userId FK)
+    User "1" -- "0..*" Notification : receives (userId FK)
+    Account "1" -- "0..*" PixKey : linked (accountId FK)
+    Account "1" -- "0..1" Card : linked (accountId FK)

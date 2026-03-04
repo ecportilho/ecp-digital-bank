@@ -1,0 +1,9 @@
+{
+  "hitl": 10,
+  "phase": "03-product-delivery",
+  "agent": "qa",
+  "decision": "approved",
+  "feedback": "",
+  "decided_at": "2026-03-04",
+  "decided_by": "human"
+}

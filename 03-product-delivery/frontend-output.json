@@ -1,0 +1,103 @@
+{
+  "agent": "frontend-developer",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "status": "awaiting_hitl_9",
+
+  "summary": "React SPA completa com 10 páginas, 9 componentes, integração total com API backend, design system fiel ao design_spec.md",
+
+  "stack": {
+    "react": "18.3.1",
+    "vite": "5.4.0",
+    "react_router": "6.26.0",
+    "tailwindcss": "3.4.4",
+    "typescript": "5.5.3",
+    "lucide_react": "0.400.0",
+    "vitest": "1.6.0"
+  },
+
+  "pages": {
+    "public": {
+      "login": {
+        "file": "web/src/routes/login.tsx",
+        "features": ["Email + senha", "Show/hide password", "Error handling", "Link para registro"]
+      },
+      "register": {
+        "file": "web/src/routes/register.tsx",
+        "features": ["Nome, email, CPF, senha", "CPF mask (11 dígitos)", "Validação de senha (regex)", "Link para login"]
+      }
+    },
+    "protected": {
+      "dashboard": {
+        "file": "web/src/routes/dashboard.tsx",
+        "features": ["Saldo com show/hide toggle", "Quick actions (4 botões)", "SVG donut chart gastos por categoria", "Card summary com barra de uso do limite", "Últimas 5 transações", "Endpoint agregado /api/dashboard"]
+      },
+      "extrato": {
+        "file": "web/src/routes/extrato.tsx",
+        "features": ["Lista paginada com filtros", "Filtro por tipo (entradas/saídas)", "Category badges", "Paginação com contador total"]
+      },
+      "pix_enviar": {
+        "file": "web/src/routes/pix/enviar.tsx",
+        "features": ["Fluxo multi-step (chave → valor → confirmar → sucesso)", "Lookup de chave Pix", "Tela de confirmação com resumo", "Tela de sucesso com saldo atualizado"]
+      },
+      "pix_receber": {
+        "file": "web/src/routes/pix/receber.tsx",
+        "features": ["Lista de chaves Pix do usuário", "Copy-to-clipboard com feedback", "Dados da conta"]
+      },
+      "pix_chaves": {
+        "file": "web/src/routes/pix/chaves.tsx",
+        "features": ["CRUD completo de chaves", "Modal para adicionar chave", "Tipo + valor com placeholder dinâmico", "Chave aleatória (auto-gerada)", "Contador 5/5", "Confirm dialog para deletar"]
+      },
+      "cartoes": {
+        "file": "web/src/routes/cartoes.tsx",
+        "features": ["Card visual com gradiente", "Barra de uso do limite", "Block/unblock toggle", "Fatura atual com lista de compras"]
+      },
+      "pagamentos": {
+        "file": "web/src/routes/pagamentos.tsx",
+        "features": ["Formulário de boleto (código, valor, descrição)", "Agendamento opcional", "Lista de pagamentos agendados", "Cancelar agendamento"]
+      },
+      "perfil": {
+        "file": "web/src/routes/perfil.tsx",
+        "features": ["Editar nome e telefone", "Email read-only", "Alterar senha (atual + nova)", "Logout"]
+      }
+    }
+  },
+
+  "components": {
+    "ui": {
+      "Button": "4 variants (primary, secondary, ghost, danger), 3 sizes, loading spinner, left/right icons",
+      "Card": "2 variants (default, highlighted), 4 paddings, sub-components (Header, Title, Content)",
+      "Input": "Label, error, hint, left/right icons, forwardRef",
+      "Modal": "Escape key, backdrop click, scroll lock, 3 sizes",
+      "Badge": "6 variants (success, warning, danger, info, lime, default)",
+      "Table": "Full table primitives (Table, Header, Body, Row, Head, Cell)"
+    },
+    "layout": {
+      "Sidebar": "Desktop nav com 6 itens, user info, logout (hidden em mobile)",
+      "Header": "Greeting dinâmico, notificações com dropdown (unread count, mark as read, polling 30s)",
+      "MobileNav": "Bottom nav com 5 itens (lg:hidden)"
+    }
+  },
+
+  "services": {
+    "api": "Fetch wrapper com Bearer token, error handling (ApiError class), skipAuth option",
+    "useAuth": "Auth state completo (login, register, logout), localStorage persistence, token validation on mount",
+    "formatters": "formatCurrency, formatDate, formatDateTime, formatCPF, formatPhone, formatAccount, maskCPF, formatRelativeTime"
+  },
+
+  "design_system_compliance": {
+    "colors": "100% — todas as cores do design_spec.md no tailwind.config.ts + CSS variables",
+    "typography": "Inter font via Google Fonts",
+    "border_radius": "card=18px, control=13px",
+    "dark_theme": "bg=#0b0f14, surface=#131c28, secondary-bg=#0f1620",
+    "accent": "lime=#b7ff2a, lime-pressed=#7ed100",
+    "scrollbar": "Estilizado com cores do design system"
+  },
+
+  "total_web_files": 28,
+  "total_pages": 10,
+  "total_components": 9,
+
+  "next_hitl": 9,
+  "next_step": "QA verifica qualidade, testa integração e gera relatório"
+}

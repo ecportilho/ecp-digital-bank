@@ -1,0 +1,149 @@
+{
+  "agent": "product-manager",
+  "subagent": "market-research",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-03",
+
+  "market_sizing": {
+    "tam": {
+      "value_brl": "R$ 180 bilhões",
+      "value_usd": "~USD 35 billion",
+      "description": "Receita total do mercado de bancos digitais no Brasil (2025). Inclui todas as receitas de neobanks e braços digitais de bancos tradicionais. Base: ~100 milhões de contas digitais ativas no país."
+    },
+    "sam": {
+      "value_brl": "R$ 72 bilhões",
+      "value_usd": "~USD 14 billion",
+      "description": "Mercado acessível: adultos entre 20-45 anos, bancarizados, digitalmente ativos, insatisfeitos com bancos tradicionais. ~55 milhões de pessoas, ~40% do TAM."
+    },
+    "som": {
+      "value_brl": "R$ 360–720 milhões",
+      "value_usd": "~USD 70–140 million",
+      "description": "Fatia realista capturável nos primeiros 3 anos: 0,5% a 1,0% do SAM. 500K a 1M clientes ativos com receita média de R$720/ano."
+    },
+    "crescimento_anual": "14–18% ao ano (CAGR 2024-2029)",
+    "fontes": [
+      "Banco Central do Brasil — Relatório de Economia Bancária 2023/2024",
+      "Banco Central do Brasil — Estatísticas do Pix (2024)",
+      "IBGE — PNAD Contínua 2023",
+      "Nubank — Earnings Release Q3 2024",
+      "Mordor Intelligence — Brazil Digital Banking Market Report 2024-2029",
+      "Statista — Neobanking Brazil Market Outlook 2024-2028",
+      "McKinsey & Company — Latin America Fintech Report 2024"
+    ]
+  },
+
+  "competitor_analysis": {
+    "concorrentes": [
+      {
+        "nome": "Nubank",
+        "clientes": "100M+",
+        "posicionamento": "Maior banco digital da América Latina. Simplicidade, transparência e eliminação de burocracia.",
+        "forcas": ["Base massiva", "UX referência (4.7+ app stores)", "NPS ~80", "Ecossistema completo", "Empresa lucrativa NYSE"],
+        "fraquezas": ["Atendimento degradado com crescimento", "Interface web limitada", "Foco em massa pode alienar renda alta"],
+        "gaps": ["Sem experiência web-first robusta", "Extratos sem insights", "Sem planejamento financeiro integrado"]
+      },
+      {
+        "nome": "Banco Inter",
+        "clientes": "32M+",
+        "posicionamento": "Super app financeiro e de consumo.",
+        "forcas": ["Super app mais maduro", "Marketplace com cashback", "Investimentos robustos", "Inter Cel (MVNO)"],
+        "fraquezas": ["App sobrecarregado", "UX inconsistente", "Performance criticada"],
+        "gaps": ["Falta de simplicidade", "Sem personalização", "Web desktop inexistente"]
+      },
+      {
+        "nome": "C6 Bank",
+        "clientes": "30M+",
+        "posicionamento": "Premium com foco internacional.",
+        "forcas": ["Conta global (C6 Global)", "Programa Atoms", "CDBs competitivos", "Design limpo"],
+        "fraquezas": ["Base menor", "Menor reconhecimento de marca", "Limites baixos"],
+        "gaps": ["Sem gestão financeira inteligente", "Web desktop inexistente"]
+      },
+      {
+        "nome": "PicPay",
+        "clientes": "35M+",
+        "posicionamento": "Carteira digital com DNA social.",
+        "forcas": ["DNA social forte", "Cashback", "Base jovem engajada"],
+        "fraquezas": ["Percebido como carteira, não banco", "Mudanças abruptas em políticas"],
+        "gaps": ["100% mobile", "Sem gestão financeira", "Sem planejamento"]
+      },
+      {
+        "nome": "Mercado Pago",
+        "clientes": "Base massiva do ecossistema ML",
+        "posicionamento": "Fintech do ecossistema Mercado Livre.",
+        "forcas": ["Integração Mercado Livre", "Maquininha Point", "Crédito para vendedores"],
+        "fraquezas": ["Identidade bancária fraca", "App misturado com marketplace"],
+        "gaps": ["Sem extratos inteligentes", "Web focada em vendedores"]
+      },
+      {
+        "nome": "Neon",
+        "clientes": "Menor base",
+        "posicionamento": "Inclusão financeira, classes C/D.",
+        "forcas": ["Posicionamento inclusão", "Respaldo Banco Votorantim"],
+        "fraquezas": ["Menor awareness 20-45", "Plataforma limitada"],
+        "gaps": ["Exclusivamente mobile", "Sem categorização de gastos"]
+      }
+    ],
+    "oportunidades_diferenciacao": [
+      "Experiência Web-First com Dashboard Inteligente (gap universal — NENHUM concorrente oferece)",
+      "Extratos Inteligentes com Categorização Automática e Insights Proativos",
+      "Planejamento Financeiro Integrado ao Fluxo Bancário",
+      "Cartão Virtual com Controles Avançados de Segurança",
+      "Gestão Inteligente de Boletos e Contas",
+      "Experiência Pix Diferenciada com Contexto",
+      "Transparência Radical em Taxas e Custos",
+      "Onboarding Personalizado e Progressivo"
+    ]
+  },
+
+  "trend_scanning": {
+    "tendencias_alto_impacto": [
+      {"descricao": "Pix Automático", "impacto": "alto", "urgencia": "imediata"},
+      {"descricao": "Open Finance Brasil Fase 4", "impacto": "alto", "urgencia": "alta"},
+      {"descricao": "IA Generativa para finanças pessoais", "impacto": "alto", "urgencia": "alta"},
+      {"descricao": "Drex (Real Digital / CBDC)", "impacto": "alto", "urgencia": "média-alta"},
+      {"descricao": "Embedded Finance e BaaS", "impacto": "alto", "urgencia": "alta"},
+      {"descricao": "Pix por aproximação (NFC) e Pix no crédito", "impacto": "alto", "urgencia": "alta"},
+      {"descricao": "Segurança e prevenção a fraudes com IA", "impacto": "alto", "urgencia": "imediata"},
+      {"descricao": "Consignado CLT digital", "impacto": "alto", "urgencia": "alta"}
+    ],
+    "ameacas_principais": [
+      "Consolidação dos super apps incumbentes (Nubank 100M+)",
+      "Compressão de margens via Pix gratuito",
+      "CAC crescente em mercado saturado",
+      "Big Techs entrando em serviços financeiros"
+    ],
+    "oportunidades_principais": [
+      "Pix Automático como substituto de boleto/débito automático",
+      "Hub de Open Finance como agregador financeiro",
+      "Assistente financeiro pessoal com GenAI",
+      "Microcrédito para MEI/autônomo",
+      "Consignado CLT digital como produto de aquisição"
+    ]
+  },
+
+  "customer_segmentation": {
+    "segmentos": [
+      {
+        "nome": "Jovens Profissionais Assalariados",
+        "descricao": "22-35 anos, CLT, R$2.500-8.000/mês. Heavy users de Pix, insatisfeitos com bancos tradicionais.",
+        "tamanho_estimado": "40-45%"
+      },
+      {
+        "nome": "Freelancers e Gig Economy",
+        "descricao": "20-40 anos, MEIs e autônomos. Renda variável, múltiplos recebimentos Pix.",
+        "tamanho_estimado": "25-30%"
+      },
+      {
+        "nome": "Nativos Digitais Universitários",
+        "descricao": "20-26 anos, estudantes/recém-formados. Ultra-digitais, social Pix, design-driven.",
+        "tamanho_estimado": "15-20%"
+      },
+      {
+        "nome": "Adultos Pragmáticos em Transição Digital",
+        "descricao": "35-45 anos, renda R$4.000-15.000. Cautelosos, migração gradual, segurança-first.",
+        "tamanho_estimado": "10-15%"
+      }
+    ],
+    "segmento_prioritario": "Jovens Profissionais Assalariados — maior volume (40-45%), fit perfeito com features core, menor CAC, alta propensão a indicação"
+  }
+}

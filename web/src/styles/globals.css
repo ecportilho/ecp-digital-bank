@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #0b0f14;
+  --color-surface: #131c28;
+  --color-secondary-bg: #0f1620;
+  --color-border: #27364a;
+  --color-lime: #b7ff2a;
+  --color-lime-pressed: #7ed100;
+  --color-text-primary: #eaf2ff;
+  --color-text-secondary: #a9b7cc;
+  --color-text-tertiary: #7b8aa3;
+  --color-success: #3dff8b;
+  --color-warning: #ffcc00;
+  --color-danger: #ff4d4d;
+  --color-info: #4da3ff;
+  --radius-card: 18px;
+  --radius-control: 13px;
+  --font-family: 'Inter', sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-border);
+  }
+
+  html {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--color-background);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-tertiary);
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+  }
+
+  .btn-primary {
+    background-color: var(--color-lime);
+    color: #0b0f14;
+    font-weight: 600;
+    border-radius: var(--radius-control);
+    padding: 0.625rem 1.25rem;
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-lime-pressed);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .input-field {
+    background-color: var(--color-secondary-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    color: var(--color-text-primary);
+    padding: 0.625rem 1rem;
+    width: 100%;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--color-lime);
+  }
+
+  .input-field::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}

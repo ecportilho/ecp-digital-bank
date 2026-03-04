@@ -1,0 +1,84 @@
+{
+  "agent": "operations",
+  "phase": "04-product-operation",
+  "generated_at": "2026-03-04",
+  "status": "awaiting_hitl_11",
+
+  "summary": "Infraestrutura operacional completa: CI/CD pipeline (GitHub Actions adaptado para npm+Fastify+SQLite3), GMUD-001 aprovada para primeiro release, guia de instalação detalhado com troubleshooting Windows",
+
+  "deliverables": {
+    "ci_cd_pipeline": {
+      "file": ".github/workflows/ci.yml",
+      "description": "Pipeline GitHub Actions com 6 jobs: code-quality → unit-tests → build → change-gate → deploy-production → quality-gate",
+      "stack_adapted": {
+        "package_manager": "npm (NOT pnpm)",
+        "api_framework": "Fastify 5.0 (NOT tRPC/Next.js)",
+        "database": "SQLite3 in-memory for tests (NOT Supabase/PostgreSQL)",
+        "test_runner": "Vitest (NOT Playwright E2E — future phase)",
+        "deploy_strategy": "Node.js server + static hosting (NOT Vercel monolithic)"
+      },
+      "jobs": [
+        {"name": "code-quality", "steps": ["lint", "typecheck server", "typecheck web"]},
+        {"name": "unit-tests", "steps": ["server tests (Vitest)", "web tests (Vitest)"], "needs": ["code-quality"]},
+        {"name": "build", "steps": ["vite build"], "needs": ["unit-tests"]},
+        {"name": "change-gate", "steps": ["verify GMUD approval"], "condition": "main branch only"},
+        {"name": "deploy-production", "steps": ["install", "build", "deploy server", "deploy web", "migrations", "smoke test"], "needs": ["build", "change-gate"]},
+        {"name": "quality-gate", "steps": ["check all jobs passed"], "condition": "always"}
+      ]
+    },
+
+    "gmud": {
+      "file": "docs/gmud/GMUD-001.md",
+      "gmud_id": "GMUD-001",
+      "title": "Release Inicial — ECP Banco Digital v3.0 (MVP)",
+      "type": "Normal",
+      "status": "Aprovada",
+      "risk_level": "Baixo",
+      "risk_score": "6/30",
+      "planned_execution": "2026-03-05 10:00 BRT",
+      "estimated_duration_min": 45,
+      "components_affected": ["Fastify API", "React SPA", "SQLite3", "GitHub Actions", "Environment variables"],
+      "rollback_strategy": "SQLite backup + PM2 stop + static file replacement",
+      "registry": "docs/gmud/registro.md"
+    },
+
+    "installation_guide": {
+      "file": "docs/INSTALACAO.md",
+      "sections": [
+        "Pré-requisitos (Node.js, Python, Build Tools, Git)",
+        "Instalação Rápida (6 passos)",
+        "Variáveis de Ambiente",
+        "Scripts Disponíveis",
+        "Dados de Demonstração (Seed)",
+        "Estrutura do Projeto",
+        "Troubleshooting (4 problemas comuns)",
+        "Deploy em Produção (VPS + Plataformas)",
+        "Stack Tecnológica"
+      ]
+    }
+  },
+
+  "secrets_required": {
+    "github_actions": [
+      {"name": "VITE_API_URL", "purpose": "URL da API em produção para build do frontend"},
+      {"name": "VERCEL_TOKEN", "purpose": "Deploy automático do frontend (se usar Vercel)", "optional": true}
+    ],
+    "production_env": [
+      {"name": "JWT_SECRET", "purpose": "Chave secreta para assinatura de tokens JWT — NUNCA usar valor padrão"},
+      {"name": "DATABASE_PATH", "purpose": "Caminho para o arquivo SQLite em produção"},
+      {"name": "PORT", "purpose": "Porta da API (default: 3333)"},
+      {"name": "NODE_ENV", "purpose": "production"}
+    ]
+  },
+
+  "deployment_strategy": {
+    "type": "Simple deploy (not blue-green or canary — appropriate for MVP)",
+    "api": "Node.js process manager (PM2) on VPS/VM or Railway/Render/Fly.io",
+    "web": "Static hosting (Vercel/Netlify/Cloudflare Pages) serving web/dist/",
+    "database": "SQLite3 file on same server as API — backup before each deploy",
+    "rollback": "PM2 rollback + SQLite file restore from backup"
+  },
+
+  "next_hitl": 11,
+  "next_step": "HITL #11 — Humano avalia infraestrutura operacional (CI/CD, GMUD, instalação)"
+}

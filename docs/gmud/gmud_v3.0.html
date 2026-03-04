@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GMUD-001 — Release Inicial v3.0 | ECP Banco Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Banco Digital docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="../index.html"><span class="nav-icon">&#x25C9;</span> Visao Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="../fase-01.html"><span class="nav-icon">01</span> Contexto Estrategico</a></li>
+      <li><a href="../fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="../fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="../fase-04.html"><span class="nav-icon">04</span> Operacao</a></li>
+      <li class="sidebar-section-title">Operacional</li>
+      <li><a href="gmud_v3.0.html" class="active"><span class="nav-icon">&#x1F4CB;</span> GMUD-001</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="../INSTALACAO.md">&#x1F4E6; Guia de Instalacao</a>
+      <a href="../dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">GMUD-001 &mdash; Release Inicial v3.0</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> Aprovada</span>
+      <span>Risco Baixo (6/30)</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>GMUD-001 &mdash; Release Inicial</h1>
+    <p class="subtitle">ECP Banco Digital v3.0 (MVP) &mdash; Primeiro deploy em producao com API Fastify, React SPA e SQLite3.</p>
+
+    <!-- Stat Cards -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--success);">Aprovada</div>
+        <div class="stat-label">Status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Normal</div>
+        <div class="stat-label">Tipo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--success);">Baixo</div>
+        <div class="stat-label">Risco (6/30)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">45 min</div>
+        <div class="stat-label">Duracao Estimada</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Alta</div>
+        <div class="stat-label">Prioridade</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">10:00</div>
+        <div class="stat-label">Horario (BRT)</div>
+      </div>
+    </div>
+
+    <!-- 1. Identificacao -->
+    <h2>1. Identificacao</h2>
+    <section class="section">
+      <table class="data-table">
+        <tbody>
+          <tr><td><strong>Numero</strong></td><td>GMUD-001</td></tr>
+          <tr><td><strong>Titulo</strong></td><td>Release Inicial &mdash; ECP Banco Digital v3.0 (MVP)</td></tr>
+          <tr><td><strong>Tipo</strong></td><td>Normal</td></tr>
+          <tr><td><strong>Status</strong></td><td><span class="badge approved">Aprovada</span></td></tr>
+          <tr><td><strong>Prioridade</strong></td><td>Alta</td></tr>
+          <tr><td><strong>Solicitante</strong></td><td>Product Manager Agent</td></tr>
+          <tr><td><strong>Responsavel tecnico</strong></td><td>Operations Agent</td></tr>
+          <tr><td><strong>Change Manager</strong></td><td>Change Manager Subagent</td></tr>
+          <tr><td><strong>Data de criacao</strong></td><td>2026-03-04 09:00</td></tr>
+          <tr><td><strong>Data planejada de execucao</strong></td><td>2026-03-05 10:00</td></tr>
+          <tr><td><strong>Duracao estimada</strong></td><td>45 minutos</td></tr>
+          <tr><td><strong>Janela de manutencao</strong></td><td>10:00 ate 11:00 (BRT)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 2. Descricao da Mudanca -->
+    <h2>2. Descricao da Mudanca</h2>
+    <section class="section">
+
+      <h3>2.1 O que vai mudar?</h3>
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Primeiro Deploy</div>
+        <div class="artifact-title">ECP Banco Digital v3.0 &mdash; Aplicacao completa</div>
+        <div class="artifact-body">
+          <ul>
+            <li><strong>API Fastify</strong> &mdash; 9 modulos, 27 endpoints rodando em Node.js</li>
+            <li><strong>React SPA</strong> &mdash; 10 paginas, 9 componentes servida como build estatica</li>
+            <li><strong>SQLite3</strong> &mdash; banco de dados (arquivo unico <code>database.sqlite</code>)</li>
+            <li><strong>Autenticacao</strong> &mdash; JWT + bcryptjs</li>
+            <li><strong>Seed</strong> &mdash; dados de demonstracao (Marina Silva)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>2.2 Por que vai mudar? (Motivacao)</h3>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <ul>
+            <li>MVP do ECP Banco Digital aprovado em todas as fases de produto (HITLs #1 a #10)</li>
+            <li>Objetivo: validar product-market fit com primeiros usuarios</li>
+            <li>OKR principal: <strong>Conquistar 15.000 WAU-EFI ate Q2 2026</strong></li>
+            <li>Todas as 10 regras de negocio implementadas e testadas (29 test cases, 10/10 quality gates)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>2.3 Escopo da mudanca</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Componente</th><th>Alterado?</th><th>Descricao</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Front End Web</strong> (React + Vite)</td>
+            <td><span class="badge lime">Sim</span></td>
+            <td>SPA completa com 10 paginas, dark theme + lime accent</td>
+          </tr>
+          <tr>
+            <td><strong>API</strong> (Fastify 5.0)</td>
+            <td><span class="badge lime">Sim</span></td>
+            <td>9 modulos REST com autenticacao JWT</td>
+          </tr>
+          <tr>
+            <td><strong>Banco de dados</strong> (SQLite3)</td>
+            <td><span class="badge lime">Sim</span></td>
+            <td>Schema com 9 tabelas, 12 indices, seed de desenvolvimento</td>
+          </tr>
+          <tr>
+            <td><strong>Variaveis de ambiente</strong></td>
+            <td><span class="badge lime">Sim</span></td>
+            <td><code>JWT_SECRET</code>, <code>DATABASE_PATH</code>, <code>PORT</code>, <code>VITE_API_URL</code></td>
+          </tr>
+          <tr>
+            <td><strong>Dependencias</strong> (npm)</td>
+            <td><span class="badge lime">Sim</span></td>
+            <td>Todas as deps em server/package.json e web/package.json</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub Actions</strong> (CI/CD)</td>
+            <td><span class="badge lime">Sim</span></td>
+            <td>Pipeline ci.yml com lint, tests, build, GMUD gate, deploy</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.4 Artefatos relacionados</h3>
+      <div class="artifact-meta" style="gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+        <span class="badge info">PR #1 (initial release)</span>
+        <span class="badge lime">EPIC-01 Entrada Segura</span>
+        <span class="badge lime">EPIC-02 Operacoes Diarias</span>
+        <span class="badge lime">EPIC-03 Gestao Inteligente</span>
+        <span class="badge neutral">25 user stories</span>
+        <span class="badge neutral">14 features</span>
+        <span class="badge approved">HITLs #1 a #10 aprovados</span>
+      </div>
+    </section>
+
+    <!-- 3. Analise de Impacto -->
+    <h2>3. Analise de Impacto</h2>
+    <section class="section">
+
+      <h3>3.1 Usuarios afetados</h3>
+      <table class="data-table">
+        <thead><tr><th>Segmento</th><th>Impacto</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Nenhum (primeiro deploy)</td>
+            <td>Sem impacto &mdash; nao ha usuarios em producao</td>
+            <td><span class="badge info">Novo sistema</span></td>
+          </tr>
+          <tr>
+            <td>Early adopters convidados</td>
+            <td>Acesso inicial ao sistema</td>
+            <td><span class="badge lime">Novo comportamento</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 Sistemas e integracoes afetados</h3>
+      <table class="data-table">
+        <thead><tr><th>Sistema</th><th>Tipo de impacto</th><th>Mitigacao</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Servidor de producao (Node.js)</td>
+            <td>Novo deploy, configuracao inicial</td>
+            <td>Validar pre-requisitos antes do deploy</td>
+          </tr>
+          <tr>
+            <td>Hosting estatico (web)</td>
+            <td>Primeiro upload de build</td>
+            <td>Testar acesso apos deploy</td>
+          </tr>
+          <tr>
+            <td>DNS/dominio</td>
+            <td>Configuracao de registros A/CNAME</td>
+            <td>Verificar propagacao de DNS</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.3 Impacto nos SLOs</h3>
+      <div class="slo-grid">
+        <div class="slo-card">
+          <div class="slo-name">Disponibilidade API</div>
+          <div class="slo-target">&ge; 99,5%</div>
+          <div class="slo-desc">Primeiro deploy &mdash; sem baseline. N/A (primeiro ciclo).</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">Latencia p95</div>
+          <div class="slo-target">&lt; 500ms</div>
+          <div class="slo-desc">SQLite local &mdash; latencia esperada &lt; 100ms. Dentro do error budget.</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">Taxa de erro</div>
+          <div class="slo-target">&lt; 0,5%</div>
+          <div class="slo-desc">Zero erros esperados em deploy limpo. Dentro do error budget.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Analise de Risco -->
+    <h2>4. Analise de Risco</h2>
+    <section class="section">
+      <div class="risk-grid">
+        <div class="risk-card" style="border-left: 3px solid var(--warning);">
+          <div class="risk-type" style="color: var(--warning);">R01</div>
+          <div class="risk-verdict">node-gyp falha ao compilar better-sqlite3</div>
+          <div class="risk-confidence">Probabilidade: Media &bull; Impacto: Alto</div>
+          <div class="risk-body">
+            <strong>Mitigacao:</strong> Garantir Python 3 + Build Tools instalados no servidor de producao antes do deploy.
+          </div>
+        </div>
+        <div class="risk-card" style="border-left: 3px solid var(--success);">
+          <div class="risk-type" style="color: var(--success);">R02</div>
+          <div class="risk-verdict">Variaveis de ambiente nao configuradas</div>
+          <div class="risk-confidence">Probabilidade: Baixa &bull; Impacto: Medio</div>
+          <div class="risk-body">
+            <strong>Mitigacao:</strong> Checklist de variaveis + .env.example como referencia obrigatoria.
+          </div>
+        </div>
+        <div class="risk-card" style="border-left: 3px solid var(--success);">
+          <div class="risk-type" style="color: var(--success);">R03</div>
+          <div class="risk-verdict">Porta 3333 ocupada por outro processo</div>
+          <div class="risk-confidence">Probabilidade: Baixa &bull; Impacto: Baixo</div>
+          <div class="risk-body">
+            <strong>Mitigacao:</strong> Verificar portas antes do deploy, configurar PORT via variavel de ambiente.
+          </div>
+        </div>
+        <div class="risk-card" style="border-left: 3px solid var(--success);">
+          <div class="risk-type" style="color: var(--success);">R04</div>
+          <div class="risk-verdict">SQLite database.sqlite com permissoes incorretas</div>
+          <div class="risk-confidence">Probabilidade: Baixa &bull; Impacto: Medio</div>
+          <div class="risk-body">
+            <strong>Mitigacao:</strong> Verificar permissoes de escrita no diretorio do servidor antes do deploy.
+          </div>
+        </div>
+        <div class="risk-card" style="border-left: 3px solid var(--warning);">
+          <div class="risk-type" style="color: var(--warning);">R05</div>
+          <div class="risk-verdict">CORS bloqueando requests do frontend</div>
+          <div class="risk-confidence">Probabilidade: Media &bull; Impacto: Medio</div>
+          <div class="risk-body">
+            <strong>Mitigacao:</strong> Configurar @fastify/cors com origem correta do frontend em producao.
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Resultado da Analise</div>
+        <div class="artifact-title">Nivel de risco geral: <span style="color: var(--success);">Baixo</span></div>
+        <div class="artifact-body">
+          <p>Primeiro deploy, sem usuarios existentes, sem migracao de dados. Score: <strong>6/30</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Plano de Execucao -->
+    <h2>5. Plano de Execucao</h2>
+    <section class="section">
+
+      <h3>5.1 Pre-requisitos</h3>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <ul>
+            <li><span class="badge approved">OK</span> Todos os HITLs aprovados (#1 a #10)</li>
+            <li><span class="badge approved">OK</span> Pipeline CI passando (lint + typecheck + tests + build)</li>
+            <li><span class="badge approved">OK</span> GMUD-001 criada e avaliada</li>
+            <li><span class="badge pending">Pendente</span> Servidor de producao provisionado (Node.js 20+, Python 3, Build Tools)</li>
+            <li><span class="badge pending">Pendente</span> Dominio configurado (DNS apontando para o servidor)</li>
+            <li><span class="badge pending">Pendente</span> Variaveis de ambiente configuradas no servidor</li>
+            <li><span class="badge pending">Pendente</span> Hosting estatico configurado para o frontend</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>5.2 Passos de execucao</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>Passo</th><th>Responsavel</th><th>Duracao</th><th>Verificacao</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td>Verificar pre-requisitos do servidor (Node.js, Python, Build Tools)</td>
+            <td>Operations</td>
+            <td>3 min</td>
+            <td><code>node -v && python3 --version</code></td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td>Clonar repositorio no servidor de producao</td>
+            <td>Operations</td>
+            <td>2 min</td>
+            <td><code>git clone</code> com sucesso</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td>Instalar dependencias: <code>npm ci</code> (raiz, server, web)</td>
+            <td>Operations</td>
+            <td>5 min</td>
+            <td>Sem erros, better-sqlite3 compilado</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td>Configurar variaveis de ambiente (<code>.env</code>)</td>
+            <td>Operations</td>
+            <td>3 min</td>
+            <td>JWT_SECRET forte, DATABASE_PATH correto</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td>Executar migrations: <code>npm run db:migrate</code></td>
+            <td>Operations</td>
+            <td>1 min</td>
+            <td>Tabelas criadas sem erro</td>
+          </tr>
+          <tr>
+            <td><strong>6</strong></td>
+            <td>Executar seed (opcional): <code>npm run db:seed</code></td>
+            <td>Operations</td>
+            <td>1 min</td>
+            <td>Dados de teste inseridos</td>
+          </tr>
+          <tr>
+            <td><strong>7</strong></td>
+            <td>Build do frontend: <code>cd web && npx vite build</code></td>
+            <td>Operations</td>
+            <td>2 min</td>
+            <td><code>dist/</code> gerado sem erros</td>
+          </tr>
+          <tr>
+            <td><strong>8</strong></td>
+            <td>Iniciar servidor API: <code>cd server && node --import tsx src/server.ts</code></td>
+            <td>Operations</td>
+            <td>1 min</td>
+            <td>"Server running on port 3333"</td>
+          </tr>
+          <tr>
+            <td><strong>9</strong></td>
+            <td>Configurar PM2: <code>pm2 start ecosystem.config.js</code></td>
+            <td>Operations</td>
+            <td>3 min</td>
+            <td>API respondendo com PM2</td>
+          </tr>
+          <tr>
+            <td><strong>10</strong></td>
+            <td>Upload da build estatica para hosting</td>
+            <td>Operations</td>
+            <td>3 min</td>
+            <td>Frontend acessivel via URL</td>
+          </tr>
+          <tr>
+            <td><strong>11</strong></td>
+            <td>Verificar CORS e conectividade frontend &rarr; API</td>
+            <td>Operations</td>
+            <td>2 min</td>
+            <td>Login funcional no browser</td>
+          </tr>
+          <tr>
+            <td><strong>12</strong></td>
+            <td>Smoke test: login, dashboard, enviar Pix, extrato</td>
+            <td>QA</td>
+            <td>10 min</td>
+            <td>Todos os fluxos criticos OK</td>
+          </tr>
+          <tr>
+            <td><strong>13</strong></td>
+            <td>Monitorar logs por 15 minutos</td>
+            <td>Operations</td>
+            <td>15 min</td>
+            <td>Zero erros criticos</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>5.3 Criterios de sucesso</h3>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <ul>
+            <li>API respondendo em <code>/api/auth/login</code> com status 200</li>
+            <li>Frontend carregando sem erros no console</li>
+            <li>Login com usuario seed (<code>marina@email.com</code>) funcional</li>
+            <li>Dashboard exibindo saldo e transacoes</li>
+            <li>Pix enviar/receber funcional</li>
+            <li>Zero erros criticos nos logs nos primeiros 15 min</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Plano de Rollback -->
+    <h2>6. Plano de Rollback</h2>
+    <section class="section">
+
+      <h3>6.1 Gatilhos para rollback</h3>
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-body">
+          <ul>
+            <li>API nao inicia apos deploy</li>
+            <li>Taxa de erro &gt; 5% nos primeiros 15 minutos</li>
+            <li>SQLite database corrompido</li>
+            <li>Qualquer perda de dados detectada</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>6.2 Passos de rollback</h3>
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">API (Node.js) &mdash; 2 minutos</div>
+          <div class="artifact-title" style="color: var(--danger);">Rollback do Servidor</div>
+          <div class="artifact-body">
+            <ol>
+              <li>Parar processo via PM2: <code>pm2 stop ecp-api</code></li>
+              <li>Como e primeiro deploy, nao ha versao anterior para restaurar</li>
+              <li>Se necessario: corrigir o problema e re-deploy</li>
+            </ol>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Frontend (build estatica) &mdash; 1 minuto</div>
+          <div class="artifact-title" style="color: var(--warning);">Rollback do Frontend</div>
+          <div class="artifact-body">
+            <ol>
+              <li>Remover/substituir os arquivos em <code>dist/</code></li>
+              <li>Substituir por pagina de manutencao</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Banco de Dados &mdash; 1 minuto</div>
+        <div class="artifact-title">Rollback do SQLite3</div>
+        <div class="artifact-body">
+          <p>SQLite e arquivo unico &mdash; fazer backup <strong>antes</strong> do deploy:</p>
+          <pre><code># Pre-deploy (backup)
+cp database.sqlite database.sqlite.bak
+
+# Rollback (restaurar)
+cp database.sqlite.bak database.sqlite</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Comunicacao -->
+    <h2>7. Comunicacao</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead>
+          <tr><th>Publico</th><th>Canal</th><th>Antecedencia</th><th>Conteudo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Equipe tecnica</td>
+            <td><span class="badge info">Slack #deployments</span></td>
+            <td>30 min</td>
+            <td>"Deploy GMUD-001 iniciando em 30 min &mdash; primeiro release ECP v3.0"</td>
+          </tr>
+          <tr>
+            <td>Stakeholders</td>
+            <td><span class="badge neutral">E-mail</span></td>
+            <td>24 horas</td>
+            <td>"ECP Banco Digital v3.0 sera disponibilizado amanha as 10h"</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 8. Historico e Aprovacao -->
+    <h2>8. Historico e Aprovacao</h2>
+    <section class="section">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">2026-03-04 09:00</div>
+          <div class="timeline-title">GMUD criada</div>
+          <div class="timeline-desc">Operations Agent registrou a solicitacao de mudanca.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">2026-03-04 09:10</div>
+          <div class="timeline-title">Analise de risco concluida</div>
+          <div class="timeline-desc">Change Manager Subagent classificou risco como Baixo (6/30).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">2026-03-04 09:15</div>
+          <div class="timeline-title">Submetida para aprovacao</div>
+          <div class="timeline-desc">Operations Agent encaminhou para avaliacao formal.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase" style="color: var(--success);">2026-03-04 09:20</div>
+          <div class="timeline-title" style="color: var(--success);">APROVADA</div>
+          <div class="timeline-desc">Change Manager Subagent aprovou &mdash; primeiro deploy, baixo risco, sem usuarios afetados.</div>
+        </div>
+      </div>
+
+      <h3>Parecer do Change Manager</h3>
+      <div class="artifact-card highlighted" style="border-left-color: var(--success);">
+        <div class="artifact-label">Parecer</div>
+        <div class="artifact-title" style="color: var(--success);">APROVADA</div>
+        <div class="artifact-body">
+          <p><strong>Justificativa:</strong></p>
+          <ul>
+            <li>Primeiro deploy em producao &mdash; risco inerentemente baixo (sem usuarios existentes, sem migracao)</li>
+            <li>Nivel de risco geral: <strong>BAIXO</strong> (score 6/30)</li>
+            <li>Todas as 10 regras de negocio testadas e aprovadas</li>
+            <li>Pipeline CI com quality gate obrigatorio</li>
+            <li>Plano de rollback simples (backup de arquivo SQLite)</li>
+            <li>Janela de manutencao adequada (terca, horario comercial)</li>
+          </ul>
+          <p style="margin-top: 16px;"><strong>Condicoes:</strong></p>
+          <ol>
+            <li>Backup do database.sqlite <strong>ANTES</strong> de qualquer operacao</li>
+            <li>Smoke test obrigatorio apos deploy (todos os fluxos criticos)</li>
+            <li>Monitoramento de logs por minimo 15 minutos pos-deploy</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Licoes Aprendidas -->
+    <h2>9. Licoes Aprendidas</h2>
+    <section class="section">
+      <div class="artifact-card" style="border-left: 3px solid var(--muted);">
+        <div class="artifact-body">
+          <p style="color: var(--muted); font-style: italic;">Preencher apos a execucao da mudanca.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Artefatos -->
+    <h2>Artefatos Relacionados</h2>
+    <section class="section">
+      <div class="quick-links">
+        <a href="../fase-04.html" class="quick-link">
+          <span class="ql-icon">&#x2699;</span> Fase 04 &mdash; Operacao
+        </a>
+        <a href="../INSTALACAO.md" class="quick-link">
+          <span class="ql-icon">&#x1F4E6;</span> Guia de Instalacao
+        </a>
+        <a href="../dashboard/index.html" class="quick-link">
+          <span class="ql-icon">&#x1F4CA;</span> Dashboard Operacional
+        </a>
+        <a href="../index.html" class="quick-link">
+          <span class="ql-icon">&#x25C9;</span> Visao Geral do Produto
+        </a>
+      </div>
+      <div class="artifact-meta" style="gap: 8px; margin-top: 16px;">
+        <span class="file-ref">docs/gmud/GMUD-001.md</span>
+        <span class="file-ref">docs/gmud/registro.md</span>
+        <span class="file-ref">.github/workflows/ci.yml</span>
+        <span class="file-ref">04-product-operation/ops-output.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../assets/nav.js"></script>
+</body>
+</html>

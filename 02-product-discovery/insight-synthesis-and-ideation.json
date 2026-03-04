@@ -1,0 +1,369 @@
+{
+  "agent": "product-designer",
+  "skills": ["insight-synthesizer", "ideation-facilitator"],
+  "phase": "02-product-discovery",
+  "generated_at": "2026-03-03",
+  "depends_on": [
+    "01-strategic-context/market-research.json",
+    "01-strategic-context/product-strategy.json",
+    "01-strategic-context/product-vision.json",
+    "01-strategic-context/metrics.json",
+    "02-product-discovery/opportunity-prioritization.json"
+  ],
+
+  "insight_synthesis": {
+    "insights_principais": [
+      {
+        "id": "INS-01",
+        "titulo": "Gap universal de experiencia web e o maior diferencial competitivo disponivel no mercado brasileiro",
+        "evidencia": "Todos os 6 concorrentes analisados (Nubank, Inter, C6, PicPay, Mercado Pago, Neon) sao 100% mobile-only ou possuem web extremamente limitada. Nenhum oferece dashboard financeiro, extrato inteligente ou Pix funcional no desktop. Profissionais CLT 22-35 passam 8-10h/dia no computador e sao forcados a interromper o fluxo de trabalho para pegar o celular.",
+        "implicacao_para_design": "A interface web nao deve ser uma adaptacao do mobile. Deve ser desenhada nativamente para telas 1280px+, explorando densidade de informacao, atalhos de teclado, multitasking e side-by-side que o desktop permite. O diferencial nao e apenas 'ter web', e sim oferecer uma experiencia que so faz sentido na web.",
+        "oportunidades_conectadas": ["opp-01", "opp-13", "opp-06"],
+        "krs_impactados": ["kr-01", "kr-05", "kr-02"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-02",
+        "titulo": "Ausencia de inteligencia financeira nos extratos e um gap nao-atendido por nenhum player",
+        "evidencia": "Nenhum dos 6 concorrentes oferece categorização automatica ou insights proativos no extrato. Usuarios recorrem a apps terceiros (Organizze, Mobills) para entender para onde vai o dinheiro. A North Star Metric (WAU-EFI) depende diretamente de engajamento com funcionalidades inteligentes.",
+        "implicacao_para_design": "O extrato nao pode ser uma lista cronologica de transacoes como todos os concorrentes fazem. Deve ser um 'painel de inteligencia financeira' com categorizacao visual, graficos de distribuicao, comparativos entre periodos e insights acionaveis. A categorizacao precisa ser automatica (>90% acuracia) para gerar valor, nao frustracao.",
+        "oportunidades_conectadas": ["opp-02", "opp-11"],
+        "krs_impactados": ["kr-01", "kr-04"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-03",
+        "titulo": "Onboarding e o momento critico de conversao e deve entregar valor imediato",
+        "evidencia": "KR-02 exige 40% de ativacao (3+ operacoes em 7 dias). Dados de mercado mostram que time-to-first-action <2h gera 3x mais ativacao. Onboarding longo e burocratico (opp-04) combinado com falta de valor imediato pos-cadastro (opp-05) e incompreensao da proposta web-first (opp-06) criam um funil de abandono triplo.",
+        "implicacao_para_design": "O onboarding deve ser progressivo: minimo de campos para criar conta, primeira acao guiada em <2 minutos, e revelacao progressiva de funcionalidades. O usuario deve perceber valor ANTES de completar todo o cadastro. A proposta web-first deve ser comunicada visualmente, nao textualmente — o usuario deve SENTIR a diferenca, nao ler sobre ela.",
+        "oportunidades_conectadas": ["opp-04", "opp-05", "opp-06"],
+        "krs_impactados": ["kr-02"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-04",
+        "titulo": "Seguranca perceptivel e pre-requisito para confianca em banco novo e desconhecido",
+        "evidencia": "Suposicao critica #2 (risco alto): usuarios confiarao suas financas a um banco digital novo. Opp-10 confirma inseguranca em operacoes online no computador. Opp-15 demanda seguranca granular em cartoes virtuais. O principio de produto 'Seguranca perceptivel, nao apenas tecnica' exige que seguranca seja VISIVEL ao usuario.",
+        "implicacao_para_design": "Cada operacao financeira deve ter feedback visual explicito de seguranca: selos de protecao, confirmacoes graduais por valor (Pix <R$500 sem fricção, >R$2.000 com confirmacao reforçada), historico de acessos visivel, controles granulares de cartao virtual (limite por transacao, merchant, periodo). A seguranca deve ser proporcional ao risco — nao pode gerar fricção desnecessaria em operacoes de baixo risco.",
+        "oportunidades_conectadas": ["opp-10", "opp-15", "opp-11"],
+        "krs_impactados": ["kr-04", "kr-05"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-05",
+        "titulo": "Transparencia radical e diferenciador emocional contra incumbentes",
+        "evidencia": "Opp-11 (taxas escondidas, linguagem confusa) e um pain point universal. Nubank construiu sua marca sobre transparencia, mas com 100M+ clientes o atendimento degradou. O principio 'Transparencia radical sobre lucro oculto' alinha com a oportunidade de diferenciacao identificada no market research. NPS de bancos tradicionais abaixo de 30 confirma insatisfacao com opacidade.",
+        "implicacao_para_design": "Toda tela transacional deve mostrar breakdown completo de custos antes da confirmacao. Linguagem deve ser coloquial e direta, nunca juridica. Valores devem sempre mostrar o que o usuario PAGA e o que RECEBE, sem esconder taxas em letras pequenas. Usar comparativos visuais ('Neste banco voce pagaria X, aqui voce paga Y') quando aplicavel.",
+        "oportunidades_conectadas": ["opp-11"],
+        "krs_impactados": ["kr-04"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-06",
+        "titulo": "Pix no desktop e a funcionalidade transacional mais demandada e com maior gap competitivo",
+        "evidencia": "Opp-13 tem score 22.5 (3o mais alto). Pix Automatico e tendencia de alto impacto e urgencia imediata. 79% dos adultos 22-35 usam canais digitais como principal. Fazer Pix no computador e impossivel ou extremamente burocratico na maioria dos bancos — nenhum concorrente oferece experiencia Pix web fluida.",
+        "implicacao_para_design": "Pix no desktop deve ser tao rapido quanto no celular. Formulario de envio otimizado para teclado (tab entre campos, Enter para confirmar). Lista de contatos frequentes com busca. Agendamento visivel. Cobranca Pix com QR Code para compartilhar. Respeitar RN-01 (limite diario R$5.000), RN-02 (noturno R$1.000), RN-03 (autenticacao >R$2.000), RN-10 (10 Pix/hora).",
+        "oportunidades_conectadas": ["opp-13", "opp-01"],
+        "krs_impactados": ["kr-05", "kr-01"],
+        "confianca": "alta"
+      },
+      {
+        "id": "INS-07",
+        "titulo": "Ciclo salarial como eixo organizador e diferenciador vs. calendario convencional",
+        "evidencia": "Principio de produto #6: 'Dados do ciclo salarial como eixo central'. Segmento prioritario sao Jovens Profissionais Assalariados (40-45% do SAM). Todos os concorrentes organizam extratos e resumos por mes-calendario, ignorando que o ciclo financeiro real do assalariado vai do dia do pagamento ao proximo.",
+        "implicacao_para_design": "Dashboard, extrato e categorizacao devem oferecer visualizacao por ciclo salarial (ex: '05/fev - 04/mar') alem do mes-calendario. Alertas de gasto devem ser relativos ao ciclo ('Voce usou 78% do orcamento de alimentacao, faltam 12 dias'). Isso requer que o usuario configure a data de recebimento do salario durante o onboarding.",
+        "oportunidades_conectadas": ["opp-02", "opp-01"],
+        "krs_impactados": ["kr-01", "kr-03"],
+        "confianca": "media"
+      }
+    ],
+
+    "oportunidades_confirmadas": [
+      {
+        "opp_id": "opp-01",
+        "status": "confirmada_e_amplificada",
+        "justificativa": "Evidencia competitiva contundente: ZERO concorrentes com experiencia web robusta. Gap universal no mercado. Score mais alto na priorizacao (27.0). Alinhamento direto com a visao do produto e North Star Metric."
+      },
+      {
+        "opp_id": "opp-04",
+        "status": "confirmada",
+        "justificativa": "Onboarding e gate de ativacao (KR-02). Time-to-first-action <2h triplica taxa de ativacao. Score 22.5 na priorizacao."
+      },
+      {
+        "opp_id": "opp-05",
+        "status": "confirmada",
+        "justificativa": "Complementar a opp-04. Sem valor imediato pos-cadastro, mesmo um onboarding rapido nao garante ativacao. Usuario precisa de 'momento aha' nos primeiros minutos."
+      },
+      {
+        "opp_id": "opp-06",
+        "status": "confirmada",
+        "justificativa": "Risco de confusao sobre proposta web-first. Se usuario nao entender o diferencial, vai comparar com apps mobile e achar que esta 'faltando' algo. Comunicacao visual do valor web-first e critica."
+      },
+      {
+        "opp_id": "opp-13",
+        "status": "confirmada_e_amplificada",
+        "justificativa": "Pix e a operacao mais frequente de brasileiros. Ser referencia em Pix desktop e ponto de entrada para engajamento diario. Score 22.5 e tendencia Pix Automatico reforçam urgencia."
+      },
+      {
+        "opp_id": "opp-14",
+        "status": "confirmada",
+        "justificativa": "Boletos sao segunda operacao mais frequente apos Pix. Gestao fragmentada gera esquecimentos e multas. Solucao integrada ao dashboard cria motivo recorrente de retorno."
+      },
+      {
+        "opp_id": "opp-15",
+        "status": "confirmada",
+        "justificativa": "Cartao virtual com controles granulares e diferenciador vs. concorrentes que oferecem apenas gerar/bloquear. Seguranca perceptivel no cartao gera confianca no banco como um todo."
+      },
+      {
+        "opp_id": "opp-11",
+        "status": "confirmada_e_amplificada",
+        "justificativa": "Score 24.0 (2o mais alto). Transparencia radical e principio #1 do produto. Concorrentes, mesmo os que se posicionam como transparentes (Nubank), nao oferecem breakdown visual de custos antes de confirmacao."
+      },
+      {
+        "opp_id": "opp-10",
+        "status": "confirmada",
+        "justificativa": "Pre-condicao para adocao. Se usuario nao se sentir seguro operando financas no browser, todo o diferencial web-first perde valor. Suposicao critica #2 depende disso."
+      },
+      {
+        "opp_id": "opp-02",
+        "status": "confirmada",
+        "justificativa": "Alimenta diretamente a North Star (WAU-EFI). Categorizacao automatica e base para toda a camada de inteligencia. Sem ela, o extrato e apenas uma lista — identico aos concorrentes."
+      }
+    ],
+
+    "oportunidades_novas": [
+      {
+        "opp_id": "opp-nova-01",
+        "descricao": "Atalhos de teclado e navegacao keyboard-first como diferenciador de produtividade web",
+        "justificativa": "Insight INS-01 revela que o diferencial web nao e apenas 'ter web', e sim oferecer experiencia que so faz sentido no desktop. Atalhos de teclado (Ctrl+P para Pix, Ctrl+E para extrato, / para busca) sao um padrao de produtividade web que nenhum banco oferece e que usuarios de desktop esperam.",
+        "kr_impactado": "kr-01",
+        "prioridade_sugerida": "media — pode ser adicionada incrementalmente apos MVP core"
+      },
+      {
+        "opp_id": "opp-nova-02",
+        "descricao": "Notificacoes in-browser (Web Notifications API) como alternativa a push mobile",
+        "justificativa": "Sem app mobile, o banco perde o canal de push notifications. Web Notifications API permite notificar o usuario no desktop quando recebe Pix, boleto vence ou cartao e usado. Isso cria loop de retorno sem depender do celular.",
+        "kr_impactado": "kr-03",
+        "prioridade_sugerida": "alta — compensa ausencia de push mobile e impacta retencao (KR-03 sem oportunidades diretas no MVP)"
+      }
+    ],
+
+    "suposicoes_invalidadas": [
+      {
+        "suposicao": "O mercado ja esta saturado demais para um novo entrante",
+        "por_que_invalidada": "A analise competitiva revela que TODOS os players convergem para mobile-only. O segmento web-first esta completamente desatendido. Nao e saturacao — e um 'blue ocean' dentro de um mercado maduro. A competicao esta no mobile; ninguem esta competindo no desktop.",
+        "impacto": "Reforça a tese central do produto. O risco nao e competicao direta, e sim educar o mercado sobre o valor de banco no desktop."
+      },
+      {
+        "suposicao": "Extratos inteligentes sao apenas um 'nice to have'",
+        "por_que_invalidada": "A North Star Metric (WAU-EFI) depende explicitamente de engajamento com funcionalidades inteligentes. Usuarios ja recorrem a apps terceiros (Organizze, Mobills) para obter categorizacao que o banco nao oferece. Existe demanda latente comprovada. O extrato inteligente e o CORE do diferencial, nao um complemento.",
+        "impacto": "Elevação de prioridade da categorização automatica de 'feature' para 'pilar estrategico'."
+      }
+    ],
+
+    "atualizacoes_sugeridas_para_ost": [
+      {
+        "tipo": "nova_oportunidade",
+        "descricao": "Adicionar opp-nova-02 (Web Notifications) ao KR-03, que atualmente nao tem oportunidades no MVP. Mitiga risco declarado na priorizacao.",
+        "justificativa": "KR-03 (retencao D30 55%) nao tem oportunidades diretas. Web Notifications cria loop de retorno que impacta diretamente retencao sem complexidade alta de implementacao (Web Notifications API e nativa do browser)."
+      },
+      {
+        "tipo": "refinamento_metrica",
+        "descricao": "Adicionar 'Taxa de completude do onboarding em sessao unica' como leading indicator de KR-02",
+        "justificativa": "Dados mostram que conclusao no primeiro dia gera 2.5x mais ativacao. Medir quantos usuarios completam onboarding sem sair da sessao permite otimizar o funil antes de medir ativacao (que leva 7 dias)."
+      },
+      {
+        "tipo": "conexao_cruzada",
+        "descricao": "Conectar opp-02 (categorizacao) tambem ao KR-04 (NPS), nao apenas KR-01",
+        "justificativa": "Engajamento amplo com 3+ funcionalidades distintas gera NPS 20+ pontos acima. Categorizacao como funcionalidade standalone amplia o numero de features que o usuario engaja, impactando NPS."
+      }
+    ]
+  },
+
+  "ideation": {
+    "hipoteses": [
+      {
+        "id": "H1",
+        "titulo": "Dashboard Financeiro Web-First com Visao de Ciclo Salarial",
+        "descricao": "Dashboard principal que substitui a home generica por um painel de inteligencia financeira desenhado para tela grande (1280px+). Mostra saldo atual, entradas/saidas do ciclo salarial atual (nao mes-calendario), grafico de distribuicao de gastos por categoria, proximas contas a vencer e insights proativos contextuais. O usuario configura a data de recebimento do salario no onboarding e toda a visualizacao se organiza em torno desse ciclo. Cards de saldo com tamanho generoso, graficos interativos de categorias (donut chart com hover), lista de proximos compromissos financeiros. Layout em grid responsivo que aproveita a largura total da tela. Inclui area de 'Saude Financeira do Ciclo' com barra de progresso visual mostrando % do orcamento consumido vs. dias restantes no ciclo.",
+        "oportunidade_que_endereca": ["opp-01", "opp-02", "opp-06"],
+        "suposicoes_criticas": [
+          "Usuarios preferem visualizacao por ciclo salarial ao inves de mes-calendario",
+          "A densidade de informacao no dashboard nao gera sobrecarga cognitiva — ao contrario, gera sensacao de controle",
+          "Categorizacao automatica com regras baseadas em descricao de transacao atinge >85% de acuracia",
+          "Usuarios configurarao a data do salario durante o onboarding"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Wireframe de alta fidelidade em dark theme (#0b0f14 bg, #131c28 cards, #b7ff2a acento) com dados ficticios de um profissional CLT. Testar com 5-8 usuarios do segmento prioritario via video call compartilhando tela.",
+        "metricas_de_sucesso": ["WAU-EFI (KR-01)", "Frequencia de sessoes semanais", "Tempo medio na dashboard", "Taxa de interacao com insights"]
+      },
+      {
+        "id": "H2",
+        "titulo": "Onboarding Progressivo com Valor Imediato em 3 Etapas",
+        "descricao": "Reformulacao completa do fluxo de entrada. Etapa 1 (2 min): nome, email, CPF, senha — conta criada, usuario ja ve o dashboard vazio com dados educativos ('Quando voce depositar, seus gastos aparecerao aqui categorizados automaticamente'). Etapa 2 (opcional, guiada): configurar data do salario, registrar primeira chave Pix, explorar tour interativo das funcionalidades. Etapa 3 (gatilho contextual): completar telefone, foto, preferencias — acionada quando usuario tenta funcionalidade que precisa desses dados. O dashboard vazio nao fica 'vazio' — mostra preview do que sera com dados simulados do perfil do usuario ('Se voce ganha R$5.000/mes, assim ficaria seu painel'). A proposta web-first e comunicada visualmente: ao fazer cadastro no desktop, animacao sutil mostra o dashboard se expandindo para ocupar a tela inteira com a frase 'Seu banco. Na tela onde voce produz.'",
+        "oportunidade_que_endereca": ["opp-04", "opp-05", "opp-06"],
+        "suposicoes_criticas": [
+          "Usuarios aceitam criar conta com dados minimos (sem upload de documentos no MVP)",
+          "Preview simulado do dashboard gera 'momento aha' suficiente para reter usuario",
+          "Completar cadastro progressivamente nao causa frustracao quando funcionalidade exige dados adicionais",
+          "A frase e animacao de valor web-first ressoam emocionalmente com o publico"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Prototipo navegavel das 3 etapas com transicoes reais. Testar completion rate e pedir feedback qualitativo sobre o 'momento aha'.",
+        "metricas_de_sucesso": ["Taxa de ativacao (KR-02)", "Time-to-first-action", "Taxa de completude do onboarding por etapa", "Drop-off por campo"]
+      },
+      {
+        "id": "H3",
+        "titulo": "Pix Express Desktop — Transferencia em 3 Cliques com Atalhos de Teclado",
+        "descricao": "Fluxo de Pix otimizado para desktop: (1) Atalho rapido na sidebar ou Ctrl+P abre modal de Pix. (2) Campo de busca unificado aceita chave Pix, nome de contato ou numero — autocomplete com contatos frequentes e recentes. (3) Digita valor, ve preview do saldo apos transferencia, confirma. Para valores ate R$500 com contatos salvos: confirmacao unica. R$500-R$2.000: confirmacao com senha. >R$2.000: confirmacao reforçada (RN-03) com resumo detalhado do destinatario e selo 'Transacao Protegida'. Feedback visual imediato apos envio: animacao de check com valor, nome do destinatario e saldo atualizado. Horario noturno (22h-6h): indicador visual sutil mostrando limite noturno aplicavel (RN-02). Se usuario atingir 8/10 Pix na hora: alerta amigavel '2 Pix restantes nesta hora' (RN-10). Tela de recebimento com QR Code copiavel e link compartilhavel. Agendamento com calendario inline.",
+        "oportunidade_que_endereca": ["opp-13", "opp-01"],
+        "suposicoes_criticas": [
+          "Usuarios utilizam Pix com frequencia suficiente no computador para justificar otimizacao de fluxo",
+          "Atalhos de teclado sao descobertos e adotados pelo publico-alvo",
+          "Confirmacao simplificada para valores baixos nao gera percepcao de inseguranca",
+          "QR Code e link compartilhavel sao suficientes para cobranca sem app mobile"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Prototipo funcional do fluxo de envio com os 3 niveis de confirmacao. Testar tempo de completude vs. benchmark mobile (comparar com Nubank no celular).",
+        "metricas_de_sucesso": ["% de WAU com transacao semanal (KR-05)", "Tempo medio de completude de Pix", "Taxa de conclusao de Pix iniciados"]
+      },
+      {
+        "id": "H4",
+        "titulo": "Extrato Inteligente com Categorizacao Automatica e Painel de Insights",
+        "descricao": "Extrato redesenhado como ferramenta de inteligencia financeira, nao apenas lista de transacoes. Visualizacao principal: timeline de transacoes com badges coloridas por categoria (alimentacao=verde-lima, transporte=azul, lazer=roxo, moradia=laranja, etc.) usando cores complementares ao tema dark. Painel lateral (aproveitando largura desktop) com: donut chart de distribuicao por categoria no periodo selecionado, comparativo com ciclo anterior ('Alimentacao +12% vs ciclo anterior'), top 3 merchants por volume. Filtros avancados: por categoria, por faixa de valor, por tipo (Pix/cartao/boleto), por periodo (ciclo salarial ou calendario). Cada transacao mostra: valor em destaque, descricao, categoria (editavel com 1 clique), data/hora, e icone de tipo. Insights automaticos exibidos inline: 'Voce gastou R$890 com iFood este mes — 23% mais que no ciclo anterior', 'Subscription Netflix cobrou R$55,90 — R$10 a mais que no mes passado'. Todos os valores exibidos em reais no front-end, armazenados em centavos no back-end (RN-09).",
+        "oportunidade_que_endereca": ["opp-02", "opp-01", "opp-11"],
+        "suposicoes_criticas": [
+          "Categorizacao por regex/keyword na descricao de transacao atinge acuracia aceitavel (>85%)",
+          "Usuarios engajam com insights passivos (leitura) suficientemente para impactar WAU-EFI",
+          "Comparativos entre ciclos geram sensacao de controle, nao ansiedade",
+          "A visualizacao com painel lateral nao sobrecarrega cognitivamente"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Mockup de alta fidelidade com 30+ transacoes categorizadas, painel lateral com graficos. Testar compreensao dos insights e utilidade percebida com usuarios do segmento.",
+        "metricas_de_sucesso": ["WAU-EFI (KR-01)", "Taxa de adocao do extrato inteligente", "% de transacoes com categoria correta", "Taxa de interacao com insights"]
+      },
+      {
+        "id": "H5",
+        "titulo": "Central de Transparencia — Breakdown Visual de Custos em Toda Operacao",
+        "descricao": "Em toda tela que envolva dinheiro, antes do botao de confirmacao, exibir card de 'Transparencia' com breakdown visual completo. Para Pix: 'Voce envia R$500,00 → Destinatario recebe R$500,00 → Custo para voce: R$0,00'. Para boleto: 'Valor do boleto: R$150,00 → Juros/multa: R$0,00 → Total debitado: R$150,00'. Para cartao virtual: 'Limite usado: R$X de R$Y → Limite disponivel apos compra: R$Z'. Linguagem coloquial, sem juridiques. Valores negativos em vermelho (#ff4d4d), positivos em verde (#3dff8b), neutros em branco (#eaf2ff). Selo visual 'Sem taxas escondidas' com icone de escudo em lime (#b7ff2a) presente em toda confirmacao de operacao. Historico de custos acessivel no perfil: 'Em 2026, voce pagou R$0,00 em taxas no ECP'. Comparativo educativo opcional: 'Neste tipo de operacao, bancos tradicionais cobram em media R$X'.",
+        "oportunidade_que_endereca": ["opp-11", "opp-10"],
+        "suposicoes_criticas": [
+          "Transparencia explicita em toda transacao gera confianca sem gerar fadiga de informacao",
+          "Comparativos com bancos tradicionais sao percebidos como educativos, nao agressivos ou arrogantes",
+          "Selo 'Sem taxas escondidas' tem mais impacto emocional que simplesmente nao cobrar taxa",
+          "Usuarios leem o breakdown antes de confirmar (vs. ignorar como 'termos de uso')"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Integrar breakdown em mockups de Pix, boleto e cartao. A/B testar versao com e sem breakdown para medir impacto na confianca percebida.",
+        "metricas_de_sucesso": ["NPS (KR-04)", "CSAT em micro-surveys pos-transacao", "Taxa de completude de transacao (nao gera abandono?)"]
+      },
+      {
+        "id": "H6",
+        "titulo": "Cartao Virtual com Controles Granulares de Seguranca",
+        "descricao": "Gerenciamento de cartao virtual com controles que vao alem de gerar/bloquear. Card visual 3D com design dark theme mostrando ultimos 4 digitos, status e limite. Controles granulares: (1) Limite por transacao (ex: bloquear compras >R$500 sem confirmacao). (2) Bloqueio temporario com timer ('bloquear por 2 horas'). (3) Bloqueio/desbloqueio instantaneo com toggle visual — icone de cadeado que anima entre aberto/fechado. (4) Historico de uso do cartao com categoria de merchant. (5) Alerta em tempo real via Web Notification quando cartao e usado ('Compra de R$89,90 na Amazon detectada'). Fatura fecha dia 25 (RN-06) com timeline visual mostrando progresso da fatura atual. Limite independente do saldo da conta (RN-06) com barra de progresso visual. Geracao de novo cartao virtual sob demanda (util para sites nao confiaveis — gerar cartao, usar, bloquear).",
+        "oportunidade_que_endereca": ["opp-15", "opp-10"],
+        "suposicoes_criticas": [
+          "Usuarios querem controles granulares ou preferem simplicidade (gerar/bloquear)?",
+          "Cartoes virtuais descartaveis geram demanda real no segmento-alvo",
+          "Web Notifications para uso do cartao sao suficientes vs. SMS/push",
+          "Limite por transacao nao gera frustracao em compras legitimas"
+        ],
+        "viabilidade_preliminar": "media",
+        "como_prototipar": "Mockup interativo do card 3D com painel de controles. Testar quais controles usuarios realmente configurariam vs. quais ignorariam.",
+        "metricas_de_sucesso": ["% de WAU com transacao semanal (KR-05)", "NPS (KR-04)", "Taxa de adocao de controles granulares"]
+      },
+      {
+        "id": "H7",
+        "titulo": "Central de Boletos com Status Visual e Alertas de Vencimento",
+        "descricao": "Tela dedicada a gestao de boletos e contas, substituindo o fluxo fragmentado de buscar boleto no email, copiar codigo, colar no banco. Fluxo de pagamento: colar ou digitar codigo de barras, sistema decodifica automaticamente e exibe: beneficiario, valor, data de vencimento, juros/multa se aplicavel. Confirmacao com breakdown de transparencia (H5). Lista de boletos pagos com status visual (pago=verde, pendente=amarelo, vencido=vermelho). Campo de busca na lista. Alertas via Web Notification para boletos proximos do vencimento (se o usuario cadastrar). Integracao com extrato inteligente — boletos pagos aparecem categorizados automaticamente. Saldo insuficiente (RN-04) mostra mensagem clara com valor faltante e sugestao ('Faltam R$45,20. Deposite via Pix para pagar este boleto').",
+        "oportunidade_que_endereca": ["opp-14", "opp-11"],
+        "suposicoes_criticas": [
+          "Usuarios pagariam boletos pelo banco web ao inves do app mobile (habito)",
+          "Decodificacao de codigo de barras por input de texto (nao camera) e aceitavel no desktop",
+          "Cadastro de boletos recorrentes tem adesao suficiente para justificar a feature",
+          "Alertas de vencimento via Web Notification sao percebidos e uteis"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Prototipo do fluxo completo: colar codigo → preview → confirmar → feedback. Testar com boleto real (dados mascarados).",
+        "metricas_de_sucesso": ["% de WAU com transacao semanal (KR-05)", "Volume de boletos pagos por usuario", "Taxa de conclusao do fluxo de pagamento"]
+      },
+      {
+        "id": "H8",
+        "titulo": "Seguranca Perceptivel — Painel de Protecao e Feedback Visual de Seguranca",
+        "descricao": "Sistema de seguranca que torna a protecao VISIVEL ao usuario em cada interacao. Componentes: (1) Barra de seguranca contextual no header: icone de escudo verde + texto 'Sessao protegida' quando conectado via HTTPS com JWT valido. (2) Selo 'Transacao Protegida' com animacao sutil em toda confirmacao financeira. (3) Niveis de confirmacao proporcionais ao risco: operacoes ate R$500 com contatos salvos = 1 clique, R$500-R$2.000 = senha, >R$2.000 = senha + resumo detalhado do destinatario com timeout de 30s para revisao (RN-03). (4) Painel 'Seguranca da Conta' no perfil: historico de logins (dispositivo, IP, horario), sessoes ativas, opcao de encerrar outras sessoes. (5) Notificacao Web imediata para: login de novo dispositivo, Pix enviado, cartao usado, senha alterada. (6) Indicador visual de horario noturno (22h-6h) com limite Pix diferenciado (RN-02). Tudo usando cores semanticas do design spec: success #3dff8b para protegido, warning #ffcc00 para atencao, danger #ff4d4d para bloqueio.",
+        "oportunidade_que_endereca": ["opp-10", "opp-15", "opp-13"],
+        "suposicoes_criticas": [
+          "Usuarios percebem e valorizam feedback visual de seguranca (vs. ignorar como decoracao)",
+          "Seguranca proporcional ao risco nao gera inseguranca em operacoes de baixo risco ('por que nao pede senha?')",
+          "Historico de logins e acessos gera sensacao de controle, nao paranoia",
+          "A soma de feedbacks visuais de seguranca compensa a ausencia de biometria (desktop nao tem)"
+        ],
+        "viabilidade_preliminar": "alta",
+        "como_prototipar": "Integrar elementos de seguranca nos prototipos de Pix (H3) e Cartao (H6). Testar percepcao de seguranca com escala Likert antes/depois de ver os elementos.",
+        "metricas_de_sucesso": ["NPS (KR-04)", "Score de seguranca percebida (pesquisa)", "Taxa de completude de transacoes de alto valor"]
+      },
+      {
+        "id": "H9",
+        "titulo": "Layout Command-Palette Web-First com Navegacao por Teclado",
+        "descricao": "Inspirado em ferramentas de produtividade (VS Code, Notion, Linear), adicionar Command Palette acionada por '/' ou Ctrl+K que permite buscar e executar qualquer acao sem usar o mouse: 'Enviar Pix', 'Ver extrato', 'Bloquear cartao', 'Pagar boleto'. Autocomplete inteligente com acoes recentes priorizadas. Sidebar colapsavel para maximizar area util. Atalhos de teclado para acoes frequentes: Ctrl+P (Pix), Ctrl+E (Extrato), Ctrl+B (Boletos), Ctrl+1/2/3 para abas. Breadcrumbs para contexto de navegacao. Focus management com Tab/Shift+Tab seguindo ordem logica. Todos os componentes interativos acessiveis via teclado (WCAG 2.1 AA). Animacoes sutis de transicao entre paginas (200ms ease). Isso posiciona o ECP nao apenas como 'banco no desktop' mas como 'banco para quem trabalha no desktop' — com a mesma filosofia de produtividade que as ferramentas que o usuario ja usa.",
+        "oportunidade_que_endereca": ["opp-01", "opp-06"],
+        "suposicoes_criticas": [
+          "Publico-alvo (CLT 22-35) esta familiarizado com Command Palette de outras ferramentas",
+          "Atalhos de teclado bancarios nao conflitam com atalhos do navegador ou SO",
+          "Command Palette nao confunde usuarios menos tecnicos do segmento",
+          "A metafora de 'produtividade' ressoa com o posicionamento do banco"
+        ],
+        "viabilidade_preliminar": "media",
+        "como_prototipar": "Prototipo funcional da Command Palette sobre o dashboard (H1). Testar taxa de descoberta e uso com diferentes perfis do segmento.",
+        "metricas_de_sucesso": ["WAU-EFI (KR-01)", "Frequencia de sessoes semanais", "% de acoes executadas via teclado vs. mouse"]
+      },
+      {
+        "id": "H10",
+        "titulo": "Web Notifications Inteligentes como Canal de Re-engajamento",
+        "descricao": "Sistema de notificacoes via Web Notifications API do browser para compensar a ausencia de push notifications mobile. Categorias de notificacao: (1) Transacionais (alta prioridade): Pix recebido, cartao usado, boleto pago. (2) Financeiras (media prioridade): alerta de gasto acima da media no ciclo, boleto proximo do vencimento, insight do extrato inteligente. (3) Seguranca (critica): login de novo dispositivo, tentativa de transacao bloqueada. O usuario configura granularmente quais categorias quer receber, respeitando o principio 'Inteligencia que educa, nao decide'. Permissao de notificacao solicitada apos primeira transacao bem-sucedida (nao no primeiro acesso — timing estrategico). Badge de notificacoes no header com contador e dropdown. Central de notificacoes com filtro por tipo e status lido/nao-lido. Conexao com tabela 'notifications' ja prevista no modelo de dados.",
+        "oportunidade_que_endereca": ["opp-01", "opp-10"],
+        "suposicoes_criticas": [
+          "Usuarios autorizam Web Notifications no browser (taxa de opt-in >40%)",
+          "Web Notifications sao vistas como uteis e nao como spam",
+          "Notificacoes financeiras geram retorno ao banco (loop de re-engajamento)",
+          "Usuarios mantêm o browser aberto durante o expediente (comportamento do segmento)"
+        ],
+        "viabilidade_preliminar": "media",
+        "como_prototipar": "Prototipo conceitual das notificacoes (mockup do browser notification + central in-app). Pesquisa quantitativa sobre aceitacao de Web Notifications bancarias.",
+        "metricas_de_sucesso": ["Taxa de opt-in em Web Notifications", "Retencao D7 e D30 (KR-03)", "Sessoes originadas de notificacao"]
+      }
+    ],
+
+    "hipoteses_selecionadas_para_prototipacao": ["H1", "H2", "H3", "H4"],
+
+    "justificativa_selecao": {
+      "criterios_de_selecao": [
+        "Cobertura das 10 oportunidades priorizadas — as 4 hipoteses selecionadas enderecam 9 das 10 oportunidades",
+        "Impacto nos KRs — cobrem KR-01 (H1, H4), KR-02 (H2), KR-04 (H4, H5 embutido em H3), KR-05 (H3)",
+        "Viabilidade tecnica alta — todas usam stack definida (React + Vite + Tailwind) sem dependencias externas",
+        "Sequencia logica — H2 (onboarding) → H1 (dashboard) → H4 (extrato) → H3 (Pix) forma o fluxo primario do usuario",
+        "As hipoteses H5 (transparencia) e H8 (seguranca) serao EMBUTIDAS nos prototipos de H3 e H4 como componentes transversais, nao como prototipos separados"
+      ],
+      "hipoteses_para_iteracao_futura": {
+        "H5_e_H8": "Componentes de transparencia e seguranca serao integrados nos prototipos de H3 (Pix) e H4 (Extrato). Nao precisam de prototipo separado.",
+        "H6": "Cartao virtual com controles granulares sera prototipado apos validacao das 4 hipoteses core. Risco medio na viabilidade (controles granulares podem adicionar complexidade ao MVP).",
+        "H7": "Central de boletos sera prototipada junto com H3 (Pix) na iteracao seguinte, pois compartilham padroes de fluxo transacional.",
+        "H9": "Command Palette e refinamento de produtividade para versao pos-MVP. Requer primeiro que o usuario conheça as funcionalidades para depois acessar via atalho.",
+        "H10": "Web Notifications deve ser implementada no Delivery, mas nao precisa de prototipo de design dedicado — e uma feature tecnica com configuracao simples de UI."
+      }
+    },
+
+    "mapa_oportunidade_hipotese": [
+      {"opp": "opp-01", "hipoteses": ["H1", "H3", "H9", "H10"], "cobertura": "alta"},
+      {"opp": "opp-02", "hipoteses": ["H1", "H4"], "cobertura": "alta"},
+      {"opp": "opp-04", "hipoteses": ["H2"], "cobertura": "alta"},
+      {"opp": "opp-05", "hipoteses": ["H2"], "cobertura": "alta"},
+      {"opp": "opp-06", "hipoteses": ["H1", "H2", "H9"], "cobertura": "alta"},
+      {"opp": "opp-10", "hipoteses": ["H5", "H6", "H8", "H10"], "cobertura": "alta"},
+      {"opp": "opp-11", "hipoteses": ["H4", "H5", "H7"], "cobertura": "alta"},
+      {"opp": "opp-13", "hipoteses": ["H3", "H8"], "cobertura": "alta"},
+      {"opp": "opp-14", "hipoteses": ["H7"], "cobertura": "media"},
+      {"opp": "opp-15", "hipoteses": ["H6", "H8"], "cobertura": "alta"}
+    ]
+  }
+}

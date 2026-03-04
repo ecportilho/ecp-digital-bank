@@ -1,0 +1,600 @@
+{
+  "agent": "software-architect",
+  "skill": "domain-design",
+  "artifact": "bounded-contexts",
+  "phase": "03-product-delivery",
+  "generated_at": "2026-03-04",
+  "version": "1.0.0",
+  "product": "ECP Digital Bank",
+
+  "overview": {
+    "description": "Mapeamento dos Bounded Contexts do ECP Digital Bank usando Domain-Driven Design (DDD). Cada contexto delimita um subdomínio coeso com linguagem ubíqua própria, equipe responsável e fronteiras de integração explícitas.",
+    "total_contexts": 5,
+    "integration_style": "Shared Kernel para tipos primitivos de domínio (Money, CPF, Email); Events para comunicação assíncrona; Direct Call para chamadas síncronas dentro do mesmo processo (MVP monolítico).",
+    "architecture_note": "No MVP, todos os contextos residem no mesmo processo Node.js (Fastify). A separação é lógica (módulos distintos em /server), não física. A estrutura modular permite extrair contextos para microsserviços em versões futuras sem reescrever a lógica de domínio."
+  },
+
+  "bounded_contexts": [
+    {
+      "id": "BC-01",
+      "name": "Identity & Access",
+      "portuguese_name": "Identidade e Acesso",
+      "type": "Supporting Domain",
+      "description": "Gerencia a identidade dos usuários, autenticação, autorização e ciclo de vida das sessões. É o portão de entrada para todos os outros contextos. Toda operação financeira depende de uma identidade autenticada.",
+      "responsibility": "Quem pode fazer o quê no sistema. Emissão e validação de tokens JWT. Registro e atualização de credenciais. Verificação de força de senha.",
+      "module_path": "/server/modules/auth, /server/modules/users",
+
+      "entities": [
+        {
+          "name": "User",
+          "description": "Representação da pessoa física que possui conta no banco",
+          "is_aggregate_root": true,
+          "db_table": "users"
+        },
+        {
+          "name": "Session",
+          "description": "Sessão ativa representada por um JWT em memória (stateless)",
+          "is_aggregate_root": false,
+          "db_table": null,
+          "note": "Sessão é stateless — o JWT carrega os claims, não há tabela de sessões"
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "Email",
+          "description": "Endereço de e-mail validado por regex RFC 5322. Imutável após registro.",
+          "rules": ["Formato válido", "Único no sistema", "Normalizado em lowercase"]
+        },
+        {
+          "name": "CPF",
+          "description": "Cadastro de Pessoa Física brasileiro. Validado com algoritmo de dígitos verificadores.",
+          "rules": ["11 dígitos numéricos", "Dígitos verificadores válidos", "Único no sistema", "Armazenado sem formatação"]
+        },
+        {
+          "name": "HashedPassword",
+          "description": "Senha criptografada com bcryptjs (salt rounds ≥ 10). Nunca exposta em resposta de API.",
+          "rules": ["Mínimo 8 caracteres na senha original", "Hash gerado com bcryptjs", "Nunca serializado em JSON de resposta"]
+        },
+        {
+          "name": "JwtToken",
+          "description": "Token JWT assinado com secret da aplicação. Carrega userId e expiration.",
+          "rules": ["Expira em 24h", "Contém userId como subject", "Assinado com HS256"]
+        }
+      ],
+
+      "aggregates": ["User (root)"],
+
+      "domain_events": [
+        {
+          "name": "UserRegistered",
+          "trigger": "Novo usuário criado com sucesso no cadastro Etapa 1",
+          "consumers": ["BC-02 (cria Account automático)", "BC-05 (envia notificação de boas-vindas)"]
+        },
+        {
+          "name": "UserPasswordChanged",
+          "trigger": "Usuário altera senha com sucesso",
+          "consumers": ["BC-05 (notifica sobre mudança de senha)"]
+        },
+        {
+          "name": "UserAuthenticated",
+          "trigger": "Login bem-sucedido com e-mail e senha válidos",
+          "consumers": []
+        },
+        {
+          "name": "UserProfileUpdated",
+          "trigger": "Dados de perfil (nome, telefone, data de salário) atualizados",
+          "consumers": ["BC-05 (recalcula insights de ciclo salarial)"]
+        }
+      ],
+
+      "api_routes": [
+        "POST /auth/register",
+        "POST /auth/login",
+        "POST /auth/logout",
+        "GET  /users/me",
+        "PUT  /users/me",
+        "PUT  /users/me/password"
+      ],
+
+      "relationships": [
+        {
+          "context": "BC-02",
+          "type": "Upstream",
+          "description": "Identity & Access é upstream de Banking Core — um User precisa existir antes que uma Account possa ser criada"
+        },
+        {
+          "context": "BC-03",
+          "type": "Upstream",
+          "description": "User precisa existir para registrar Chaves Pix"
+        },
+        {
+          "context": "BC-04",
+          "type": "Upstream",
+          "description": "User precisa existir para criar Cartões"
+        },
+        {
+          "context": "BC-05",
+          "type": "Upstream",
+          "description": "User precisa existir para receber Notificações"
+        }
+      ]
+    },
+
+    {
+      "id": "BC-02",
+      "name": "Banking Core",
+      "portuguese_name": "Núcleo Bancário",
+      "type": "Core Domain",
+      "description": "O coração do banco digital. Gerencia contas, saldos e o ledger de transações financeiras. Toda movimentação de dinheiro passa por este contexto. Implementa as regras mais críticas de integridade financeira.",
+      "responsibility": "Custódia do saldo. Débito e crédito atômicos. Histórico imutável de transações. Categorização automática. Resumo financeiro por período e ciclo salarial.",
+      "module_path": "/server/modules/accounts, /server/modules/transactions",
+
+      "entities": [
+        {
+          "name": "Account",
+          "description": "Conta bancária de um usuário. Raiz de agregado. Centraliza saldo e operações financeiras.",
+          "is_aggregate_root": true,
+          "db_table": "accounts"
+        },
+        {
+          "name": "Transaction",
+          "description": "Registro imutável de qualquer movimentação financeira (crédito ou débito). Filho do agregado Account.",
+          "is_aggregate_root": false,
+          "db_table": "transactions"
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "Money",
+          "description": "Valor monetário armazenado em centavos (integer). Evita erros de ponto flutuante.",
+          "rules": ["Sempre inteiro não-negativo em centavos", "Exibido como BRL formatado no front-end", "Zero é válido", "Não pode ser negativo"]
+        },
+        {
+          "name": "TransactionCategory",
+          "description": "Categoria atribuída à transação (automática ou manual)",
+          "values": ["alimentacao", "transporte", "saude", "educacao", "lazer", "moradia", "assinaturas", "pix", "pagamentos", "outros"]
+        },
+        {
+          "name": "AccountNumber",
+          "description": "Número da conta bancária no formato padrão brasileiro",
+          "rules": ["Gerado automaticamente no cadastro", "Único no sistema", "Formato: 7 dígitos + dígito verificador"]
+        }
+      ],
+
+      "aggregates": ["Account (root, children: [Transaction])"],
+
+      "domain_events": [
+        {
+          "name": "AccountCreated",
+          "trigger": "Evento UserRegistered recebido de BC-01",
+          "consumers": ["BC-05 (notifica ativação de conta)"]
+        },
+        {
+          "name": "BalanceDebited",
+          "trigger": "Débito confirmado no saldo da conta",
+          "consumers": ["BC-03 (confirma Pix enviado)", "BC-05 (notifica débito)"]
+        },
+        {
+          "name": "BalanceCredited",
+          "trigger": "Crédito confirmado no saldo da conta",
+          "consumers": ["BC-05 (notifica crédito recebido)"]
+        },
+        {
+          "name": "TransactionCategorized",
+          "trigger": "Categorização automática aplicada à transação",
+          "consumers": ["BC-05 (atualiza insights de gastos)"]
+        }
+      ],
+
+      "api_routes": [
+        "GET /accounts/balance",
+        "GET /transactions",
+        "GET /transactions/summary"
+      ],
+
+      "business_rules": [
+        "RN-04: Saldo insuficiente bloqueia Pix e pagamentos",
+        "RN-07: Transações nunca são deletadas (soft delete por status)",
+        "RN-08: Idempotência via idempotency_key em operações de crédito/débito",
+        "RN-09: Saldo armazenado em centavos (integer)"
+      ],
+
+      "relationships": [
+        {
+          "context": "BC-01",
+          "type": "Downstream",
+          "description": "Recebe UserRegistered para criar Account automaticamente"
+        },
+        {
+          "context": "BC-03",
+          "type": "Provider",
+          "description": "Fornece operação de débito/crédito para o contexto Pix executar transferências"
+        },
+        {
+          "context": "BC-04",
+          "type": "Provider",
+          "description": "Fornece operação de pagamento para registrar compras no cartão e pagamentos de boleto"
+        },
+        {
+          "context": "BC-05",
+          "type": "Upstream",
+          "description": "Emite eventos de movimentação que alimentam notificações e insights"
+        }
+      ]
+    },
+
+    {
+      "id": "BC-03",
+      "name": "Pix",
+      "portuguese_name": "Pix",
+      "type": "Core Domain",
+      "description": "Gerencia o sistema de pagamentos instantâneos Pix do Banco Central do Brasil. Controla chaves Pix, limites por horário, autenticação reforçada e QR codes. É o módulo transacional mais crítico para engajamento semanal (KR-05).",
+      "responsibility": "Registro e gestão de chaves Pix. Execução de transferências com validação de limite por horário. Geração e leitura de QR Code. Autenticação reforçada acima de R$2.000.",
+      "module_path": "/server/modules/pix",
+
+      "entities": [
+        {
+          "name": "PixKey",
+          "description": "Chave de endereçamento Pix (CPF, e-mail, telefone, EVP aleatória). Raiz de agregado.",
+          "is_aggregate_root": true,
+          "db_table": "pix_keys"
+        },
+        {
+          "name": "PixTransfer",
+          "description": "Operação de transferência Pix. Validada e executada atomicamente com débito na Account.",
+          "is_aggregate_root": false,
+          "db_table": "transactions",
+          "note": "Persistida como Transaction com type='pix_sent' ou 'pix_received'"
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "PixKeyType",
+          "description": "Tipo da chave Pix conforme especificação do BACEN",
+          "values": ["cpf", "email", "phone", "evp"],
+          "rules": ["Imutável após criação da chave"]
+        },
+        {
+          "name": "PixKeyValue",
+          "description": "Valor da chave com validação específica por tipo",
+          "rules": [
+            "CPF: 11 dígitos válidos",
+            "Email: formato RFC 5322",
+            "Telefone: formato +55DDNNNNNNNNN",
+            "EVP: UUID v4 gerado pelo sistema"
+          ]
+        },
+        {
+          "name": "PixLimit",
+          "description": "Limite de transferência Pix contextualizado por horário",
+          "rules": [
+            "Diurno (6h-22h): R$5.000 por dia (500000 centavos)",
+            "Noturno (22h-6h): R$1.000 por transação (100000 centavos)",
+            "Autenticação reforçada acima de R$2.000 (200000 centavos)"
+          ]
+        }
+      ],
+
+      "aggregates": ["PixKey (root)"],
+
+      "domain_events": [
+        {
+          "name": "PixKeyClaimed",
+          "trigger": "Nova chave Pix registrada com sucesso",
+          "consumers": ["BC-05 (notifica registro de chave)"]
+        },
+        {
+          "name": "PixKeyDeleted",
+          "trigger": "Chave Pix deletada (soft delete)",
+          "consumers": ["BC-05 (notifica exclusão de chave)"]
+        },
+        {
+          "name": "PixTransferInitiated",
+          "trigger": "Transferência Pix validada e enviada para débito",
+          "consumers": ["BC-02 (executa débito)", "BC-05 (notifica envio)"]
+        },
+        {
+          "name": "PixTransferReceived",
+          "trigger": "Crédito Pix identificado para conta destino",
+          "consumers": ["BC-02 (executa crédito)", "BC-05 (notifica recebimento)"]
+        }
+      ],
+
+      "api_routes": [
+        "GET  /pix/keys",
+        "POST /pix/keys",
+        "DELETE /pix/keys/:id",
+        "POST /pix/transfer",
+        "GET  /pix/qrcode/:keyId"
+      ],
+
+      "business_rules": [
+        "RN-01: Limite diário R$5.000 em horário comercial (6h-22h)",
+        "RN-02: Limite por transação R$1.000 no horário noturno (22h-6h)",
+        "RN-03: Autenticação reforçada para transações acima de R$2.000",
+        "RN-04: Saldo insuficiente bloqueia transferência",
+        "RN-05: Máximo de 5 chaves Pix por conta",
+        "RN-08: Idempotência via idempotency_key",
+        "RN-10: Rate limit de 10 Pix por hora por usuário"
+      ],
+
+      "relationships": [
+        {
+          "context": "BC-01",
+          "type": "Downstream",
+          "description": "Valida que o usuário está autenticado antes de qualquer operação Pix"
+        },
+        {
+          "context": "BC-02",
+          "type": "Consumer",
+          "description": "Solicita débito/crédito em Account para executar transferências"
+        },
+        {
+          "context": "BC-05",
+          "type": "Upstream",
+          "description": "Emite eventos de transferência para notificações em tempo real"
+        }
+      ]
+    },
+
+    {
+      "id": "BC-04",
+      "name": "Cards & Payments",
+      "portuguese_name": "Cartões e Pagamentos",
+      "type": "Supporting Domain",
+      "description": "Gerencia cartões virtuais, faturas de crédito, compras e pagamento de boletos. O cartão virtual tem limite independente do saldo da conta corrente. Faturas fecham dia 25 de cada mês.",
+      "responsibility": "Emissão e controle de cartão virtual. Ciclo de fatura (aberta, fechada, paga). Registro de compras. Bloqueio/desbloqueio de cartão. Pagamento de boletos bancários.",
+      "module_path": "/server/modules/cards, /server/modules/payments",
+
+      "entities": [
+        {
+          "name": "Card",
+          "description": "Cartão virtual do usuário. Raiz de agregado. Contém limite próprio e status.",
+          "is_aggregate_root": true,
+          "db_table": "cards"
+        },
+        {
+          "name": "Invoice",
+          "description": "Fatura mensal do cartão. Filho do agregado Card.",
+          "is_aggregate_root": false,
+          "db_table": "invoices"
+        },
+        {
+          "name": "CardPurchase",
+          "description": "Compra registrada no cartão. Filho do agregado Invoice.",
+          "is_aggregate_root": false,
+          "db_table": "card_purchases"
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "CardNumber",
+          "description": "Número do cartão virtual gerado (16 dígitos Luhn-válidos). Exibido mascarado.",
+          "rules": ["16 dígitos", "Validação Luhn", "Exibido como ****-****-****-XXXX no front-end"]
+        },
+        {
+          "name": "CardLimit",
+          "description": "Limite de crédito do cartão, independente do saldo da conta corrente.",
+          "rules": ["Armazenado em centavos", "Não reduz saldo da conta corrente", "Definido no momento da emissão do cartão"]
+        },
+        {
+          "name": "InvoiceStatus",
+          "description": "Estado atual da fatura",
+          "values": ["open", "closed", "paid"],
+          "rules": ["Transição válida: open → closed (dia 25) → paid (pagamento manual)"]
+        },
+        {
+          "name": "CardStatus",
+          "description": "Estado operacional do cartão",
+          "values": ["active", "blocked", "cancelled"],
+          "rules": ["Transição válida: active ↔ blocked, active → cancelled (irreversível)"]
+        },
+        {
+          "name": "BoletoBarcode",
+          "description": "Código de barras ou linha digitável de boleto bancário",
+          "rules": ["44 ou 47 dígitos para código de barras", "Validação de dígito verificador"]
+        }
+      ],
+
+      "aggregates": ["Card (root, children: [Invoice (children: [CardPurchase])])"],
+
+      "domain_events": [
+        {
+          "name": "CardIssued",
+          "trigger": "Cartão virtual emitido para o usuário",
+          "consumers": ["BC-05 (notifica emissão do cartão)"]
+        },
+        {
+          "name": "CardBlocked",
+          "trigger": "Usuário bloqueia o cartão",
+          "consumers": ["BC-05 (notifica bloqueio)"]
+        },
+        {
+          "name": "CardUnblocked",
+          "trigger": "Usuário desbloqueia o cartão",
+          "consumers": ["BC-05 (notifica desbloqueio)"]
+        },
+        {
+          "name": "InvoiceClosed",
+          "trigger": "Fatura fechada automaticamente no dia 25",
+          "consumers": ["BC-05 (notifica fechamento de fatura com valor)"]
+        },
+        {
+          "name": "PurchaseRegistered",
+          "trigger": "Compra no cartão registrada",
+          "consumers": ["BC-05 (notifica compra)"]
+        },
+        {
+          "name": "BoletoPaymentExecuted",
+          "trigger": "Boleto pago com débito na conta corrente",
+          "consumers": ["BC-02 (executa débito)", "BC-05 (notifica pagamento)"]
+        }
+      ],
+
+      "api_routes": [
+        "GET  /cards",
+        "POST /cards",
+        "PUT  /cards/:id/block",
+        "PUT  /cards/:id/unblock",
+        "GET  /cards/:id/invoice",
+        "POST /payments/boleto"
+      ],
+
+      "business_rules": [
+        "RN-04: Saldo insuficiente bloqueia pagamento de boleto (débito na conta corrente)",
+        "RN-06: Limite do cartão é independente do saldo; fatura fecha no dia 25",
+        "RN-07: Soft delete em registros de compras e faturas",
+        "RN-08: Idempotência via idempotency_key em pagamentos",
+        "RN-09: Limites e valores de compras em centavos"
+      ],
+
+      "relationships": [
+        {
+          "context": "BC-01",
+          "type": "Downstream",
+          "description": "Valida autenticação antes de operações com cartão"
+        },
+        {
+          "context": "BC-02",
+          "type": "Consumer",
+          "description": "Solicita débito em Account para pagamentos de boleto"
+        },
+        {
+          "context": "BC-05",
+          "type": "Upstream",
+          "description": "Emite eventos de fatura e compra para notificações"
+        }
+      ]
+    },
+
+    {
+      "id": "BC-05",
+      "name": "Intelligence",
+      "portuguese_name": "Inteligência",
+      "type": "Supporting Domain",
+      "description": "Responsável por transformar dados transacionais brutos em insights acionáveis. Inclui categorização automática de transações, cálculo de ciclo salarial, geração de notificações e alertas proativos. Alimenta o diferencial competitivo do produto (EP-003).",
+      "responsibility": "Categorização automática por palavras-chave do description. Cálculo de gastos por categoria e período. Insights de ciclo salarial. Notificações em tempo real de operações. Alertas de limite próximo.",
+      "module_path": "/server/modules/transactions (summary), notificações via tabela notifications",
+
+      "entities": [
+        {
+          "name": "Notification",
+          "description": "Notificação enviada ao usuário sobre eventos financeiros relevantes",
+          "is_aggregate_root": true,
+          "db_table": "notifications"
+        }
+      ],
+
+      "value_objects": [
+        {
+          "name": "NotificationType",
+          "description": "Categoria semântica da notificação",
+          "values": ["pix_sent", "pix_received", "card_purchase", "invoice_closed", "boleto_paid", "security_alert", "salary_cycle", "limit_warning"]
+        },
+        {
+          "name": "SalaryCycle",
+          "description": "Período entre dois recebimentos de salário, calculado a partir da data configurada pelo usuário",
+          "rules": ["Calculado dinamicamente com base no salary_day do usuário", "Período: do salary_day do mês anterior até salary_day do mês atual"]
+        },
+        {
+          "name": "CategoryRule",
+          "description": "Regra de categorização automática baseada em palavras-chave no description da transação",
+          "rules": ["Match case-insensitive", "Prioridade definida por especificidade da regra", "Fallback para 'outros' quando sem match"]
+        }
+      ],
+
+      "aggregates": ["Notification (root)"],
+
+      "domain_events": [
+        {
+          "name": "NotificationCreated",
+          "trigger": "Qualquer evento financeiro relevante ocorre em BC-02, BC-03 ou BC-04",
+          "consumers": ["Front-end via polling ou WebSocket (futuro)"]
+        },
+        {
+          "name": "InsightGenerated",
+          "trigger": "Cálculo periódico de gastos por categoria ou alerta de ciclo salarial",
+          "consumers": ["Front-end dashboard ao carregar"]
+        }
+      ],
+
+      "api_routes": [
+        "GET /transactions/summary",
+        "GET /accounts/balance (inclui insights de ciclo salarial)"
+      ],
+
+      "business_rules": [
+        "RN-07: Notificações não são deletadas, apenas marcadas como lidas",
+        "RN-09: Valores nos insights sempre em centavos internamente"
+      ],
+
+      "relationships": [
+        {
+          "context": "BC-01",
+          "type": "Downstream",
+          "description": "Recebe eventos de registro de usuário para enviar notificação de boas-vindas"
+        },
+        {
+          "context": "BC-02",
+          "type": "Downstream",
+          "description": "Consome eventos de débito/crédito para gerar notificações e calcular insights"
+        },
+        {
+          "context": "BC-03",
+          "type": "Downstream",
+          "description": "Consome eventos Pix para notificações de envio/recebimento"
+        },
+        {
+          "context": "BC-04",
+          "type": "Downstream",
+          "description": "Consome eventos de compra e fatura para notificações e insights de cartão"
+        }
+      ]
+    }
+  ],
+
+  "context_map": {
+    "description": "Mapa de relacionamentos entre todos os contextos",
+    "relationships": [
+      {"from": "BC-01", "to": "BC-02", "pattern": "Upstream/Downstream", "trigger": "UserRegistered → cria Account"},
+      {"from": "BC-01", "to": "BC-03", "pattern": "Upstream/Downstream", "trigger": "User deve existir para criar PixKey"},
+      {"from": "BC-01", "to": "BC-04", "pattern": "Upstream/Downstream", "trigger": "User deve existir para emitir Card"},
+      {"from": "BC-01", "to": "BC-05", "pattern": "Upstream/Downstream", "trigger": "UserRegistered → notificação de boas-vindas"},
+      {"from": "BC-03", "to": "BC-02", "pattern": "Customer/Supplier", "trigger": "PixTransfer solicita débito/crédito em Account"},
+      {"from": "BC-04", "to": "BC-02", "pattern": "Customer/Supplier", "trigger": "BoletoPayment solicita débito em Account"},
+      {"from": "BC-02", "to": "BC-05", "pattern": "Published Language", "trigger": "BalanceDebited/BalanceCredited → insights e notificações"},
+      {"from": "BC-03", "to": "BC-05", "pattern": "Published Language", "trigger": "PixTransferInitiated/Received → notificações"},
+      {"from": "BC-04", "to": "BC-05", "pattern": "Published Language", "trigger": "PurchaseRegistered/InvoiceClosed → notificações"}
+    ]
+  },
+
+  "shared_kernel": {
+    "description": "Tipos compartilhados entre contextos sem violação de fronteiras",
+    "types": [
+      {
+        "name": "Money",
+        "used_by": ["BC-02", "BC-03", "BC-04", "BC-05"],
+        "description": "Value object de valor monetário em centavos"
+      },
+      {
+        "name": "UserId",
+        "used_by": ["BC-01", "BC-02", "BC-03", "BC-04", "BC-05"],
+        "description": "Identificador único do usuário (INTEGER primary key do SQLite)"
+      },
+      {
+        "name": "Timestamp",
+        "used_by": ["BC-01", "BC-02", "BC-03", "BC-04", "BC-05"],
+        "description": "ISO 8601 datetime string para created_at, updated_at, deleted_at"
+      },
+      {
+        "name": "IdempotencyKey",
+        "used_by": ["BC-02", "BC-03", "BC-04"],
+        "description": "UUID v4 enviado pelo cliente para garantir idempotência de operações POST"
+      }
+    ]
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "agent": "product-manager",
+  "subagent": "product-strategy",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-03",
+
+  "okrs": [
+    {
+      "objetivo": "Conquistar os primeiros usuários que adotam o ECP como seu banco digital principal no computador, provando que gestão financeira inteligente na web gera engajamento recorrente e confiança",
+      "krs": [
+        {
+          "kr_id": "kr-01",
+          "descricao": "Atingir 15.000 WAU-EFI até o final do Q2 2026",
+          "metrica": "WAU-EFI (usuários semanais que interagem com extrato inteligente, insights ou planejamento financeiro)",
+          "baseline": "0 (produto novo)",
+          "meta": "15.000",
+          "prazo": "30/06/2026",
+          "tipo_indicador": "lagging"
+        },
+        {
+          "kr_id": "kr-02",
+          "descricao": "Alcançar taxa de ativação de 40%",
+          "metrica": "% de cadastros que completam 3+ operações em 7 dias",
+          "baseline": "0%",
+          "meta": "40%",
+          "prazo": "30/06/2026",
+          "tipo_indicador": "leading"
+        },
+        {
+          "kr_id": "kr-03",
+          "descricao": "Atingir retenção D30 de 55%",
+          "metrica": "% de usuários do cohort que fazem login no dia 30 após cadastro",
+          "baseline": "0%",
+          "meta": "55%",
+          "prazo": "30/06/2026",
+          "tipo_indicador": "lagging"
+        },
+        {
+          "kr_id": "kr-04",
+          "descricao": "Alcançar NPS de 60+ entre usuários ativos",
+          "metrica": "NPS via survey in-app para usuários com 4+ semanas de uso",
+          "baseline": "Sem baseline",
+          "meta": "60+",
+          "prazo": "30/06/2026",
+          "tipo_indicador": "lagging"
+        },
+        {
+          "kr_id": "kr-05",
+          "descricao": "60% dos usuários ativos com 1+ transação real por semana",
+          "metrica": "% de WAU que realizam Pix, pagamento ou transferência semanal",
+          "baseline": "0%",
+          "meta": "60%",
+          "prazo": "30/06/2026",
+          "tipo_indicador": "leading"
+        }
+      ]
+    }
+  ],
+
+  "opportunity_solution_tree": {
+    "north_star_metric": "WAU-EFI",
+    "total_opportunities": 15,
+    "by_type": {"pain": 9, "need": 4, "desire": 2},
+
+    "kr_01_opportunities": [
+      {
+        "opp_id": "opp-01",
+        "type": "pain",
+        "description": "Profissionais que trabalham no computador o dia inteiro são forçados a pegar o celular para verificar saldo, extrato e fazer operações bancárias, quebrando o fluxo de trabalho"
+      },
+      {
+        "opp_id": "opp-02",
+        "type": "need",
+        "description": "Usuários precisam entender para onde seu dinheiro está indo sem ter que categorizar manualmente cada transação ou exportar dados para planilhas"
+      },
+      {
+        "opp_id": "opp-03",
+        "type": "desire",
+        "description": "Jovens profissionais assalariados desejam sentir que estão no controle da vida financeira, não apenas reagindo a contas e boletos"
+      }
+    ],
+    "kr_02_opportunities": [
+      {
+        "opp_id": "opp-04",
+        "type": "pain",
+        "description": "Processos de abertura de conta digital são longos, burocráticos e frequentemente falham na validação de documentos"
+      },
+      {
+        "opp_id": "opp-05",
+        "type": "need",
+        "description": "Novos usuários precisam perceber valor imediato ao abrir uma conta — sem depósito inicial, sem espera de cartão físico"
+      },
+      {
+        "opp_id": "opp-06",
+        "type": "pain",
+        "description": "Usuários não entendem quais funcionalidades o banco oferece nem como começar a usar, especialmente com proposta web-first diferenciada"
+      }
+    ],
+    "kr_03_opportunities": [
+      {
+        "opp_id": "opp-07",
+        "type": "need",
+        "description": "Usuários precisam de motivos recorrentes para voltar ao banco — não apenas quando precisam pagar algo, mas como parte da rotina financeira semanal"
+      },
+      {
+        "opp_id": "opp-08",
+        "type": "pain",
+        "description": "Informações financeiras pessoais ficam espalhadas entre banco, apps de controle, planilhas e boletos em e-mail"
+      },
+      {
+        "opp_id": "opp-09",
+        "type": "desire",
+        "description": "Profissionais assalariados desejam antecipar como vai ficar a situação financeira até o próximo salário, sentindo segurança de que vão 'fechar o mês'"
+      }
+    ],
+    "kr_04_opportunities": [
+      {
+        "opp_id": "opp-10",
+        "type": "pain",
+        "description": "Usuários sentem insegurança com proteção do dinheiro e dados em operações online no computador"
+      },
+      {
+        "opp_id": "opp-11",
+        "type": "pain",
+        "description": "Bancos digitais cobram taxas escondidas, usam linguagem confusa e dificultam entendimento real de custos"
+      },
+      {
+        "opp_id": "opp-12",
+        "type": "need",
+        "description": "Usuários com deficiências precisam de banco digital que funcione plenamente com tecnologias assistivas"
+      }
+    ],
+    "kr_05_opportunities": [
+      {
+        "opp_id": "opp-13",
+        "type": "pain",
+        "description": "Fazer Pix no computador é impossível ou extremamente burocrático na maioria dos bancos"
+      },
+      {
+        "opp_id": "opp-14",
+        "type": "pain",
+        "description": "Gerenciar boletos e contas recorrentes é processo manual e fragmentado"
+      },
+      {
+        "opp_id": "opp-15",
+        "type": "need",
+        "description": "Usuários precisam de segurança granular em compras online — cartões temporários, limites por transação"
+      }
+    ]
+  },
+
+  "assumption_map": {
+    "total_suposicoes": 12,
+    "by_risk": {"alto": 5, "medio": 6, "baixo": 1},
+    "top_3_critical": [
+      {
+        "prioridade": 1,
+        "descricao": "Profissionais CLT 22-35 sentem frustração real ao gerenciar finanças pelo celular, preferindo web/desktop",
+        "tipo": "valor",
+        "risco": "alto",
+        "como_testar": "Pesquisa quantitativa (n=300+) + entrevistas em profundidade (15-20)"
+      },
+      {
+        "prioridade": 2,
+        "descricao": "Usuários confiarão suas finanças a um banco digital novo e desconhecido",
+        "tipo": "valor",
+        "risco": "alto",
+        "como_testar": "Fake door test com landing page + pergunta pós-cadastro sobre migração de salário"
+      },
+      {
+        "prioridade": 3,
+        "descricao": "Categorização automática será precisa o suficiente (>90%) para gerar valor, não frustração",
+        "tipo": "viabilidade",
+        "risco": "alto",
+        "como_testar": "Protótipo técnico com dataset de 5.000+ transações reais brasileiras"
+      }
+    ],
+    "sequencia_validacao": [
+      {"sprint": "1 (Sem 1-2)", "valida": "Demanda web-first + confiança em banco novo"},
+      {"sprint": "2 (Sem 3-4)", "valida": "Contexto de uso no trabalho + acurácia categorização"},
+      {"sprint": "3 (Sem 5-6)", "valida": "Engajamento diário + sustentabilidade da diferenciação"},
+      {"sprint": "4 (Sem 7-8)", "valida": "Pricing + modelagem financeira de aquisição"}
+    ]
+  }
+}

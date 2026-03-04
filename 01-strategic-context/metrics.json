@@ -1,0 +1,116 @@
+{
+  "agent": "product-manager",
+  "subagent": "metrics",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-03",
+
+  "leading_lagging_indicators": {
+    "por_kr": [
+      {
+        "kr": "KR-01: 15.000 WAU-EFI",
+        "lagging": {
+          "metrica": "WAU-EFI — Usuários Ativos Semanais com Engajamento Financeiro Inteligente",
+          "frequencia_medicao": "Semanal"
+        },
+        "leading": [
+          {
+            "metrica": "Taxa de abertura de notificações de insights financeiros",
+            "relacao_com_lagging": "3x mais chance de interagir com funcionalidades inteligentes na mesma semana"
+          },
+          {
+            "metrica": "Visualizações do extrato inteligente por usuário por semana",
+            "relacao_com_lagging": "2+ visualizações semanais = 4x maior retenção de engajamento"
+          },
+          {
+            "metrica": "% de usuários que configuraram meta/alerta de planejamento financeiro",
+            "relacao_com_lagging": "Cria loops de retorno automático via notificações de progresso"
+          }
+        ]
+      },
+      {
+        "kr": "KR-02: Taxa de ativação 40%",
+        "lagging": {
+          "metrica": "Taxa de ativação — % novos cadastros com 3+ operações em 7 dias",
+          "frequencia_medicao": "Semanal (coorte)"
+        },
+        "leading": [
+          {
+            "metrica": "Taxa de conclusão do onboarding completo em até 24h",
+            "relacao_com_lagging": "2,5x mais probabilidade de ativação quando completo no primeiro dia"
+          },
+          {
+            "metrica": "Time-to-first-action após cadastro",
+            "relacao_com_lagging": "Primeira ação em <2h = 3x taxa de ativação superior"
+          },
+          {
+            "metrica": "% de novos usuários que vinculam conta bancária/cartão em 48h",
+            "relacao_com_lagging": "Preditor mais forte de múltiplas operações na primeira semana"
+          }
+        ]
+      },
+      {
+        "kr": "KR-03: Retenção D30 de 55%",
+        "lagging": {
+          "metrica": "Retenção D30 — % de usuários que retornam no 30º dia",
+          "frequencia_medicao": "Mensal (coorte)"
+        },
+        "leading": [
+          {
+            "metrica": "Retenção D7",
+            "relacao_com_lagging": "D7 >65% prediz D30 >55%. Permite intervenção 3 semanas antes"
+          },
+          {
+            "metrica": "Frequência de sessões na primeira semana",
+            "relacao_com_lagging": "4+ sessões semana 1 = D30 de 70%+. 1 sessão = D30 <20%"
+          },
+          {
+            "metrica": "% de usuários com notificações push ativas em 14 dias",
+            "relacao_com_lagging": "Push ativo = 2x mais chance de retorno no D30"
+          }
+        ]
+      },
+      {
+        "kr": "KR-04: NPS 60+",
+        "lagging": {
+          "metrica": "NPS entre usuários ativos com 4+ semanas",
+          "frequencia_medicao": "Mensal"
+        },
+        "leading": [
+          {
+            "metrica": "CSAT médio em micro-surveys in-app",
+            "relacao_com_lagging": "Quedas no CSAT precedem quedas no NPS em 2-4 semanas"
+          },
+          {
+            "metrica": "FCR (First Contact Resolution) no suporte",
+            "relacao_com_lagging": "FCR <70% = sinal antecipado de queda no NPS"
+          },
+          {
+            "metrica": "% de usuários com 3+ funcionalidades distintas por semana",
+            "relacao_com_lagging": "Engajamento amplo = NPS 20+ pontos acima de uso de 1 feature"
+          }
+        ]
+      },
+      {
+        "kr": "KR-05: 60% com transação semanal",
+        "lagging": {
+          "metrica": "% de WAU com 1+ transação real na semana",
+          "frequencia_medicao": "Semanal"
+        },
+        "leading": [
+          {
+            "metrica": "% de usuários com saldo disponível ou cartão ativo",
+            "relacao_com_lagging": "Sem saldo/cartão = taxa de transação próxima de zero"
+          },
+          {
+            "metrica": "Visualizações de telas transacionais por usuário por semana",
+            "relacao_com_lagging": "2+ visitas a telas transacionais = 75% convertem em transação"
+          },
+          {
+            "metrica": "Taxa de conclusão de transações iniciadas",
+            "relacao_com_lagging": "Queda indica fricção no fluxo e antecipa queda em transações reais"
+          }
+        ]
+      }
+    ]
+  }
+}

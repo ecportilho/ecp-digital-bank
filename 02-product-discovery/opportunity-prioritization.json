@@ -1,0 +1,33 @@
+{
+  "agent": "product-owner",
+  "skill": "opportunity-prioritizer",
+  "phase": "02-product-discovery",
+  "generated_at": "2026-03-03",
+  "next_hitl": 2,
+
+  "priorizadas": [
+    {"opp": "opp-01", "descricao": "Profissionais forçados a usar celular quebrando fluxo de trabalho", "kr": "kr-01", "impacto": "alto", "score": 27.0},
+    {"opp": "opp-04", "descricao": "Onboarding longo, burocrático, falhas em validação", "kr": "kr-02", "impacto": "alto", "score": 22.5},
+    {"opp": "opp-13", "descricao": "Pix no computador impossível/burocrático", "kr": "kr-05", "impacto": "alto", "score": 22.5},
+    {"opp": "opp-11", "descricao": "Taxas escondidas e linguagem confusa", "kr": "kr-04", "impacto": "alto", "score": 24.0},
+    {"opp": "opp-05", "descricao": "Sem valor imediato pós-cadastro", "kr": "kr-02", "impacto": "alto", "score": 18.0},
+    {"opp": "opp-10", "descricao": "Insegurança em operações online no computador", "kr": "kr-04", "impacto": "alto", "score": 14.4},
+    {"opp": "opp-06", "descricao": "Não entendem proposta web-first diferenciada", "kr": "kr-02", "impacto": "alto", "score": 14.0},
+    {"opp": "opp-02", "descricao": "Não entendem para onde vai o dinheiro sem categorizar", "kr": "kr-01", "impacto": "alto", "score": 9.3},
+    {"opp": "opp-14", "descricao": "Gestão de boletos manual e fragmentada", "kr": "kr-05", "impacto": "alto", "score": 12.8},
+    {"opp": "opp-15", "descricao": "Segurança granular em compras online (cartão virtual)", "kr": "kr-05", "impacto": "alto", "score": 12.8}
+  ],
+
+  "deixadas_para_depois": [
+    {"opp": "opp-07", "descricao": "Sem motivos recorrentes para voltar", "kr": "kr-03", "motivo": "Depende de dados acumulados. Ciclo 2."},
+    {"opp": "opp-03", "descricao": "Desejam controle, não apenas reagir", "kr": "kr-01", "motivo": "Planejamento requer histórico. Ciclo 2."},
+    {"opp": "opp-08", "descricao": "Informações espalhadas entre banco/apps/planilhas", "kr": "kr-03", "motivo": "Open Finance: complexidade regulatória. Ciclo 2."},
+    {"opp": "opp-09", "descricao": "Antecipar situação até próximo salário", "kr": "kr-03", "motivo": "Requer 2-3 meses de histórico. Feature-estrela do Ciclo 2."},
+    {"opp": "opp-12", "descricao": "Acessibilidade para deficientes", "kr": "kr-04", "motivo": "MVP será WCAG 2.1 AA como requisito. Discovery dedicado com PCD no Ciclo 2."}
+  ],
+
+  "descartadas": [],
+
+  "narrativa_mvp": "3 pilares: (1) ENTRADA — onboarding rápido + valor imediato + comunicação web-first; (2) USO DIÁRIO — Pix no browser + boletos + cartão virtual seguro; (3) INTELIGÊNCIA — extrato categorizado + transparência radical + segurança perceptível.",
+  "risco_declarado": "KR-03 (retenção D30) sem oportunidades diretas. Mitigação: monitorar D7. Se D7 <50%, acelerar opp-07 e opp-09."
+}

@@ -1,0 +1,1337 @@
+{
+  "agent": "product-owner",
+  "skills": ["epic-writer", "feature-writer", "user-story-writer", "acceptance-criteria-writer"],
+  "phase": "02-product-discovery",
+  "generated_at": "2026-03-04",
+  "mvp_narrative": "O MVP do ECP Digital Bank é estruturado em 3 pilares interdependentes que formam a jornada completa do usuário Marina — profissional CLT, 28 anos, que passa 8-10h/dia no computador e está frustrada com bancos mobile-only. (1) ENTRADA: onboarding progressivo em 3 etapas que entrega valor imediato antes de completar o cadastro, comunicando visualmente o diferencial web-first — meta: 40% de ativação em 7 dias (KR-02). (2) USO DIÁRIO: Pix Express Desktop otimizado para teclado e mouse, pagamento de boletos integrado e cartão virtual com controles granulares — meta: 60% dos WAU com transação semanal (KR-05). (3) INTELIGÊNCIA: dashboard com visão de ciclo salarial, extrato com categorização automática, transparência radical em toda operação e segurança perceptível — meta: 15.000 WAU-EFI (KR-01) e NPS 60+ (KR-04). Os 3 pilares atendem coletivamente 10 oportunidades priorizadas (opp-01 a opp-15) e as 4 hipóteses validadas em prototipação (H1, H2, H3, H4), com H5 (transparência) e H8 (segurança) integradas transversalmente.",
+
+  "business_rules_reference": {
+    "RN-01": "Limite diário Pix R$5.000 em horário comercial (6h-22h)",
+    "RN-02": "Limite noturno Pix R$1.000 por transação (22h-6h)",
+    "RN-03": "Autenticação reforçada para transações acima de R$2.000",
+    "RN-04": "Saldo insuficiente bloqueia Pix e pagamentos",
+    "RN-05": "Máximo de 5 chaves Pix por conta (1 CPF + 4 outras)",
+    "RN-06": "Limite do cartão virtual independente do saldo; fatura fecha dia 25",
+    "RN-07": "Soft delete — nenhum registro é deletado fisicamente",
+    "RN-08": "Idempotência via idempotency_key em requisições POST",
+    "RN-09": "Valores armazenados em centavos (integer), exibidos em BRL no front-end",
+    "RN-10": "Rate limit: máximo 10 Pix por hora por usuário"
+  },
+
+  "epics": [
+    {
+      "id": "EP-001",
+      "titulo": "Entrada — Onboarding Progressivo e Valor Imediato Web-First",
+      "hypothesis_statement": "Para profissionais CLT brasileiros de 22-35 anos que precisam abrir conta num banco digital sem interromper seu fluxo de trabalho no computador, o EP-001 é um épico de entrada que reduz o onboarding a 2 minutos e entrega valor perceptível antes do cadastro completo. Diferente do onboarding tradicional que exige documentos, espera e aprovação antes de qualquer ação, nossa solução ativa o usuário progressivamente: conta criada com dados mínimos, dashboard com preview imediato, funcionalidades adicionais desbloqueadas conforme necessidade.",
+      "benefit_hypothesis": "Acreditamos que um onboarding em 3 etapas progressivas com valor imediato pós-cadastro vai elevar a taxa de ativação (3+ operações em 7 dias) de um baseline estimado de 15% para 40% (KR-02). O momento 'aha' — ver o dashboard funcionando com dados simulados do próprio perfil — será o gatilho de retenção de curto prazo.",
+      "criterios_de_satisfacao": [
+        "Taxa de conclusão da Etapa 1 (dados mínimos) ≥ 85% das tentativas iniciadas",
+        "Time-to-first-action (primeiro Pix ou pagamento) < 2 horas após cadastro",
+        "Taxa de drop-off por campo no formulário < 5% por campo",
+        "NPS do onboarding ≥ 50 (pesquisa in-app ao final da Etapa 3)",
+        "Taxa de completude do onboarding em sessão única ≥ 70%"
+      ],
+      "kr_alvo": ["kr-02"],
+      "oportunidades_atendidas": ["opp-04", "opp-05", "opp-06"],
+      "hipoteses_validadas": ["H2"]
+    },
+    {
+      "id": "EP-002",
+      "titulo": "Uso Diário — Pix Desktop, Boletos e Cartão Virtual com Segurança Perceptível",
+      "hypothesis_statement": "Para profissionais CLT que realizam operações financeiras diárias no computador e encontram Pix impossível ou burocrático nos bancos atuais, o EP-002 é um épico de operações transacionais que torna Pix, boletos e cartão virtual fluidos e seguros no browser. Diferente dos concorrentes que forçam o usuário a pegar o celular para qualquer transação, nossa solução oferece Pix em 3 cliques com atalhos de teclado, pagamento de boletos integrado ao extrato e cartão virtual com controles granulares — tudo com feedback visual de segurança proporcional ao risco.",
+      "benefit_hypothesis": "Acreditamos que Pix Express Desktop com 3 níveis de segurança por valor, pagamento de boletos integrado e cartão virtual com controles granulares vai fazer com que 60% dos WAU realizem pelo menos uma transação por semana (KR-05). A fluidez das operações será o principal driver de engajamento recorrente.",
+      "criterios_de_satisfacao": [
+        "Tempo médio de completude de um Pix < 45 segundos (vs. 90s benchmark mobile Nubank)",
+        "Taxa de conclusão de Pix iniciados ≥ 90%",
+        "Taxa de conclusão de pagamento de boleto ≥ 88%",
+        "Taxa de adoção de controles granulares do cartão virtual ≥ 35%",
+        "Zero falsos positivos de rate limit (RN-10) para comportamento normal de uso"
+      ],
+      "kr_alvo": ["kr-05", "kr-04"],
+      "oportunidades_atendidas": ["opp-13", "opp-14", "opp-15", "opp-10", "opp-11"],
+      "hipoteses_validadas": ["H3", "H5", "H6", "H7", "H8"]
+    },
+    {
+      "id": "EP-003",
+      "titulo": "Inteligência — Dashboard Web-First, Extrato Categorizado e Transparência Radical",
+      "hypothesis_statement": "Para profissionais CLT que não entendem para onde vai seu dinheiro e se sentem enganados por taxas escondidas nos bancos tradicionais, o EP-003 é um épico de inteligência financeira que transforma dados brutos em visão de controle e clareza. Diferente dos extratos de lista cronológica sem categorização que todos os concorrentes oferecem, nossa solução provê dashboard com ciclo salarial, extrato com categorização automática >85% de acurácia, insights proativos contextuais e breakdown visual de custos em toda operação.",
+      "benefit_hypothesis": "Acreditamos que dashboard com ciclo salarial + extrato inteligente + transparência radical vai gerar 15.000 WAU-EFI (KR-01) e NPS ≥ 60 (KR-04). A inteligência financeira contextual é o diferencial que transforma o banco de ferramenta transacional em parceiro financeiro — criando motivo recorrente de retorno e retenção D30 ≥ 55% (KR-03).",
+      "criterios_de_satisfacao": [
+        "Taxa de acurácia de categorização automática ≥ 85% das transações",
+        "Taxa de interação semanal com o dashboard ≥ 70% dos usuários ativos",
+        "Taxa de interação com insights contextuais ≥ 40% (clique ou expansão)",
+        "NPS pós-uso do extrato inteligente ≥ 60",
+        "Taxa de adoção de visualização por ciclo salarial ≥ 50% dos usuários que configuram data de salário"
+      ],
+      "kr_alvo": ["kr-01", "kr-03", "kr-04"],
+      "oportunidades_atendidas": ["opp-01", "opp-02", "opp-06", "opp-11", "opp-10"],
+      "hipoteses_validadas": ["H1", "H4", "H5", "H8"]
+    }
+  ],
+
+  "features": [
+    {
+      "id": "FT-001",
+      "epico_pai": "EP-001",
+      "titulo": "Cadastro de Conta — Etapa 1: Dados Mínimos",
+      "descricao": "Como Marina, profissional CLT de 28 anos, eu preciso criar minha conta com o mínimo de informações possível para que eu possa acessar o banco imediatamente sem interromper meu trabalho.",
+      "benefit_hypothesis": "Acreditamos que reduzir o cadastro inicial a 4 campos (nome, e-mail, CPF, senha) vai alcançar taxa de conclusão ≥ 85% na Etapa 1 e reduzir o drop-off de abandono de 60% para < 15%. Saberemos que foi bem-sucedida quando a taxa de cadastros iniciados que chegam ao dashboard for ≥ 85% e o tempo médio de Etapa 1 for < 2 minutos.",
+      "acceptance_criteria": [
+        "Formulário com apenas 4 campos: Nome completo, E-mail, CPF, Senha",
+        "Validação em tempo real de cada campo (sem esperar submit)",
+        "Ao submeter com sucesso, usuário é redirecionado ao dashboard imediatamente",
+        "Nenhum upload de documento exigido na Etapa 1",
+        "Conta criada com status 'ativo_basico' que permite visualizar o dashboard"
+      ],
+      "oportunidades_atendidas": ["opp-04", "opp-06"],
+      "hipoteses_validadas": ["H2"]
+    },
+    {
+      "id": "FT-002",
+      "epico_pai": "EP-001",
+      "titulo": "Configuração Inicial — Etapa 2: Salário, Chave Pix e Personalização",
+      "descricao": "Como Marina, eu preciso configurar minha data de recebimento de salário e minha primeira chave Pix logo após criar a conta para que meu dashboard seja personalizado ao meu ciclo financeiro real e eu já possa receber transferências.",
+      "benefit_hypothesis": "Acreditamos que oferecer a Etapa 2 como guiada e opcional (não bloqueante) vai alcançar taxa de conclusão ≥ 65% na mesma sessão do cadastro. Saberemos que foi bem-sucedida quando ≥ 60% dos usuários que concluem Etapa 1 configurarem a data do salário, habilitando a visão de ciclo salarial no dashboard (KR-01).",
+      "acceptance_criteria": [
+        "Tour guiado interativo com 3 passos: (1) configurar data do salário, (2) registrar primeira chave Pix, (3) conhecer o dashboard",
+        "Usuário pode pular qualquer passo e completar depois",
+        "Data do salário permite seleção de dia 1-31 com aviso para dias inexistentes em meses curtos",
+        "Registro de chave Pix (CPF pré-preenchido) com confirmação por e-mail",
+        "Progresso visual (step indicator) mostrando posição na jornada"
+      ],
+      "oportunidades_atendidas": ["opp-05", "opp-06"],
+      "hipoteses_validadas": ["H2"]
+    },
+    {
+      "id": "FT-003",
+      "epico_pai": "EP-001",
+      "titulo": "Welcome Experience — Etapa 3: Dashboard com Preview e Proposta Web-First",
+      "descricao": "Como Marina, eu preciso ver o valor do banco imediatamente após criar minha conta para que eu entenda o diferencial web-first e tenha motivação para continuar usando antes de depositar qualquer dinheiro.",
+      "benefit_hypothesis": "Acreditamos que mostrar preview do dashboard com dados simulados do perfil do usuário e animação de valor web-first vai alcançar time-to-first-action < 2 horas em ≥ 50% dos novos usuários. Saberemos que foi bem-sucedida quando a taxa de ativação (3+ ops em 7 dias) atingir 40% (KR-02).",
+      "acceptance_criteria": [
+        "Dashboard vazio exibe preview simulado com dados contextuais ('Se você ganha R$6.500/mês, assim ficaria seu painel')",
+        "Animação sutil ao entrar: dashboard se expande para ocupar a tela com a frase 'Seu banco. Na tela onde você produz.'",
+        "Cards de ação rápida ('Faça seu primeiro Pix', 'Pague um boleto', 'Veja seu extrato') com call-to-action claro",
+        "Checklist de configuração visível no dashboard com progresso gamificado",
+        "Tooltip contextual em cada seção explicando o que aparecerá quando houver dados reais"
+      ],
+      "oportunidades_atendidas": ["opp-05", "opp-06"],
+      "hipoteses_validadas": ["H2", "H1"]
+    },
+    {
+      "id": "FT-004",
+      "epico_pai": "EP-001",
+      "titulo": "Login e Autenticação",
+      "descricao": "Como Marina, eu preciso de um login seguro e rápido no browser para que eu possa acessar meu banco sem fricção durante o expediente de trabalho.",
+      "benefit_hypothesis": "Acreditamos que um fluxo de login com senha + sessão persistente por 8 horas vai alcançar tempo médio de login < 15 segundos. Saberemos que foi bem-sucedida quando a taxa de abandono no login for < 2% e o NPS do fluxo de autenticação for ≥ 70.",
+      "acceptance_criteria": [
+        "Login por e-mail + senha com validação em tempo real",
+        "Sessão persiste por 8 horas em dispositivo confiável (JWT com refresh token)",
+        "Logout automático após inatividade de 30 minutos com aviso 2 minutos antes",
+        "Histórico de acessos visível no painel de segurança (dispositivo, IP, horário — RN-07)",
+        "Notificação via Web Notification para login de novo dispositivo"
+      ],
+      "oportunidades_atendidas": ["opp-10"],
+      "hipoteses_validadas": ["H8"]
+    },
+    {
+      "id": "FT-005",
+      "epico_pai": "EP-002",
+      "titulo": "Envio de Pix — 3 Níveis de Segurança por Valor",
+      "descricao": "Como Marina, eu preciso enviar Pix diretamente do browser de forma tão rápida quanto no celular, com segurança proporcional ao valor, para que eu possa fazer transferências sem interromper meu fluxo de trabalho.",
+      "benefit_hypothesis": "Acreditamos que Pix Express Desktop com 3 níveis de confirmação por valor e atalhos de teclado vai alcançar tempo médio de Pix < 45 segundos e taxa de conclusão ≥ 90%. Saberemos que foi bem-sucedida quando 60% dos WAU realizarem pelo menos um Pix por semana (KR-05).",
+      "acceptance_criteria": [
+        "Atalho Ctrl+P abre modal de Pix de qualquer tela",
+        "Campo unificado aceita chave Pix (CPF, e-mail, telefone, EVP) com autocomplete de contatos frequentes",
+        "Nível 1 (até R$499,99 com contato salvo): confirmação única — 1 clique",
+        "Nível 2 (R$500,00–R$1.999,99): confirmação com senha",
+        "Nível 3 (≥ R$2.000,00): confirmação com senha + resumo detalhado do destinatário + timeout de 30s para revisão (RN-03)",
+        "Preview de saldo após transferência antes de confirmar",
+        "Feedback visual imediato: animação check + valor + nome do destinatário + saldo atualizado",
+        "Respeito aos limites RN-01 (R$5.000/dia), RN-02 (R$1.000/tx noturno), RN-10 (10 Pix/hora)",
+        "Idempotency_key gerado automaticamente para cada Pix (RN-08)",
+        "Valores enviados ao back-end em centavos, exibidos em BRL no front-end (RN-09)"
+      ],
+      "oportunidades_atendidas": ["opp-13", "opp-01", "opp-11"],
+      "hipoteses_validadas": ["H3", "H5", "H8"]
+    },
+    {
+      "id": "FT-006",
+      "epico_pai": "EP-002",
+      "titulo": "Recebimento de Pix — QR Code e Chave de Cobrança",
+      "descricao": "Como Marina, eu preciso gerar um QR Code Pix ou compartilhar minha chave de cobrança diretamente do browser para que eu possa cobrar clientes e receber pagamentos sem precisar pegar o celular.",
+      "benefit_hypothesis": "Acreditamos que geração de QR Code Pix com link compartilhável via browser vai alcançar adoção por ≥ 40% dos usuários na primeira semana. Saberemos que foi bem-sucedida quando o volume de Pix recebidos via QR Code gerado na web crescer 20% semana a semana nas primeiras 4 semanas.",
+      "acceptance_criteria": [
+        "Tela de cobrança com campo de valor (opcional) e descrição",
+        "QR Code gerado em < 2 segundos após confirmar valor",
+        "Botão 'Copiar código Pix' com feedback visual de confirmação ('Copiado!')",
+        "Link compartilhável (URL encurtada) para compartilhar via e-mail ou WhatsApp sem precisar copiar QR Code",
+        "Notificação Web Notification imediata quando Pix for recebido",
+        "Extrato atualizado em tempo real após recebimento (polling a cada 5s por 5 minutos após gerar QR Code)"
+      ],
+      "oportunidades_atendidas": ["opp-13", "opp-01"],
+      "hipoteses_validadas": ["H3"]
+    },
+    {
+      "id": "FT-007",
+      "epico_pai": "EP-002",
+      "titulo": "Gerenciamento de Chaves Pix",
+      "descricao": "Como Marina, eu preciso gerenciar minhas chaves Pix diretamente no browser para que eu possa registrar, visualizar e remover chaves sem precisar acessar outro aplicativo.",
+      "benefit_hypothesis": "Acreditamos que gerenciamento completo de chaves Pix na web vai alcançar taxa de registros de pelo menos 1 chave ativa por usuário em ≥ 80% dos usuários ativos. Saberemos que foi bem-sucedida quando ≥ 70% dos usuários tiverem CPF configurado como chave Pix.",
+      "acceptance_criteria": [
+        "Lista de chaves cadastradas com status (ativa/pendente/inativa) e tipo (CPF/e-mail/telefone/EVP/aleatória)",
+        "Máximo de 5 chaves exibido com contador visual 'X de 5 chaves utilizadas' (RN-05)",
+        "Botão de registrar nova chave desabilitado e com tooltip explicativo quando limite atingido (RN-05)",
+        "Fluxo de registro: selecionar tipo → validar posse (código por e-mail/SMS) → confirmar",
+        "Remoção de chave com soft delete — chave desativada, não excluída (RN-07)",
+        "Confirmação de remoção com modal de aviso 'Esta ação é irreversível para esta chave'"
+      ],
+      "oportunidades_atendidas": ["opp-13"],
+      "hipoteses_validadas": ["H3"]
+    },
+    {
+      "id": "FT-008",
+      "epico_pai": "EP-002",
+      "titulo": "Pagamento de Boletos com Transparência e Alertas de Vencimento",
+      "descricao": "Como Marina, eu preciso pagar boletos diretamente no browser colando o código de barras para que eu pare de usar app de banco no celular para pagar contas e consolide tudo em um lugar.",
+      "benefit_hypothesis": "Acreditamos que pagamento de boletos integrado com decodificação automática de código de barras e breakdown de transparência vai alcançar taxa de conclusão de pagamento ≥ 88% e volume médio de 2 boletos pagos por usuário ativo por mês. Saberemos que foi bem-sucedida quando boletos apareceram categorizados automaticamente no extrato inteligente em ≥ 95% dos casos.",
+      "acceptance_criteria": [
+        "Campo de texto para colar código de barras (digitável ou copiado do e-mail)",
+        "Decodificação automática em < 1 segundo: beneficiário, valor, data de vencimento, juros/multa se aplicável",
+        "Breakdown de transparência antes de confirmar: 'Valor: R$X → Juros: R$0,00 → Total: R$X' (H5)",
+        "Saldo insuficiente: mensagem 'Faltam R$X. Deposite via Pix para pagar este boleto' com ação rápida (RN-04)",
+        "Confirmação com idempotency_key para evitar pagamento duplicado (RN-08)",
+        "Histórico de boletos pagos com status visual: pago (verde #3dff8b), pendente (amarelo #ffcc00), vencido (vermelho #ff4d4d)",
+        "Boleto pago aparece categorizado automaticamente no extrato inteligente"
+      ],
+      "oportunidades_atendidas": ["opp-14", "opp-11"],
+      "hipoteses_validadas": ["H7", "H5"]
+    },
+    {
+      "id": "FT-009",
+      "epico_pai": "EP-002",
+      "titulo": "Cartão Virtual com Controles Granulares de Segurança",
+      "descricao": "Como Marina, eu preciso gerar e gerenciar meu cartão virtual no browser com controles granulares de limite e bloqueio para que eu faça compras online com segurança e tenha visibilidade total do uso.",
+      "benefit_hypothesis": "Acreditamos que cartão virtual com bloqueio/desbloqueio instantâneo e controles granulares vai alcançar taxa de adoção de ≥ 35% dos usuários configurando pelo menos um controle avançado. Saberemos que foi bem-sucedida quando NPS pós-uso do cartão virtual for ≥ 65 (KR-04).",
+      "acceptance_criteria": [
+        "Card visual com design dark theme mostrando últimos 4 dígitos, status, validade e bandeira",
+        "Toggle visual de bloqueio/desbloqueio com animação de cadeado (aberto/fechado) — resposta < 500ms",
+        "Controle de limite por transação (ex: bloquear compras acima de R$500 sem autorização adicional)",
+        "Fatura atual com timeline visual mostrando progresso até fechamento dia 25 (RN-06)",
+        "Limite do cartão exibido independentemente do saldo da conta, com barra de progresso visual (RN-06)",
+        "Histórico de uso com categoria de merchant e valor em BRL (convertido de centavos — RN-09)",
+        "Web Notification imediata para cada uso do cartão: 'Compra de R$89,90 na Amazon detectada'",
+        "Geração de novo cartão virtual sob demanda (use-and-block flow)"
+      ],
+      "oportunidades_atendidas": ["opp-15", "opp-10"],
+      "hipoteses_validadas": ["H6", "H8"]
+    },
+    {
+      "id": "FT-010",
+      "epico_pai": "EP-003",
+      "titulo": "Dashboard Web-First com Saldo e Visão de Ciclo Salarial",
+      "descricao": "Como Marina, eu preciso de um dashboard que organize minhas finanças em torno do meu ciclo salarial (do dia 5 ao dia 4 do mês seguinte) para que eu entenda em tempo real quanto já gastei e quanto tenho disponível até o próximo salário.",
+      "benefit_hypothesis": "Acreditamos que dashboard com ciclo salarial como eixo central vai alcançar taxa de interação semanal ≥ 70% dos usuários ativos e tempo médio de sessão no dashboard ≥ 3 minutos. Saberemos que foi bem-sucedida quando WAU-EFI atingir 15.000 (KR-01) e ≥ 50% dos usuários adotarem a visão por ciclo salarial.",
+      "acceptance_criteria": [
+        "Card de saldo principal com valor em destaque em BRL (convertido de centavos — RN-09) e variação do dia",
+        "Visão de ciclo salarial configurável com período exibido 'DD/MMM – DD/MMM'",
+        "Barra de saúde financeira: '% do orçamento consumido vs. dias restantes no ciclo'",
+        "Gráfico donut de distribuição de gastos por categoria com hover interativo",
+        "Lista de próximas contas a vencer (boletos cadastrados) nos próximos 7 dias",
+        "Cards de acesso rápido para Pix, Boletos e Cartão na área principal (layout 1280px+)",
+        "Insights proativos contextuais em área dedicada (máximo 3 por sessão)"
+      ],
+      "oportunidades_atendidas": ["opp-01", "opp-02", "opp-06"],
+      "hipoteses_validadas": ["H1"]
+    },
+    {
+      "id": "FT-011",
+      "epico_pai": "EP-003",
+      "titulo": "Extrato Inteligente com Categorização Automática",
+      "descricao": "Como Marina, eu preciso de um extrato que categorize minhas transações automaticamente e mostre painel de distribuição de gastos para que eu entenda para onde vai meu dinheiro sem precisar usar apps terceiros como Organizze ou Mobills.",
+      "benefit_hypothesis": "Acreditamos que extrato com categorização automática ≥ 85% de acurácia e painel lateral de insights vai alcançar taxa de adoção de ≥ 65% dos usuários ativos consultando o extrato semanalmente. Saberemos que foi bem-sucedida quando WAU-EFI (KR-01) incluir engajamento com extrato em ≥ 40% das sessões ativas.",
+      "acceptance_criteria": [
+        "Timeline de transações com badges coloridas por categoria (alimentação=verde-lima, transporte=azul, lazer=roxo, moradia=laranja)",
+        "Painel lateral (aproveitando largura desktop) com donut chart de distribuição por categoria",
+        "Comparativo com ciclo anterior: 'Alimentação +12% vs ciclo anterior' em cada categoria",
+        "Top 3 merchants por volume no período selecionado",
+        "Filtros avançados: por categoria, faixa de valor, tipo (Pix/cartão/boleto), período (ciclo ou calendário)",
+        "Categoria editável com 1 clique por transação — mudança salva em < 500ms",
+        "Insights automáticos inline: 'Você gastou R$890 com iFood este mês — 23% mais que no ciclo anterior'",
+        "Valores sempre exibidos em BRL, armazenados em centavos (RN-09)"
+      ],
+      "oportunidades_atendidas": ["opp-02", "opp-01", "opp-11"],
+      "hipoteses_validadas": ["H4"]
+    },
+    {
+      "id": "FT-012",
+      "epico_pai": "EP-003",
+      "titulo": "Insights Financeiros Contextuais e Proativos",
+      "descricao": "Como Marina, eu preciso receber insights financeiros proativos baseados nos meus padrões de gasto para que eu tome decisões mais conscientes sem precisar analisar os dados manualmente.",
+      "benefit_hypothesis": "Acreditamos que insights financeiros contextuais no dashboard e extrato vão alcançar taxa de interação (clique ou expansão) ≥ 40% dos usuários ativos. Saberemos que foi bem-sucedida quando a presença de insights correlacionar com sessões de retorno em D7 ≥ 50% (contribuindo para KR-03).",
+      "acceptance_criteria": [
+        "Máximo 3 insights por sessão para evitar sobrecarga cognitiva",
+        "Insights baseados em regras: assinaturas com aumento de valor, padrões de gasto acima da média, aproximação de limite do cartão",
+        "Cada insight com ação sugerida (ex: 'Ver detalhes', 'Ajustar limite')",
+        "Insights descartáveis: usuário pode ocultar insight específico com 'X'",
+        "Histórico de insights visível na seção de extrato inteligente",
+        "Alertas de gasto relativos ao ciclo: 'Você usou 78% do orçamento de alimentação, faltam 12 dias'"
+      ],
+      "oportunidades_atendidas": ["opp-02", "opp-07"],
+      "hipoteses_validadas": ["H4", "H1"]
+    },
+    {
+      "id": "FT-013",
+      "epico_pai": "EP-003",
+      "titulo": "Transparência Radical — Breakdown Visual de Custos em Todas as Operações",
+      "descricao": "Como Marina, eu preciso ver o breakdown completo de qualquer operação financeira antes de confirmar para que eu nunca seja surpreendida por taxas escondidas e confie plenamente no banco.",
+      "benefit_hypothesis": "Acreditamos que breakdown visual de custos em toda operação + selo 'Sem taxas escondidas' vai alcançar NPS ≥ 60 (KR-04) e CSAT ≥ 4,5/5 em micro-surveys pós-transação. Saberemos que foi bem-sucedida quando taxa de abandono pré-confirmação cair (vs. A/B test sem breakdown) e NPS mencionar 'transparência' como atributo positivo.",
+      "acceptance_criteria": [
+        "Card 'Transparência' antes de todo botão de confirmação financeira",
+        "Para Pix: 'Você envia R$X → Destinatário recebe R$X → Custo para você: R$0,00'",
+        "Para boleto: 'Valor: R$X → Juros/multa: R$0,00 → Total debitado: R$X'",
+        "Para cartão: 'Limite usado: R$X de R$Y → Disponível após compra: R$Z'",
+        "Selo visual 'Sem taxas escondidas' com ícone de escudo lime (#b7ff2a) em toda confirmação",
+        "Valores negativos em vermelho (#ff4d4d), positivos em verde (#3dff8b), neutros em branco (#eaf2ff)",
+        "Linguagem coloquial — zero termos jurídicos ou técnicos no breakdown",
+        "Histórico de custos no perfil: 'Em 2026, você pagou R$0,00 em taxas no ECP'"
+      ],
+      "oportunidades_atendidas": ["opp-11"],
+      "hipoteses_validadas": ["H5"]
+    },
+    {
+      "id": "FT-014",
+      "epico_pai": "EP-003",
+      "titulo": "Perfil, Segurança da Conta e Preferências",
+      "descricao": "Como Marina, eu preciso de um painel de segurança completo com histórico de acessos e configurações granulares para que eu sinta controle e confiança em gerenciar minhas finanças num banco novo pelo browser.",
+      "benefit_hypothesis": "Acreditamos que painel de segurança com histórico de logins, sessões ativas e notificações configuráveis vai alcançar taxa de acesso ao painel de segurança ≥ 30% dos usuários mensalmente. Saberemos que foi bem-sucedida quando score de segurança percebida (escala Likert 1-5) atingir ≥ 4,3/5 em pesquisa in-app.",
+      "acceptance_criteria": [
+        "Histórico de logins: dispositivo, IP, horário, cidade estimada — últimos 30 acessos",
+        "Sessões ativas com opção de encerrar outras sessões remotamente",
+        "Indicador 'Sessão protegida' no header (ícone de escudo verde) quando JWT válido via HTTPS",
+        "Configuração granular de Web Notifications por categoria (transacionais, financeiras, segurança)",
+        "Troca de senha com validação de senha atual e requisitos explícitos de complexidade",
+        "Dados pessoais editáveis (nome, telefone) com validação e confirmação por código",
+        "Soft delete de conta: desativação, não exclusão (RN-07)"
+      ],
+      "oportunidades_atendidas": ["opp-10"],
+      "hipoteses_validadas": ["H8"]
+    }
+  ],
+
+  "stories": [
+    {
+      "id": "US-001",
+      "feature_pai": "FT-001",
+      "titulo": "Criar conta com dados mínimos em menos de 2 minutos",
+      "descricao": "Como Marina, profissional CLT de 28 anos que está no computador trabalhando, eu quero criar minha conta do ECP Digital Bank preenchendo apenas nome, e-mail, CPF e senha para que eu possa começar a usar o banco sem interromper meu fluxo de trabalho por mais de 2 minutos.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Cadastro bem-sucedido com dados válidos",
+          "dado": "Que Marina acessa a página de cadastro com e-mail 'marina@design.com', CPF '123.456.789-00' ainda não cadastrado e senha 'Senha@2026'",
+          "quando": "Ela preenche todos os 4 campos (nome: 'Marina Oliveira', e-mail, CPF, senha) e clica em 'Criar conta'",
+          "entao": "Sua conta é criada com status 'ativo_basico' e ela é redirecionada ao dashboard em menos de 3 segundos",
+          "e": [
+            "Um e-mail de boas-vindas é enviado para 'marina@design.com'",
+            "O header exibe 'Marina Oliveira' e o saldo R$0,00",
+            "O tempo total do processo de preenchimento ao dashboard é ≤ 2 minutos"
+          ]
+        },
+        {
+          "cenario": "Validação em tempo real de CPF inválido",
+          "dado": "Que Marina está preenchendo o formulário de cadastro",
+          "quando": "Ela digita o CPF '000.000.000-00' (inválido por dígito verificador) e move o foco para o próximo campo",
+          "entao": "O campo CPF exibe a mensagem de erro 'CPF inválido. Verifique os números e tente novamente.' em vermelho (#ff4d4d) imediatamente, sem esperar o submit",
+          "e": [
+            "O botão 'Criar conta' permanece desabilitado enquanto o CPF for inválido",
+            "O campo CPF fica com borda vermelha (#ff4d4d)",
+            "Nenhuma requisição é enviada ao back-end"
+          ]
+        },
+        {
+          "cenario": "E-mail já cadastrado no sistema",
+          "dado": "Que Marina tenta criar uma conta com o e-mail 'marina@design.com' que já existe no sistema",
+          "quando": "Ela preenche todos os campos e clica em 'Criar conta'",
+          "entao": "A API retorna erro 409 e a tela exibe a mensagem 'Este e-mail já está cadastrado. Que tal fazer login?' com link direto para a página de login",
+          "e": [
+            "O campo e-mail fica destacado em vermelho (#ff4d4d)",
+            "Os outros dados preenchidos permanecem no formulário (não resetar o form)",
+            "O erro é exibido em menos de 2 segundos"
+          ]
+        },
+        {
+          "cenario": "Senha que não atende requisitos mínimos",
+          "dado": "Que Marina está no campo de senha do formulário de cadastro",
+          "quando": "Ela digita a senha '123456' (sem letra maiúscula e sem caractere especial)",
+          "entao": "Um indicador visual de força da senha aparece abaixo do campo com os requisitos faltantes em vermelho: '• Mínimo 8 caracteres ✓ • Letra maiúscula ✗ • Número ✓ • Caractere especial ✗'",
+          "e": [
+            "O botão 'Criar conta' permanece desabilitado",
+            "À medida que Marina adiciona os caracteres faltantes, os itens da lista ficam verdes (#3dff8b)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-002",
+      "feature_pai": "FT-001",
+      "titulo": "Validar CPF duplicado em tempo real antes do submit",
+      "descricao": "Como Marina, eu quero receber feedback imediato se meu CPF já está cadastrado no sistema para que eu não perca tempo preenchendo o formulário inteiro antes de descobrir que já tenho uma conta.",
+      "estimativa": "P",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "CPF já cadastrado — detecção antecipada",
+          "dado": "Que o CPF '123.456.789-00' já está associado a uma conta existente no sistema",
+          "quando": "Marina preenche o campo CPF com esse valor e move o foco para o próximo campo",
+          "entao": "O campo CPF exibe 'Este CPF já possui uma conta. Prefere fazer login?' com link para login",
+          "e": [
+            "A verificação é feita via API em background (debounce 500ms após o usuário parar de digitar)",
+            "O botão 'Criar conta' permanece desabilitado enquanto o conflito existir",
+            "A requisição de verificação não expõe dados pessoais associados ao CPF"
+          ]
+        },
+        {
+          "cenario": "CPF novo — continuação sem interrupção",
+          "dado": "Que o CPF '987.654.321-00' não existe no sistema",
+          "quando": "Marina preenche o campo CPF e move o foco",
+          "entao": "O campo exibe ícone de check verde (#3dff8b) e o foco move para o próximo campo sem interrupção",
+          "e": [
+            "Nenhuma mensagem de erro é exibida",
+            "O fluxo continua normalmente"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-003",
+      "feature_pai": "FT-002",
+      "titulo": "Configurar data de recebimento do salário no onboarding",
+      "descricao": "Como Marina, que recebe salário todo dia 5, eu quero configurar minha data de recebimento durante o onboarding para que meu dashboard organize os gastos pelo ciclo do dia 5 ao dia 4 do mês seguinte, refletindo minha realidade financeira.",
+      "estimativa": "P",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Configuração bem-sucedida da data do salário",
+          "dado": "Que Marina está na Etapa 2 do onboarding e seu salário cai todo dia 5",
+          "quando": "Ela seleciona o dia '5' no seletor de data e clica em 'Confirmar'",
+          "entao": "O dashboard é imediatamente reorganizado mostrando o ciclo '05/fev – 04/mar' como período ativo",
+          "e": [
+            "A barra de saúde financeira exibe '0% do orçamento consumido — 28 dias restantes no ciclo'",
+            "A configuração é salva e persiste entre sessões",
+            "Uma mensagem de confirmação aparece: 'Perfeito! Seu ciclo salarial começa no dia 5'"
+          ]
+        },
+        {
+          "cenario": "Usuário pula a configuração da data de salário",
+          "dado": "Que Marina está na Etapa 2 e decide não configurar a data do salário agora",
+          "quando": "Ela clica em 'Pular por agora'",
+          "entao": "O dashboard usa o mês-calendário como padrão (1º ao último dia do mês) com aviso discreto: 'Configure a data do salário para ver seu ciclo financeiro real'",
+          "e": [
+            "O onboarding avança para a Etapa 3 normalmente",
+            "O aviso de configuração aparece no dashboard como card de ação pendente"
+          ]
+        },
+        {
+          "cenario": "Seleção de dia 31 em meses com 28 ou 30 dias",
+          "dado": "Que Marina quer configurar o dia 31 como data do salário",
+          "quando": "Ela seleciona '31' no seletor",
+          "entao": "Uma tooltip aparece: 'Em meses com menos de 31 dias, seu ciclo usará o último dia do mês'",
+          "e": [
+            "A configuração é permitida (dia 31 é válido)",
+            "A lógica de ciclo no back-end trata corretamente meses curtos"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-004",
+      "feature_pai": "FT-002",
+      "titulo": "Registrar primeira chave Pix (CPF) durante o onboarding",
+      "descricao": "Como Marina, eu quero registrar meu CPF como chave Pix durante o onboarding para que eu já possa receber transferências imediatamente após criar minha conta.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Registro de chave Pix CPF com sucesso",
+          "dado": "Que Marina está na Etapa 2 e seu CPF '123.456.789-00' ainda não é chave Pix de nenhum banco",
+          "quando": "Ela clica em 'Usar meu CPF como chave Pix' e confirma no e-mail de validação",
+          "entao": "A chave é registrada no DICT e exibida como ativa na lista de chaves com status 'CPF — Ativa'",
+          "e": [
+            "O contador de chaves exibe '1 de 5 chaves utilizadas' (RN-05)",
+            "Uma notificação de sucesso aparece: 'Pronto! Agora você pode receber Pix pelo seu CPF'",
+            "O processo de confirmação por e-mail tem timeout de 10 minutos com opção de reenviar"
+          ]
+        },
+        {
+          "cenario": "CPF já é chave Pix em outro banco",
+          "dado": "Que o CPF de Marina já está registrado como chave Pix no Nubank",
+          "quando": "Ela tenta registrar o CPF como chave Pix",
+          "entao": "O sistema exibe: 'Seu CPF já é chave Pix em outro banco. Quer portá-la para o ECP? (Processo leva até 7 dias úteis)' com opção de iniciar portabilidade ou registrar outro tipo de chave",
+          "e": [
+            "A portabilidade é opcional — usuário pode pular e usar outro tipo de chave",
+            "O fluxo de portabilidade é iniciado como processo assíncrono com status visível"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-005",
+      "feature_pai": "FT-003",
+      "titulo": "Ver preview do dashboard com dados simulados após cadastro",
+      "descricao": "Como Marina, que acabou de criar sua conta com saldo R$0,00, eu quero ver uma prévia do que meu dashboard parecerá quando tiver dados reais para que eu entenda o valor do banco antes de depositar qualquer dinheiro.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Dashboard vazio com preview simulado ativo",
+          "dado": "Que Marina concluiu a Etapa 1 do onboarding e configurou salário de R$6.500 na Etapa 2",
+          "quando": "Ela acessa o dashboard pela primeira vez",
+          "entao": "O dashboard exibe dados simulados com badge 'Preview — assim ficaria seu painel' mostrando saldo fictício, categorias de gastos simuladas e insights de exemplo",
+          "e": [
+            "Uma mensagem de call-to-action aparece: 'Deposite via Pix para ver seus dados reais'",
+            "Os dados simulados usam valores plausíveis para renda de R$6.500/mês",
+            "O preview é claramente distinguível de dados reais (badge visual destacado)"
+          ]
+        },
+        {
+          "cenario": "Animação de valor web-first na primeira visita",
+          "dado": "Que Marina acessa o dashboard pela primeira vez em um desktop com largura ≥ 1280px",
+          "quando": "O dashboard carrega pela primeira vez",
+          "entao": "Uma animação sutil de 2 segundos mostra o dashboard se expandindo para ocupar a tela com a frase 'Seu banco. Na tela onde você produz.'",
+          "e": [
+            "A animação ocorre apenas na primeira sessão (flag de 'onboarding_seen' salvo)",
+            "A animação pode ser interrompida com tecla ESC ou clique fora",
+            "Em dispositivos < 1280px, a animação é suprimida e substituída por mensagem estática"
+          ]
+        },
+        {
+          "cenario": "Preview é substituído por dados reais ao receber primeiro depósito",
+          "dado": "Que Marina está com o dashboard em modo preview e recebe um Pix de R$6.500,00",
+          "quando": "A transação é confirmada e o saldo atualiza",
+          "entao": "O badge de preview desaparece e o dashboard exibe os dados reais com animação de transição suave",
+          "e": [
+            "Uma notificação in-app aparece: 'Pix de R$6.500,00 recebido de João Silva'",
+            "O saldo real substitui o saldo simulado: R$6.500,00",
+            "O ciclo salarial inicia com a data do primeiro crédito"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-006",
+      "feature_pai": "FT-004",
+      "titulo": "Fazer login com e-mail e senha no browser",
+      "descricao": "Como Marina, que usa o banco principalmente no computador do trabalho, eu quero fazer login com e-mail e senha e ter minha sessão mantida por 8 horas para que eu não precise reautenticar a cada vez que volto ao browser durante o expediente.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Login bem-sucedido com sessão persistente",
+          "dado": "Que Marina tem conta ativa e acessa a página de login com 'marina@design.com' e 'Senha@2026'",
+          "quando": "Ela preenche e-mail e senha e clica em 'Entrar'",
+          "entao": "Ela é redirecionada ao dashboard em < 2 segundos com JWT válido por 8 horas",
+          "e": [
+            "O header exibe 'Marina Oliveira' e saldo atualizado",
+            "O ícone de escudo no header exibe 'Sessão protegida' (ícone verde)",
+            "Um registro de login é salvo no histórico de acessos com dispositivo, IP e horário"
+          ]
+        },
+        {
+          "cenario": "Login com senha errada — feedback de erro",
+          "dado": "Que Marina tenta fazer login com a senha incorreta 'SenhaErrada1!'",
+          "quando": "Ela submete o formulário",
+          "entao": "A mensagem de erro 'E-mail ou senha incorretos. Verifique seus dados.' aparece sem indicar qual campo específico está errado (por segurança)",
+          "e": [
+            "Nenhum dado da conta é exposto na mensagem de erro",
+            "Após 5 tentativas erradas consecutivas, o login é bloqueado por 15 minutos com mensagem explicativa"
+          ]
+        },
+        {
+          "cenario": "Logout automático por inatividade",
+          "dado": "Que Marina está logada e fica 28 minutos sem interagir com o sistema",
+          "quando": "O timer de inatividade atinge 28 minutos",
+          "entao": "Um modal de aviso aparece: 'Sua sessão expirará em 2 minutos por inatividade. Deseja continuar?'",
+          "e": [
+            "Se ela não responder em 2 minutos, a sessão é encerrada e ela é redirecionada ao login",
+            "Se ela clicar 'Continuar', o timer é reiniciado por mais 30 minutos",
+            "Nenhum dado de sessão (saldo, extrato) é visível na tela de login após o logout"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-007",
+      "feature_pai": "FT-005",
+      "titulo": "Enviar Pix de até R$499,99 com confirmação única (1 clique)",
+      "descricao": "Como Marina, que precisa pagar um freelancer de R$250,00 enquanto trabalha, eu quero enviar Pix sem senha para valores baixos com contatos salvos para que a operação seja tão rápida quanto no celular.",
+      "estimativa": "G",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Pix de baixo valor para contato salvo — 1 clique",
+          "dado": "Que Marina tem R$4.235,78 em conta, João Silva salvo como contato Pix e está em horário comercial (14h)",
+          "quando": "Ela pressiona Ctrl+P, seleciona João Silva, digita R$250,00 e clica em 'Enviar Pix'",
+          "entao": "O Pix é enviado imediatamente com animação de check e mensagem 'Pix de R$250,00 enviado para João Silva'",
+          "e": [
+            "O saldo atualiza para R$3.985,78 em tempo real",
+            "A transação aparece no extrato com categoria automática dentro de 5 segundos",
+            "O idempotency_key é gerado automaticamente (RN-08) para evitar duplicata",
+            "Nenhuma senha é solicitada (nível 1 de segurança para valores < R$500)"
+          ]
+        },
+        {
+          "cenario": "Saldo insuficiente para enviar Pix",
+          "dado": "Que Marina tem R$180,00 em conta e tenta enviar R$250,00",
+          "quando": "Ela digita o valor R$250,00 no formulário de Pix",
+          "entao": "O botão 'Enviar Pix' fica desabilitado e aparece a mensagem 'Saldo insuficiente. Você tem R$180,00 disponíveis.' (RN-04)",
+          "e": [
+            "O preview de 'Saldo após transferência' exibe 'R$180,00 disponível' com ícone de alerta",
+            "Nenhuma requisição é enviada ao back-end enquanto o saldo for insuficiente",
+            "Uma sugestão aparece: 'Receba via Pix para completar o saldo'"
+          ]
+        },
+        {
+          "cenario": "Atalho de teclado Ctrl+P abre modal de Pix",
+          "dado": "Que Marina está na página do extrato",
+          "quando": "Ela pressiona Ctrl+P",
+          "entao": "O modal de Pix abre imediatamente com foco automático no campo de busca de destinatário",
+          "e": [
+            "O modal abre em < 200ms",
+            "Escape fecha o modal sem enviar nada",
+            "O campo de busca aceita chave Pix ou nome de contato com autocomplete"
+          ]
+        },
+        {
+          "cenario": "Limite diário de Pix atingido (RN-01)",
+          "dado": "Que Marina já enviou R$4.800,00 em Pix hoje (horário comercial) e tenta enviar mais R$300,00",
+          "quando": "Ela confirma o envio",
+          "entao": "A operação é bloqueada com a mensagem 'Você atingiu R$4.800 do seu limite diário de R$5.000. Você pode enviar até R$200,00 agora.' (RN-01)",
+          "e": [
+            "O campo de valor exibe o limite disponível restante",
+            "A mensagem informa quando o limite será renovado (meia-noite)",
+            "Marina pode enviar R$200,00 (valor dentro do limite restante)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-008",
+      "feature_pai": "FT-005",
+      "titulo": "Enviar Pix de R$500,00 a R$1.999,99 com confirmação por senha",
+      "descricao": "Como Marina, que vai pagar o aluguel de R$1.800,00 pelo browser, eu quero confirmar o Pix com minha senha para que eu tenha segurança proporcional ao valor sem fricção excessiva.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Pix de valor médio — confirmação por senha",
+          "dado": "Que Marina tem R$4.235,78 em conta e quer enviar R$1.800,00 para a chave Pix da imobiliária",
+          "quando": "Ela preenche o formulário e clica em 'Continuar'",
+          "entao": "Um segundo passo aparece pedindo a senha da conta com campo mascarado e botão 'Confirmar Pix de R$1.800,00'",
+          "e": [
+            "O resumo da transação é exibido: destinatário, valor, saldo após transferência (R$2.435,78)",
+            "O selo 'Transação Protegida' com animação sutil aparece no card de confirmação",
+            "Após senha correta, o Pix é enviado com feedback visual imediato"
+          ]
+        },
+        {
+          "cenario": "Pix noturno com limite reduzido (RN-02)",
+          "dado": "Que são 23h e Marina tenta enviar R$1.500,00",
+          "quando": "Ela abre o formulário de Pix",
+          "entao": "Um indicador visual amarelo aparece: 'Horário noturno — limite de R$1.000,00 por transação (22h–6h)' (RN-02)",
+          "e": [
+            "O campo de valor fica bloqueado acima de R$1.000,00 com mensagem explicativa",
+            "O botão 'Enviar Pix' só é habilitado para valores ≤ R$1.000,00",
+            "O indicador noturno desaparece após as 6h sem necessidade de refresh"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-009",
+      "feature_pai": "FT-005",
+      "titulo": "Enviar Pix acima de R$2.000,00 com autenticação reforçada",
+      "descricao": "Como Marina, que precisa fazer uma transferência de R$3.500,00 para pagar parcelamento de um curso, eu quero ter um processo de confirmação detalhado com revisão completa do destinatário para que eu me sinta segura antes de confirmar um valor alto.",
+      "estimativa": "G",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Pix de alto valor — autenticação reforçada (RN-03)",
+          "dado": "Que Marina quer enviar R$3.500,00 para a chave Pix 'escola@cursos.com.br' e tem R$4.235,78 em conta",
+          "quando": "Ela preenche o formulário e clica em 'Continuar'",
+          "entao": "Um resumo detalhado aparece com: (1) nome completo do destinatário, (2) banco do destinatário, (3) chave Pix usada, (4) valor em destaque grande, (5) saldo após transferência (R$735,78), (6) campo de senha, (7) timer de 30 segundos para revisão",
+          "e": [
+            "O botão 'Confirmar' fica desabilitado durante os 30 segundos de revisão obrigatória (RN-03)",
+            "O timer é visual (barra de progresso) com contagem regressiva",
+            "Após os 30 segundos, o botão é habilitado com a senha já preenchida (não resetar a senha)",
+            "O selo 'Transação Protegida' aparece com ícone de escudo lime (#b7ff2a)"
+          ]
+        },
+        {
+          "cenario": "Rate limit atingido — 10 Pix na última hora (RN-10)",
+          "dado": "Que Marina enviou 10 Pix na última hora e tenta enviar o 11º",
+          "quando": "Ela confirma o envio",
+          "entao": "A operação é bloqueada com mensagem: 'Você atingiu o limite de 10 Pix por hora. Aguarde X minutos para enviar mais.' (RN-10)",
+          "e": [
+            "O tempo exato de espera é exibido em minutos",
+            "Nenhuma cobrança ou débito ocorre",
+            "O contador de Pix na hora aparece no modal: '10/10 Pix utilizados nesta hora'",
+            "Quando Marina atingir 8/10, um aviso amigável aparece: '2 Pix restantes nesta hora'"
+          ]
+        },
+        {
+          "cenario": "Transação com idempotência — evitar Pix duplicado (RN-08)",
+          "dado": "Que Marina envia um Pix de R$3.500,00 e a conexão cai após o clique em confirmar",
+          "quando": "Ela recarrega a página e tenta confirmar o mesmo Pix novamente",
+          "entao": "O sistema detecta o idempotency_key duplicado e exibe 'Este Pix já foi processado. Veja no seu extrato.' sem debitar o valor novamente (RN-08)",
+          "e": [
+            "O extrato mostra apenas uma transação de R$3.500,00",
+            "O saldo não é debitado duas vezes",
+            "Uma notificação informa que o Pix foi confirmado no primeiro envio"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-010",
+      "feature_pai": "FT-006",
+      "titulo": "Gerar QR Code Pix para receber pagamentos do computador",
+      "descricao": "Como Marina, que quer cobrar um freelancer de R$800,00 sem precisar pegar o celular, eu quero gerar um QR Code Pix no browser e compartilhar o link para que o pagamento caia na minha conta sem interromper meu trabalho.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Geração de QR Code com valor fixo",
+          "dado": "Que Marina está na tela de recebimento e quer cobrar R$800,00 de um cliente",
+          "quando": "Ela digita R$800,00, adiciona a descrição 'Projeto de UX — Janeiro' e clica em 'Gerar QR Code'",
+          "entao": "Um QR Code é gerado em < 2 segundos com o valor embutido e exibido em destaque na tela",
+          "e": [
+            "Botão 'Copiar código Pix' copia o payload para área de transferência com feedback 'Copiado!'",
+            "Botão 'Compartilhar link' gera URL encurtada válida por 24 horas",
+            "O valor R$800,00 e a descrição aparecem abaixo do QR Code como confirmação visual"
+          ]
+        },
+        {
+          "cenario": "Notificação imediata ao receber o pagamento",
+          "dado": "Que Marina gerou o QR Code e o cliente pagou R$800,00",
+          "quando": "O pagamento é confirmado no back-end",
+          "entao": "Uma Web Notification aparece no browser: 'Pix de R$800,00 recebido de Carlos Lima'",
+          "e": [
+            "O saldo atualiza em tempo real sem necessidade de refresh",
+            "A transação aparece no extrato com categoria 'Receita' automaticamente",
+            "O QR Code é marcado como 'Pago' na interface se a tela ainda estiver aberta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-011",
+      "feature_pai": "FT-007",
+      "titulo": "Visualizar e gerenciar todas as chaves Pix cadastradas",
+      "descricao": "Como Marina, eu quero ver todas as minhas chaves Pix e gerenciar quais estão ativas para que eu saiba exatamente quais chaves posso compartilhar para receber pagamentos.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Listagem de chaves com contador de limite",
+          "dado": "Que Marina tem 3 chaves ativas: CPF, e-mail e telefone",
+          "quando": "Ela acessa a página de gerenciamento de chaves Pix",
+          "entao": "A lista exibe as 3 chaves com tipo, valor mascarado, status ('Ativa') e data de cadastro, com contador '3 de 5 chaves utilizadas' (RN-05)",
+          "e": [
+            "Botão 'Adicionar chave' está habilitado",
+            "Cada chave tem botão de 'Copiar chave' e 'Remover'"
+          ]
+        },
+        {
+          "cenario": "Tentativa de adicionar 6ª chave — limite atingido (RN-05)",
+          "dado": "Que Marina já tem 5 chaves cadastradas (CPF + 4 outras)",
+          "quando": "Ela tenta clicar em 'Adicionar nova chave'",
+          "entao": "O botão está desabilitado com tooltip: 'Você atingiu o limite de 5 chaves Pix. Remova uma chave para adicionar outra.' (RN-05)",
+          "e": [
+            "O contador exibe '5 de 5 chaves utilizadas' em destaque",
+            "Nenhum modal de adição é aberto"
+          ]
+        },
+        {
+          "cenario": "Remoção de chave Pix com soft delete (RN-07)",
+          "dado": "Que Marina quer remover sua chave de e-mail 'marina@antiga.com' que não usa mais",
+          "quando": "Ela clica em 'Remover' na chave de e-mail e confirma no modal",
+          "entao": "A chave é desativada (status 'Inativa') e removida da lista ativa, mas o registro é mantido no banco de dados (RN-07)",
+          "e": [
+            "O contador atualiza para '4 de 5 chaves utilizadas'",
+            "Mensagem de sucesso: 'Chave de e-mail removida. Ela não receberá mais Pix.'",
+            "A chave removida não pode receber Pix mas aparece no histórico de chaves"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-012",
+      "feature_pai": "FT-008",
+      "titulo": "Pagar boleto colando o código de barras no browser",
+      "descricao": "Como Marina, que recebeu a fatura do IPTU por e-mail, eu quero colar o código de barras diretamente no browser e ver os detalhes antes de pagar para que eu pague sem precisar abrir o app do banco no celular.",
+      "estimativa": "G",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Pagamento de boleto com código válido",
+          "dado": "Que Marina tem R$4.235,78 em conta e cola o código do IPTU: '836700000012 350700000003 477500000002 380640000001 400000000000'",
+          "quando": "Ela cola o código no campo e o sistema decodifica",
+          "entao": "Em < 1 segundo, o sistema exibe: Beneficiário 'Prefeitura de São Paulo', Valor R$350,70, Vencimento 10/03/2026, Juros R$0,00, Total R$350,70",
+          "e": [
+            "O card de Transparência mostra: 'Valor: R$350,70 → Juros: R$0,00 → Total debitado: R$350,70' (H5)",
+            "Botão 'Pagar R$350,70' está habilitado e destacado",
+            "Após confirmação, a transação aparece no extrato categorizada como 'Governo/Impostos'"
+          ]
+        },
+        {
+          "cenario": "Boleto vencido com multa e juros",
+          "dado": "Que Marina tem um boleto vencido há 3 dias com valor base R$150,00 e multa de R$3,00 + juros R$0,60",
+          "quando": "Ela cola o código do boleto vencido",
+          "entao": "O sistema exibe o breakdown: 'Valor original: R$150,00 → Multa: R$3,00 → Juros: R$0,60 → Total: R$153,60' com o total em destaque e aviso 'Boleto vencido em 01/03/2026'",
+          "e": [
+            "Os valores de multa e juros ficam em amarelo (#ffcc00) para chamar atenção",
+            "Marina pode prosseguir com o pagamento do valor com acréscimos"
+          ]
+        },
+        {
+          "cenario": "Saldo insuficiente para pagar boleto (RN-04)",
+          "dado": "Que Marina tem apenas R$200,00 em conta e o boleto é de R$350,70",
+          "quando": "O sistema decodifica o boleto e exibe os detalhes",
+          "entao": "O botão 'Pagar' fica desabilitado com a mensagem: 'Saldo insuficiente. Faltam R$150,70. Deposite via Pix para pagar este boleto.' (RN-04)",
+          "e": [
+            "Um botão de ação rápida 'Receber Pix' aparece abaixo da mensagem para facilitar depósito",
+            "O valor faltante é exibido em vermelho (#ff4d4d)",
+            "O boleto permanece na tela para que Marina pague quando o saldo for suficiente"
+          ]
+        },
+        {
+          "cenario": "Idempotência — evitar pagamento duplicado de boleto (RN-08)",
+          "dado": "Que Marina pagou um boleto com sucesso e tenta colar o mesmo código novamente",
+          "quando": "Ela cola o código do boleto já pago",
+          "entao": "O sistema identifica o idempotency_key e exibe: 'Este boleto já foi pago em 04/03/2026. Veja no seu extrato.' (RN-08)",
+          "e": [
+            "Nenhum débito adicional ocorre",
+            "Um link direto para a transação no extrato é exibido"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-013",
+      "feature_pai": "FT-009",
+      "titulo": "Bloquear e desbloquear cartão virtual instantaneamente",
+      "descricao": "Como Marina, que suspeita de uso indevido do cartão após compra em site desconhecido, eu quero bloquear meu cartão virtual instantaneamente com um toggle para que eu evite novas cobranças sem precisar ligar para o banco.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Bloqueio instantâneo do cartão via toggle",
+          "dado": "Que o cartão virtual de Marina está desbloqueado e ativo",
+          "quando": "Ela clica no toggle de bloqueio do cartão",
+          "entao": "O toggle muda para 'Bloqueado' com animação de cadeado fechando em < 500ms e uma confirmação visual 'Cartão bloqueado — novas compras serão recusadas'",
+          "e": [
+            "O card visual do cartão muda para aparência 'desativada' (opacidade reduzida, ícone de cadeado sobreposto)",
+            "Uma Web Notification é enviada: 'Seu cartão virtual foi bloqueado'",
+            "O status 'Bloqueado' persiste entre sessões até ser revertido"
+          ]
+        },
+        {
+          "cenario": "Desbloqueio do cartão após verificação",
+          "dado": "Que o cartão de Marina está bloqueado",
+          "quando": "Ela clica no toggle novamente para desbloquear",
+          "entao": "Um modal de confirmação aparece: 'Deseja desbloquear o cartão? O cartão voltará a aceitar compras.' com botão 'Desbloquear'",
+          "e": [
+            "Após confirmação, o cartão é desbloqueado em < 500ms",
+            "O toggle e o card visual retornam ao estado ativo",
+            "Uma Web Notification confirma: 'Cartão desbloqueado — prontos para novas compras'"
+          ]
+        },
+        {
+          "cenario": "Web Notification ao usar o cartão (RN-06)",
+          "dado": "Que Marina fez uma compra na Amazon de R$89,90 e o cartão tem limite de R$1.000,00 com R$200,00 já utilizados (RN-06)",
+          "quando": "A compra é processada",
+          "entao": "Uma Web Notification aparece: 'Compra de R$89,90 na Amazon. Limite disponível: R$710,10'",
+          "e": [
+            "A fatura atualiza em tempo real na interface do cartão",
+            "A barra de progresso do limite mostra R$289,90 de R$1.000,00 utilizados",
+            "A transação aparece no histórico do cartão categorizada como 'E-commerce'"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-014",
+      "feature_pai": "FT-009",
+      "titulo": "Configurar limite por transação no cartão virtual",
+      "descricao": "Como Marina, que compra muito em sites variados, eu quero definir um limite máximo por transação no meu cartão virtual para que eu seja alertada de qualquer compra suspeita acima do meu padrão.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Configurar limite por transação com sucesso",
+          "dado": "Que Marina acessa as configurações do cartão virtual",
+          "quando": "Ela ativa 'Limite por transação' e define R$500,00 como valor máximo por compra",
+          "entao": "A configuração é salva com confirmação 'Compras acima de R$500,00 serão bloqueadas automaticamente'",
+          "e": [
+            "O limite por transação aparece como tag no card visual do cartão: 'Limite por compra: R$500,00'",
+            "Uma web notification é enviada para confirmar a configuração"
+          ]
+        },
+        {
+          "cenario": "Compra bloqueada por exceder limite por transação",
+          "dado": "Que Marina definiu limite de R$500,00 por transação e tenta comprar R$750,00 em software",
+          "quando": "A transação de R$750,00 é processada",
+          "entao": "A compra é recusada e Marina recebe Web Notification: 'Compra de R$750,00 bloqueada — acima do seu limite por transação de R$500,00. Era você? Clique para autorizar.'",
+          "e": [
+            "Marina pode autorizar a compra específica clicando na notificação sem alterar o limite permanente",
+            "O histórico registra a tentativa bloqueada com status 'Recusada por limite'"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-015",
+      "feature_pai": "FT-010",
+      "titulo": "Visualizar saldo e ciclo salarial atual no dashboard",
+      "descricao": "Como Marina, que recebe salário todo dia 5 e hoje é dia 15, eu quero ver no dashboard quanto gastei nos 10 dias do ciclo atual e quanto tenho disponível até o dia 4 de abril para que eu tome decisões financeiras conscientes sem fazer contas manualmente.",
+      "estimativa": "G",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Dashboard com ciclo salarial ativo e dados reais",
+          "dado": "Que Marina tem saldo de R$4.235,78, configurou salário para o dia 5 e hoje é dia 15/março",
+          "quando": "Ela acessa o dashboard",
+          "entao": "O dashboard exibe: saldo R$4.235,78 em destaque, período '05/mar – 04/abr', gastos do ciclo R$2.264,22, barra de saúde financeira '34,8% do ciclo consumido — 20 dias restantes'",
+          "e": [
+            "Os valores são exibidos em BRL (convertidos de centavos no back-end — RN-09)",
+            "O gráfico donut mostra distribuição de gastos por categoria do ciclo atual",
+            "A lista de próximas contas exibe boletos vencendo nos próximos 7 dias"
+          ]
+        },
+        {
+          "cenario": "Alternância entre visão por ciclo salarial e calendário",
+          "dado": "Que Marina está no dashboard com visão de ciclo salarial ativa",
+          "quando": "Ela clica no toggle 'Ver por mês-calendário'",
+          "entao": "O dashboard atualiza para mostrar o período '01/mar – 31/mar' com os gastos recalculados para o mês-calendário",
+          "e": [
+            "A alternância ocorre sem recarregar a página (estado local)",
+            "O toggle visual indica claramente qual visão está ativa",
+            "Todos os gráficos e barras atualizam para refletir o período selecionado"
+          ]
+        },
+        {
+          "cenario": "Dashboard com dados em tempo real após transação",
+          "dado": "Que Marina está no dashboard e acaba de enviar um Pix de R$500,00",
+          "quando": "O Pix é confirmado",
+          "entao": "O saldo atualiza de R$4.235,78 para R$3.735,78 em tempo real sem refresh",
+          "e": [
+            "Os gastos do ciclo atualizam de R$2.264,22 para R$2.764,22",
+            "A barra de saúde financeira atualiza para refletir o novo percentual",
+            "Uma animação sutil de atualização indica que os dados mudaram"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-016",
+      "feature_pai": "FT-010",
+      "titulo": "Ver insights proativos financeiros no dashboard",
+      "descricao": "Como Marina, eu quero receber insights automáticos no dashboard sobre meus padrões de gasto para que eu tome ações preventivas antes de gastar mais do que posso neste ciclo.",
+      "estimativa": "G",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Insight de gasto acima da média em categoria",
+          "dado": "Que Marina gastou R$890,00 com iFood neste ciclo, 23% acima do ciclo anterior (R$723,00)",
+          "quando": "Ela acessa o dashboard",
+          "entao": "Um card de insight aparece: 'Alimentação delivery 23% acima do ciclo anterior — R$890 gastos com iFood este mês'",
+          "e": [
+            "O card tem botão 'Ver detalhes' que leva ao extrato filtrado por categoria 'Alimentação'",
+            "O card tem botão 'X' para descartá-lo desta sessão",
+            "Máximo 3 insights são exibidos por sessão"
+          ]
+        },
+        {
+          "cenario": "Alerta de orçamento de categoria próximo do limite",
+          "dado": "Que Marina consumiu 78% do seu gasto histórico médio em alimentação e faltam 12 dias no ciclo",
+          "quando": "Ela acessa o dashboard",
+          "entao": "Um insight amarelo (#ffcc00) aparece: 'Você usou 78% do orçamento médio de alimentação, faltam 12 dias no ciclo'",
+          "e": [
+            "A cor amarela (#ffcc00) indica atenção sem alarmismo",
+            "Nenhum bloqueio ou restrição ocorre — é apenas informativo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-017",
+      "feature_pai": "FT-011",
+      "titulo": "Ver extrato com transações categorizadas automaticamente",
+      "descricao": "Como Marina, eu quero acessar meu extrato e ver todas as transações já categorizadas automaticamente com gráfico de distribuição de gastos por categoria para que eu entenda meu padrão financeiro sem precisar classificar cada item manualmente.",
+      "estimativa": "G",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Extrato com categorização automática e painel lateral",
+          "dado": "Que Marina tem 35 transações no ciclo atual cobrindo Pix, boletos e compras no cartão",
+          "quando": "Ela acessa a página do extrato",
+          "entao": "A timeline exibe todas as 35 transações com badges coloridas por categoria, e o painel lateral mostra donut chart com distribuição percentual de cada categoria",
+          "e": [
+            "A acurácia de categorização é ≥ 85% das transações (sem intervenção manual)",
+            "Os valores são exibidos em BRL (RN-09)",
+            "O painel lateral mostra os top 3 merchants por volume no período"
+          ]
+        },
+        {
+          "cenario": "Editar categoria de uma transação com 1 clique",
+          "dado": "Que o iFood foi categorizado como 'Alimentação' mas Marina quer mudar para 'Lazer'",
+          "quando": "Ela clica na badge de categoria da transação do iFood",
+          "entao": "Um seletor inline de categorias aparece, Marina seleciona 'Lazer' e a mudança é salva em < 500ms",
+          "e": [
+            "O donut chart e os totais do painel lateral atualizam em tempo real após a mudança",
+            "A edição manual tem prioridade sobre categorização automática futura para o mesmo merchant"
+          ]
+        },
+        {
+          "cenario": "Filtrar extrato por categoria e período",
+          "dado": "Que Marina quer ver apenas as transações de 'Transporte' do ciclo atual",
+          "quando": "Ela seleciona o filtro 'Transporte' no painel de filtros avançados",
+          "entao": "A timeline exibe apenas transações de transporte (Uber, gasolina, estacionamento) com total da categoria destacado no painel lateral",
+          "e": [
+            "O filtro é aplicado sem recarregar a página",
+            "Um indicador visual mostra '5 de 35 transações' após filtro",
+            "Botão 'Limpar filtros' restaura a visualização completa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-018",
+      "feature_pai": "FT-011",
+      "titulo": "Comparar gastos por categoria entre ciclos salariais",
+      "descricao": "Como Marina, eu quero ver quanto gastei em cada categoria neste ciclo comparado ao ciclo anterior para que eu identifique padrões de gastos crescentes antes que se tornem um problema.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Comparativo de ciclo no painel lateral do extrato",
+          "dado": "Que Marina gasta em média R$723,00 em alimentação e este ciclo já tem R$890,00",
+          "quando": "Ela está no painel lateral do extrato com o período do ciclo selecionado",
+          "entao": "Cada categoria do donut chart exibe o comparativo: 'Alimentação: R$890,00 (+23% vs ciclo anterior)'",
+          "e": [
+            "Valores acima do ciclo anterior ficam em vermelho (#ff4d4d) com seta para cima",
+            "Valores abaixo ficam em verde (#3dff8b) com seta para baixo",
+            "Valores estáveis ficam em branco (#eaf2ff)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-019",
+      "feature_pai": "FT-013",
+      "titulo": "Ver breakdown de transparência antes de confirmar qualquer transação",
+      "descricao": "Como Marina, que desconfia de bancos que escondem taxas, eu quero ver o custo exato de cada operação antes de confirmar para que eu nunca seja cobrada de forma inesperada.",
+      "estimativa": "M",
+      "prioridade": 1,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Breakdown de transparência no Pix",
+          "dado": "Que Marina vai enviar um Pix de R$4.235,78 para João Silva",
+          "quando": "Ela chega na tela de confirmação do Pix",
+          "entao": "Um card 'Transparência' exibe: 'Você envia → R$4.235,78 | João Silva recebe → R$4.235,78 | Custo para você → R$0,00'",
+          "e": [
+            "O selo 'Sem taxas escondidas' com ícone de escudo lime (#b7ff2a) aparece no card",
+            "O texto usa linguagem coloquial — zero juridiques",
+            "O custo R$0,00 fica em verde (#3dff8b)"
+          ]
+        },
+        {
+          "cenario": "Histórico de custos zerado no perfil",
+          "dado": "Que Marina acessa o histórico de custos no perfil",
+          "quando": "Ela clica em 'Ver histórico de taxas'",
+          "entao": "A tela exibe: 'Em 2026, você pagou R$0,00 em taxas no ECP Digital Bank'",
+          "e": [
+            "O valor R$0,00 é exibido em destaque em verde (#3dff8b)",
+            "Há quebra por mês mostrando o total de transações e o total de taxas (sempre R$0,00)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-020",
+      "feature_pai": "FT-014",
+      "titulo": "Ver histórico de acessos e sessões ativas da conta",
+      "descricao": "Como Marina, eu quero acessar o histórico de logins e ver sessões ativas para que eu identifique rapidamente qualquer acesso não autorizado à minha conta.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Histórico de logins com detalhes completos",
+          "dado": "Que Marina acessa o painel de segurança da conta",
+          "quando": "Ela clica em 'Histórico de acessos'",
+          "entao": "Uma lista dos últimos 30 acessos exibe: dispositivo ('Chrome no Windows 11'), IP (parcialmente mascarado), horário e cidade estimada para cada entrada",
+          "e": [
+            "O login atual aparece marcado como 'Sessão atual' em verde (#3dff8b)",
+            "Logins de novos dispositivos são marcados com badge 'Novo dispositivo' em amarelo (#ffcc00)"
+          ]
+        },
+        {
+          "cenario": "Encerrar todas as outras sessões ativas remotamente",
+          "dado": "Que Marina está logada em 2 sessões (computador do trabalho e computador de casa)",
+          "quando": "Ela clica em 'Encerrar outras sessões' no painel de segurança",
+          "entao": "Todas as sessões exceto a atual são invalidadas imediatamente com mensagem: 'X sessão(ões) encerrada(s) com sucesso'",
+          "e": [
+            "Web Notifications são enviadas aos outros dispositivos (se permitido)",
+            "A sessão atual continua ativa sem interrupção"
+          ]
+        },
+        {
+          "cenario": "Notificação de login de novo dispositivo",
+          "dado": "Que Marina está logada no computador do trabalho e faz login no notebook pessoal pela primeira vez",
+          "quando": "O login no novo dispositivo é bem-sucedido",
+          "entao": "Uma Web Notification aparece no computador do trabalho: 'Novo acesso à sua conta de Chrome no macOS às 19:32. Era você?'",
+          "e": [
+            "A notificação tem botão 'Não fui eu' que redireciona para encerrar sessões",
+            "O novo dispositivo aparece no histórico de acessos imediatamente"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-021",
+      "feature_pai": "FT-014",
+      "titulo": "Configurar quais categorias de Web Notifications receber",
+      "descricao": "Como Marina, que fica com o browser aberto durante o expediente, eu quero controlar quais notificações o banco me envia pelo browser para que eu receba apenas alertas relevantes sem ser incomodada por notificações desnecessárias.",
+      "estimativa": "P",
+      "prioridade": 3,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Configuração granular de notificações",
+          "dado": "Que Marina acessa as configurações de notificações no perfil",
+          "quando": "Ela visualiza as categorias disponíveis",
+          "entao": "Três categorias são exibidas com toggles individuais: 'Transacionais (Pix, cartão, boleto)' — ativo por padrão, 'Financeiras (insights, alertas de gasto)' — ativo por padrão, 'Segurança (novos acessos, senhas)' — sempre ativo e não pode ser desativado",
+          "e": [
+            "O toggle de 'Segurança' está bloqueado com tooltip: 'Alertas de segurança não podem ser desativados para sua proteção'",
+            "Mudanças são salvas automaticamente ao alternar o toggle"
+          ]
+        },
+        {
+          "cenario": "Solicitação de permissão após primeira transação bem-sucedida",
+          "dado": "Que Marina concluiu seu primeiro Pix com sucesso e ainda não concedeu permissão de notificações",
+          "quando": "O Pix é confirmado",
+          "entao": "Um card in-app aparece: 'Quer ser avisada na hora que receber Pix? Ative as notificações do ECP.' com botão 'Ativar notificações'",
+          "e": [
+            "O card aparece apenas uma vez por sessão",
+            "Se recusado, o card não aparece novamente por 7 dias",
+            "Se aceito, o browser exibe o diálogo nativo de permissão de notificações"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-022",
+      "feature_pai": "FT-012",
+      "titulo": "Receber insight automático sobre assinatura com aumento de valor",
+      "descricao": "Como Marina, que tem várias assinaturas recorrentes, eu quero ser notificada quando uma assinatura cobrar mais do que o valor usual para que eu identifique reajustes não comunicados.",
+      "estimativa": "M",
+      "prioridade": 3,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Insight de assinatura com aumento detectado",
+          "dado": "Que a Netflix cobrou R$55,90 neste mês sendo que no mês anterior cobrou R$45,90",
+          "quando": "A transação é processada e categorizada como 'Assinaturas'",
+          "entao": "Um insight aparece no extrato: 'Netflix cobrou R$55,90 — R$10,00 a mais que no ciclo anterior'",
+          "e": [
+            "O aumento R$10,00 é exibido em vermelho (#ff4d4d)",
+            "Um link 'Ver histórico desta assinatura' filtra o extrato por merchant Netflix"
+          ]
+        },
+        {
+          "cenario": "Nenhum insight para cobranças estáveis",
+          "dado": "Que o Spotify cobrou R$21,90 pelo quarto mês consecutivo sem variação",
+          "quando": "A transação é processada",
+          "entao": "Nenhum insight é gerado para esta transação",
+          "e": [
+            "A transação aparece normalmente no extrato com categoria 'Assinaturas' sem insight associado"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-023",
+      "feature_pai": "FT-005",
+      "titulo": "Buscar destinatário Pix com autocomplete de contatos frequentes",
+      "descricao": "Como Marina, que faz Pix para os mesmos 5-6 contatos regularmente, eu quero que o campo de destinatário suggira automaticamente meus contatos frequentes para que eu encontre o destinatário sem precisar digitar a chave Pix completa.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Autocomplete de contato frequente com 2 letras digitadas",
+          "dado": "Que Marina abriu o modal de Pix e João Silva (chave: joao@email.com) é seu contato mais frequente",
+          "quando": "Ela digita 'Jo' no campo de busca",
+          "entao": "O autocomplete exibe 'João Silva — joao@email.com — 8 Pix enviados' como primeira sugestão dentro de 200ms",
+          "e": [
+            "Os contatos são ordenados por frequência de uso (mais frequentes primeiro)",
+            "Uma foto/inicial do contato é exibida na sugestão para reconhecimento visual rápido",
+            "Selecionar o contato preenche o campo e move o foco para o campo de valor automaticamente"
+          ]
+        },
+        {
+          "cenario": "Busca por chave Pix desconhecida (nova chave)",
+          "dado": "Que Marina quer enviar para uma chave Pix que nunca usou antes: 'novo@email.com'",
+          "quando": "Ela digita 'novo@email.com' no campo de busca",
+          "entao": "O sistema valida a chave no DICT e exibe o nome do titular: 'Carlos Eduardo — novo@email.com — Banco Bradesco' com opção de salvar como contato",
+          "e": [
+            "A validação ocorre em < 2 segundos",
+            "Se a chave não existir no DICT, a mensagem 'Chave Pix não encontrada. Verifique o endereço.' aparece",
+            "O botão de salvar contato aparece com o nome já preenchido"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-024",
+      "feature_pai": "FT-003",
+      "titulo": "Completar checklist de configurações inicial com gamificação",
+      "descricao": "Como Marina, que acabou de criar a conta, eu quero um checklist visual de configurações pendentes no dashboard para que eu saiba exatamente quais passos completar para usar 100% das funcionalidades do banco.",
+      "estimativa": "P",
+      "prioridade": 3,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Checklist com progresso gamificado",
+          "dado": "Que Marina concluiu apenas a Etapa 1 (cadastro básico)",
+          "quando": "Ela acessa o dashboard",
+          "entao": "Um card de checklist exibe: '2 de 5 passos concluídos' com barra de progresso e os passos: ✓ Criar conta, ✓ Acessar o dashboard, ○ Configurar data do salário, ○ Registrar chave Pix, ○ Fazer a primeira transação'",
+          "e": [
+            "Cada passo tem um link de ação direta que leva para a configuração correspondente",
+            "Ao completar todos os 5 passos, uma mensagem de celebração aparece: 'Conta totalmente configurada! Você está pronto para usar o ECP.'",
+            "O card desaparece do dashboard após completar todos os passos"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US-025",
+      "feature_pai": "FT-009",
+      "titulo": "Ver fatura do cartão virtual com timeline de fechamento",
+      "descricao": "Como Marina, que usa o cartão virtual para compras online, eu quero ver o progresso da minha fatura atual e quando ela fecha para que eu planeje meus pagamentos sem ser pega de surpresa no dia 25.",
+      "estimativa": "M",
+      "prioridade": 2,
+      "criterios_de_aceite": [
+        {
+          "cenario": "Fatura em progresso com timeline visual",
+          "dado": "Que hoje é dia 15/março e a fatura de Marina tem R$289,90 de R$1.000,00 utilizados (RN-06)",
+          "quando": "Ela acessa a tela do cartão virtual",
+          "entao": "Uma timeline visual exibe o progresso: 'Fatura atual: R$289,90 | Fecha em: dia 25/março (em 10 dias) | Limite disponível: R$710,10'",
+          "e": [
+            "O limite R$1.000,00 é independente do saldo da conta corrente (RN-06)",
+            "A barra de progresso do limite muda de cor: verde < 70%, amarelo 70-90%, vermelho > 90%",
+            "Os valores são exibidos em BRL convertidos de centavos (RN-09)"
+          ]
+        },
+        {
+          "cenario": "Fatura fechada aguardando pagamento",
+          "dado": "Que hoje é dia 26/março e a fatura de R$289,90 fechou ontem",
+          "quando": "Marina acessa o cartão",
+          "entao": "A seção exibe 'Fatura fechada: R$289,90 — Vencimento: 05/abril' com botão de ação 'Pagar fatura'",
+          "e": [
+            "A fatura anterior fica em estado 'Aguardando pagamento' em amarelo (#ffcc00)",
+            "Uma nova fatura começa automaticamente com R$0,00 de gastos"
+          ]
+        }
+      ]
+    }
+  ],
+
+  "summary": {
+    "total_epics": 3,
+    "total_features": 14,
+    "total_stories": 25,
+    "stories_por_feature": {
+      "FT-001": ["US-001", "US-002"],
+      "FT-002": ["US-003", "US-004"],
+      "FT-003": ["US-005", "US-024"],
+      "FT-004": ["US-006"],
+      "FT-005": ["US-007", "US-008", "US-009", "US-023"],
+      "FT-006": ["US-010"],
+      "FT-007": ["US-011"],
+      "FT-008": ["US-012"],
+      "FT-009": ["US-013", "US-014", "US-025"],
+      "FT-010": ["US-015", "US-016"],
+      "FT-011": ["US-017", "US-018"],
+      "FT-012": ["US-022"],
+      "FT-013": ["US-019"],
+      "FT-014": ["US-020", "US-021"]
+    },
+    "estimativas_por_tamanho": {
+      "P": ["US-002", "US-021", "US-024"],
+      "M": ["US-001", "US-003", "US-006", "US-010", "US-011", "US-013", "US-014", "US-018", "US-019", "US-020", "US-022", "US-023", "US-025"],
+      "G": ["US-004", "US-005", "US-007", "US-008", "US-009", "US-012", "US-015", "US-016", "US-017"],
+      "GG": []
+    },
+    "stories_por_prioridade": {
+      "p1_criticas": ["US-001", "US-003", "US-004", "US-005", "US-006", "US-007", "US-008", "US-009", "US-012", "US-013", "US-015", "US-017", "US-019"],
+      "p2_altas": ["US-002", "US-010", "US-011", "US-014", "US-016", "US-018", "US-020", "US-023", "US-025"],
+      "p3_medias": ["US-021", "US-022", "US-024"]
+    },
+    "coverage_by_kr": {
+      "kr-01": ["EP-003", "FT-010", "FT-011", "FT-012"],
+      "kr-02": ["EP-001", "FT-001", "FT-002", "FT-003"],
+      "kr-03": ["EP-003", "FT-012", "FT-014"],
+      "kr-04": ["EP-002", "EP-003", "FT-013", "FT-009", "FT-014"],
+      "kr-05": ["EP-002", "FT-005", "FT-008", "FT-009"]
+    },
+    "business_rules_coverage": {
+      "RN-01": ["US-007", "US-008", "US-009"],
+      "RN-02": ["US-008"],
+      "RN-03": ["US-009"],
+      "RN-04": ["US-007", "US-012"],
+      "RN-05": ["US-004", "US-011"],
+      "RN-06": ["US-013", "US-025"],
+      "RN-07": ["US-011"],
+      "RN-08": ["US-007", "US-009", "US-012"],
+      "RN-09": ["US-007", "US-015", "US-017", "US-025"],
+      "RN-10": ["US-009"]
+    },
+    "oportunidades_atendidas": {
+      "opp-01": ["FT-005", "FT-006", "FT-010"],
+      "opp-02": ["FT-010", "FT-011", "FT-012"],
+      "opp-04": ["FT-001"],
+      "opp-05": ["FT-002", "FT-003"],
+      "opp-06": ["FT-001", "FT-003"],
+      "opp-10": ["FT-004", "FT-009", "FT-014"],
+      "opp-11": ["FT-008", "FT-013"],
+      "opp-13": ["FT-005", "FT-006", "FT-007"],
+      "opp-14": ["FT-008"],
+      "opp-15": ["FT-009"]
+    },
+    "hipoteses_cobertas": {
+      "H1": ["FT-010", "FT-012"],
+      "H2": ["FT-001", "FT-002", "FT-003"],
+      "H3": ["FT-005", "FT-006", "FT-007"],
+      "H4": ["FT-011", "FT-012"],
+      "H5": ["FT-008", "FT-013"],
+      "H6": ["FT-009"],
+      "H7": ["FT-008"],
+      "H8": ["FT-004", "FT-005", "FT-009", "FT-014"]
+    },
+    "risco_declarado": "KR-03 (retenção D30 55%) tem cobertura indireta via FT-012 (insights), FT-014 (segurança e confiança) e Web Notifications (FT-014/US-021). Monitorar D7 ≥ 50% como leading indicator. Se D7 < 50% após 2 semanas de produção, acionar sprint dedicado para opp-07 (motivos recorrentes de retorno) e opp-09 (previsão de ciclo) do Ciclo 2.",
+    "proximos_passos": {
+      "fase_03_delivery": "Backlog pronto para refinamento com time de engenharia (Arquiteto + Back End + Front End + QA)",
+      "ordem_sugerida_de_implementacao": [
+        "Sprint 1: US-001, US-002, US-006 (auth + cadastro — base técnica)",
+        "Sprint 2: US-003, US-004, US-005, US-024 (onboarding completo — EP-001)",
+        "Sprint 3: US-015, US-016 (dashboard core — EP-003)",
+        "Sprint 4: US-007, US-008, US-009, US-023 (Pix envio completo — EP-002)",
+        "Sprint 5: US-010, US-011 (Pix recebimento + chaves)",
+        "Sprint 6: US-012 (boletos — EP-002)",
+        "Sprint 7: US-013, US-014, US-025 (cartão virtual — EP-002)",
+        "Sprint 8: US-017, US-018 (extrato inteligente — EP-003)",
+        "Sprint 9: US-019 (transparência radical — transversal)",
+        "Sprint 10: US-020, US-021, US-022 (perfil, segurança, insights — EP-003)"
+      ]
+    }
+  }
+}
