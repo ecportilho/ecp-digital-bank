@@ -34,15 +34,15 @@
       ECP Banco Digital docs
     </div>
     <ul class="sidebar-nav">
-      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Visao Geral</a></li>
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
       <li class="sidebar-section-title">Fases do Produto</li>
-      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estrategico</a></li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estratégico</a></li>
       <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
       <li><a href="fase-03.html" class="active"><span class="nav-icon">03</span> Product Delivery</a></li>
-      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operacao</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operação</a></li>
     </ul>
     <div class="sidebar-footer">
-      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instalacao</a>
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instalação</a>
       <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
     </div>
   </aside>
@@ -59,7 +59,7 @@
   <!-- Content -->
   <main class="content">
     <h1>Fase 03 &mdash; Product Delivery</h1>
-    <p class="subtitle">Arquitetura DDD, API REST, frontend React SPA e qualidade &mdash; do design de dominio ao deploy.</p>
+    <p class="subtitle">Arquitetura DDD, API REST, frontend React SPA e qualidade &mdash; do design de domínio ao deploy.</p>
 
     <!-- Stats -->
     <div class="stat-grid">
@@ -67,7 +67,7 @@
       <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">ADRs</div></div>
       <div class="stat-card"><div class="stat-value">27</div><div class="stat-label">Endpoints</div></div>
       <div class="stat-card"><div class="stat-value">9</div><div class="stat-label">Tabelas</div></div>
-      <div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Paginas</div></div>
+      <div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Páginas</div></div>
       <div class="stat-card"><div class="stat-value">29</div><div class="stat-label">Test Cases</div></div>
       <div class="stat-card"><div class="stat-value">10/10</div><div class="stat-label">Quality Gates</div></div>
     </div>
@@ -75,7 +75,7 @@
     <!-- Architecture -->
     <h2>Arquitetura &mdash; Domain-Driven Design</h2>
     <section class="section">
-      <p>5 Bounded Contexts em monolito modular Node.js (Fastify). Separacao logica em modulos distintos em <code>/server</code>, com path de extracao para microsservicos no futuro.</p>
+      <p>5 Bounded Contexts em monólito modular Node.js (Fastify). Separação lógica em módulos distintos em <code>/server</code>, com path de extração para microsserviços no futuro.</p>
 
       <div class="mermaid">
 classDiagram
@@ -127,13 +127,13 @@ classDiagram
 
       <h3>Bounded Contexts</h3>
       <table class="data-table">
-        <thead><tr><th>BC</th><th>Nome</th><th>Tipo</th><th>Modulos</th><th>Responsabilidade</th></tr></thead>
+        <thead><tr><th>BC</th><th>Nome</th><th>Tipo</th><th>Módulos</th><th>Responsabilidade</th></tr></thead>
         <tbody>
-          <tr><td>BC-01</td><td>Identity &amp; Access</td><td>Supporting</td><td>auth, users</td><td>Identidade, autenticacao JWT, autorizacao, ciclo de vida de sessoes</td></tr>
-          <tr><td>BC-02</td><td>Banking Core</td><td><strong>Core</strong></td><td>accounts, transactions</td><td>Custodia do saldo, debito/credito atomicos, ledger imutavel, categorizacao</td></tr>
-          <tr><td>BC-03</td><td>Pix</td><td><strong>Core</strong></td><td>pix</td><td>Chaves Pix, transferencias, limites por horario, QR Code</td></tr>
-          <tr><td>BC-04</td><td>Cards &amp; Payments</td><td>Supporting</td><td>cards, payments</td><td>Cartao virtual, faturas, compras, pagamento de boletos</td></tr>
-          <tr><td>BC-05</td><td>Intelligence</td><td>Supporting</td><td>transactions (summary), notifications</td><td>Categorizacao automatica, insights, notificacoes, ciclo salarial</td></tr>
+          <tr><td>BC-01</td><td>Identity &amp; Access</td><td>Supporting</td><td>auth, users</td><td>Identidade, autenticação JWT, autorização, ciclo de vida de sessões</td></tr>
+          <tr><td>BC-02</td><td>Banking Core</td><td><strong>Core</strong></td><td>accounts, transactions</td><td>Custódia do saldo, débito/crédito atômicos, ledger imutável, categorização</td></tr>
+          <tr><td>BC-03</td><td>Pix</td><td><strong>Core</strong></td><td>pix</td><td>Chaves Pix, transferências, limites por horário, QR Code</td></tr>
+          <tr><td>BC-04</td><td>Cards &amp; Payments</td><td>Supporting</td><td>cards, payments</td><td>Cartão virtual, faturas, compras, pagamento de boletos</td></tr>
+          <tr><td>BC-05</td><td>Intelligence</td><td>Supporting</td><td>transactions (summary), notifications</td><td>Categorização automática, insights, notificações, ciclo salarial</td></tr>
         </tbody>
       </table>
     </section>
@@ -145,48 +145,48 @@ classDiagram
         <div class="adr-id">ADR-001</div>
         <div class="adr-title">SQLite3 como banco de dados do MVP em vez de PostgreSQL</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">Zero configuracao &mdash; arquivo unico database.sqlite. Sem servidor separado. Transacoes ACID completas via better-sqlite3 (sincrono). Performance excelente para cargas &lt;100 writes/segundo. Migracao para PostgreSQL planejada quando escala horizontal for requisito.</div>
+        <div class="adr-body">Zero configuração &mdash; arquivo único database.sqlite. Sem servidor separado. Transações ACID completas via better-sqlite3 (síncrono). Performance excelente para cargas &lt;100 writes/segundo. Migração para PostgreSQL planejada quando escala horizontal for requisito.</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-002</div>
         <div class="adr-title">SQL direto via better-sqlite3 em vez de ORM (Prisma, TypeORM, Drizzle)</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">Queries de dominio financeiro (debito + registro de transacao) sao explicitas e auditaveis. Zero overhead de ORM. Prepared statements automaticos via better-sqlite3 &mdash; SQL injection impossivel com uso correto.</div>
+        <div class="adr-body">Queries de domínio financeiro (débito + registro de transação) são explícitas e auditáveis. Zero overhead de ORM. Prepared statements automáticos via better-sqlite3 &mdash; SQL injection impossível com uso correto.</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-003</div>
-        <div class="adr-title">Autenticacao JWT local com bcryptjs em vez de provedor externo</div>
+        <div class="adr-title">Autenticação JWT local com bcryptjs em vez de provedor externo</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">Zero dependencia externa. CPF e e-mail nunca saem do servidor. Autenticacao reforcada (RN-03) implementada como middleware nativo Fastify. Token JWT HS256 com expiry de 24h. bcryptjs (pure JS, saltRounds=10).</div>
+        <div class="adr-body">Zero dependência externa. CPF e e-mail nunca saem do servidor. Autenticação reforçada (RN-03) implementada como middleware nativo Fastify. Token JWT HS256 com expiry de 24h. bcryptjs (pure JS, saltRounds=10).</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-004</div>
         <div class="adr-title">SPA com React+Vite em vez de SSR com Next.js</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">Produto web-first autenticado &mdash; nenhuma tela precisa de SEO. SPA oferece experiencia mais proxima de desktop app. Vite HMR &lt;50ms. Bundle servido pelo proprio Fastify como arquivos estaticos.</div>
+        <div class="adr-body">Produto web-first autenticado &mdash; nenhuma tela precisa de SEO. SPA oferece experiência mais próxima de desktop app. Vite HMR &lt;50ms. Bundle servido pelo próprio Fastify como arquivos estáticos.</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-005</div>
-        <div class="adr-title">Valores monetarios como INTEGER em centavos em vez de DECIMAL/FLOAT</div>
+        <div class="adr-title">Valores monetários como INTEGER em centavos em vez de DECIMAL/FLOAT</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">Padrao Stripe/Adyen/PagSeguro. Precisao absoluta &mdash; sem ponto flutuante. R$1.234,56 = 123456 centavos. Limites de Pix verificados com comparacao inteira. SQLite INTEGER 64-bit suporta ate ~R$92 quadrilhoes.</div>
+        <div class="adr-body">Padrão Stripe/Adyen/PagSeguro. Precisão absoluta &mdash; sem ponto flutuante. R$1.234,56 = 123456 centavos. Limites de Pix verificados com comparação inteira. SQLite INTEGER 64-bit suporta até ~R$92 quadrilhões.</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-006</div>
-        <div class="adr-title">Soft delete com coluna deleted_at em vez de delecao fisica</div>
+        <div class="adr-title">Soft delete com coluna deleted_at em vez de deleção física</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">RN-07 define soft delete como requisito. Historico de auditoria 100% preservado. Compliance bancario: registros nunca destruidos. Reversibilidade de operacoes equivocadas.</div>
+        <div class="adr-body">RN-07 define soft delete como requisito. Histórico de auditoria 100% preservado. Compliance bancário: registros nunca destruídos. Reversibilidade de operações equivocadas.</div>
       </div>
       <div class="adr-card">
         <div class="adr-id">ADR-007</div>
-        <div class="adr-title">Convencao de 3 arquivos por modulo: schema.ts + routes.ts + service.ts</div>
+        <div class="adr-title">Convenção de 3 arquivos por módulo: schema.ts + routes.ts + service.ts</div>
         <div class="adr-status">Status: Accepted</div>
-        <div class="adr-body">schema.ts: Zod schemas para validacao + tipos TypeScript inferidos. routes.ts: Fastify plugin com rotas (zero logica de negocio). service.ts: logica de dominio pura com acesso direto ao banco. Service testavel sem servidor HTTP.</div>
+        <div class="adr-body">schema.ts: Zod schemas para validação + tipos TypeScript inferidos. routes.ts: Fastify plugin com rotas (zero lógica de negócio). service.ts: lógica de domínio pura com acesso direto ao banco. Service testável sem servidor HTTP.</div>
       </div>
     </section>
 
     <!-- Stack -->
-    <h2>Stack Tecnologica</h2>
+    <h2>Stack Tecnológica</h2>
     <section class="section">
       <div class="two-col">
         <div class="artifact-card">
@@ -221,7 +221,7 @@ classDiagram
     </section>
 
     <!-- API Endpoints -->
-    <h2>API &mdash; 9 Modulos, 27 Endpoints</h2>
+    <h2>API &mdash; 9 Módulos, 27 Endpoints</h2>
     <section class="section">
 
       <h3>Auth (3 endpoints)</h3>
@@ -275,19 +275,19 @@ classDiagram
     <!-- Database -->
     <h2>Banco de Dados</h2>
     <section class="section">
-      <p>SQLite3 com WAL mode e foreign keys. 9 tabelas, 12 indices.</p>
+      <p>SQLite3 com WAL mode e foreign keys. 9 tabelas, 12 índices.</p>
       <table class="data-table">
-        <thead><tr><th>Tabela</th><th>Descricao</th><th>Aggregate Root</th></tr></thead>
+        <thead><tr><th>Tabela</th><th>Descrição</th><th>Aggregate Root</th></tr></thead>
         <tbody>
           <tr><td>users</td><td>Dados de identidade (nome, email, CPF, password hash, salary_day)</td><td>User (BC-01)</td></tr>
-          <tr><td>accounts</td><td>Conta bancaria com saldo em centavos, numero da conta, limites</td><td>Account (BC-02)</td></tr>
-          <tr><td>transactions</td><td>Ledger imutavel de movimentacoes (credito/debito) com categoria</td><td>&mdash;</td></tr>
+          <tr><td>accounts</td><td>Conta bancária com saldo em centavos, número da conta, limites</td><td>Account (BC-02)</td></tr>
+          <tr><td>transactions</td><td>Ledger imutável de movimentações (crédito/débito) com categoria</td><td>&mdash;</td></tr>
           <tr><td>pix_keys</td><td>Chaves Pix (CPF, email, telefone, EVP) com soft delete</td><td>PixKey (BC-03)</td></tr>
-          <tr><td>cards</td><td>Cartao virtual com limite, status (active/blocked/cancelled)</td><td>Card (BC-04)</td></tr>
-          <tr><td>invoices</td><td>Faturas mensais do cartao (open/closed/paid)</td><td>&mdash;</td></tr>
-          <tr><td>card_purchases</td><td>Compras registradas no cartao com merchant e categoria</td><td>&mdash;</td></tr>
-          <tr><td>notifications</td><td>Notificacoes de eventos financeiros com status read/unread</td><td>Notification (BC-05)</td></tr>
-          <tr><td>pix_rate_limit</td><td>Controle de rate limit de Pix por hora por usuario (RN-10)</td><td>&mdash;</td></tr>
+          <tr><td>cards</td><td>Cartão virtual com limite, status (active/blocked/cancelled)</td><td>Card (BC-04)</td></tr>
+          <tr><td>invoices</td><td>Faturas mensais do cartão (open/closed/paid)</td><td>&mdash;</td></tr>
+          <tr><td>card_purchases</td><td>Compras registradas no cartão com merchant e categoria</td><td>&mdash;</td></tr>
+          <tr><td>notifications</td><td>Notificações de eventos financeiros com status read/unread</td><td>Notification (BC-05)</td></tr>
+          <tr><td>pix_rate_limit</td><td>Controle de rate limit de Pix por hora por usuário (RN-10)</td><td>&mdash;</td></tr>
         </tbody>
       </table>
     </section>
@@ -295,19 +295,19 @@ classDiagram
     <!-- Frontend -->
     <h2>Frontend &mdash; React SPA</h2>
     <section class="section">
-      <h3>10 Paginas</h3>
+      <h3>10 Páginas</h3>
       <table class="data-table">
-        <thead><tr><th>Pagina</th><th>Arquivo</th><th>Features Principais</th></tr></thead>
+        <thead><tr><th>Página</th><th>Arquivo</th><th>Features Principais</th></tr></thead>
         <tbody>
           <tr><td>Login</td><td><code>routes/login.tsx</code></td><td>Email + senha, show/hide password, error handling</td></tr>
-          <tr><td>Registro</td><td><code>routes/register.tsx</code></td><td>Nome, email, CPF mask, validacao de senha (regex)</td></tr>
-          <tr><td>Dashboard</td><td><code>routes/dashboard.tsx</code></td><td>Saldo show/hide, quick actions, SVG donut chart, card summary, ultimas 5 transacoes</td></tr>
-          <tr><td>Extrato</td><td><code>routes/extrato.tsx</code></td><td>Lista paginada com filtros, category badges, paginacao com contador</td></tr>
+          <tr><td>Registro</td><td><code>routes/register.tsx</code></td><td>Nome, email, CPF mask, validação de senha (regex)</td></tr>
+          <tr><td>Dashboard</td><td><code>routes/dashboard.tsx</code></td><td>Saldo show/hide, quick actions, SVG donut chart, card summary, últimas 5 transações</td></tr>
+          <tr><td>Extrato</td><td><code>routes/extrato.tsx</code></td><td>Lista paginada com filtros, category badges, paginação com contador</td></tr>
           <tr><td>Pix Enviar</td><td><code>routes/pix/enviar.tsx</code></td><td>Fluxo multi-step (chave &rarr; valor &rarr; confirmar &rarr; sucesso), lookup de chave</td></tr>
           <tr><td>Pix Receber</td><td><code>routes/pix/receber.tsx</code></td><td>Lista de chaves, copy-to-clipboard, dados da conta</td></tr>
           <tr><td>Pix Chaves</td><td><code>routes/pix/chaves.tsx</code></td><td>CRUD completo, modal, contador 5/5, confirm dialog</td></tr>
-          <tr><td>Cartoes</td><td><code>routes/cartoes.tsx</code></td><td>Card visual com gradiente, barra de limite, block/unblock, fatura</td></tr>
-          <tr><td>Pagamentos</td><td><code>routes/pagamentos.tsx</code></td><td>Formulario de boleto, agendamento, lista de agendados</td></tr>
+          <tr><td>Cartões</td><td><code>routes/cartoes.tsx</code></td><td>Card visual com gradiente, barra de limite, block/unblock, fatura</td></tr>
+          <tr><td>Pagamentos</td><td><code>routes/pagamentos.tsx</code></td><td>Formulário de boleto, agendamento, lista de agendados</td></tr>
           <tr><td>Perfil</td><td><code>routes/perfil.tsx</code></td><td>Editar nome/telefone, alterar senha, logout</td></tr>
         </tbody>
       </table>
@@ -332,7 +332,7 @@ classDiagram
           <div class="artifact-body">
             <ul>
               <li><strong>Sidebar:</strong> Desktop nav com 6 itens, user info, logout</li>
-              <li><strong>Header:</strong> Greeting dinamico, notificacoes com dropdown (unread count, polling 30s)</li>
+              <li><strong>Header:</strong> Greeting dinâmico, notificações com dropdown (unread count, polling 30s)</li>
               <li><strong>MobileNav:</strong> Bottom nav com 5 itens (lg:hidden)</li>
             </ul>
           </div>
@@ -355,19 +355,19 @@ classDiagram
           <tr><td>Design System</td><td><span class="badge approved">Pass</span></td><td>100% compliance com design_spec.md. Dark theme, lime accent, Inter font.</td></tr>
           <tr><td>API Integration</td><td><span class="badge approved">Pass</span></td><td>Web integra com todos 27 endpoints via fetch wrapper centralizado (api.ts).</td></tr>
           <tr><td>Responsive</td><td><span class="badge approved">Pass</span></td><td>Sidebar desktop (&ge;1024px) + bottom nav mobile. Testado: 375px, 768px, 1024px, 1440px.</td></tr>
-          <tr><td>Test Coverage</td><td><span class="badge approved">Pass</span></td><td>29 test cases em 4 files. Modulos de maior risco: auth (10), pix (11), accounts (4), payments (4).</td></tr>
+          <tr><td>Test Coverage</td><td><span class="badge approved">Pass</span></td><td>29 test cases em 4 files. Módulos de maior risco: auth (10), pix (11), accounts (4), payments (4).</td></tr>
           <tr><td>Accessibility</td><td><span class="badge approved">Pass*</span></td><td>Semantic HTML, form labels, color contrast AA. *Notas: skip-to-content e aria-labels em icon buttons pendentes.</td></tr>
         </tbody>
       </table>
 
       <h3>Findings (5)</h3>
       <table class="data-table">
-        <thead><tr><th>Severidade</th><th>Categoria</th><th>Descricao</th></tr></thead>
+        <thead><tr><th>Severidade</th><th>Categoria</th><th>Descrição</th></tr></thead>
         <tbody>
-          <tr><td><span class="badge" style="background: rgba(255,204,0,0.12); color: var(--warning);">low</span></td><td>Test Coverage</td><td>5 modulos (transactions, cards, users, notifications, dashboard) sem test files dedicados. Os 4 modulos testados cobrem funcionalidade de maior risco.</td></tr>
+          <tr><td><span class="badge" style="background: rgba(255,204,0,0.12); color: var(--warning);">low</span></td><td>Test Coverage</td><td>5 módulos (transactions, cards, users, notifications, dashboard) sem test files dedicados. Os 4 módulos testados cobrem funcionalidade de maior risco.</td></tr>
           <tr><td><span class="badge info">info</span></td><td>Accessibility</td><td>Falta skip-to-content link, focus management em route changes, e aria-label em icon buttons.</td></tr>
-          <tr><td><span class="badge info">info</span></td><td>Performance</td><td>Fetch wrapper sem caching/deduplication. Considerar React Query ou SWR em iteracao futura.</td></tr>
-          <tr><td><span class="badge" style="background: rgba(255,204,0,0.12); color: var(--warning);">low</span></td><td>Security</td><td>JWT em localStorage (vs. httpOnly cookies). Aceitavel para MVP sem scripts terceiros.</td></tr>
+          <tr><td><span class="badge info">info</span></td><td>Performance</td><td>Fetch wrapper sem caching/deduplication. Considerar React Query ou SWR em iteração futura.</td></tr>
+          <tr><td><span class="badge" style="background: rgba(255,204,0,0.12); color: var(--warning);">low</span></td><td>Security</td><td>JWT em localStorage (vs. httpOnly cookies). Aceitável para MVP sem scripts terceiros.</td></tr>
           <tr><td><span class="badge info">info</span></td><td>Observability</td><td>Logging via console sem formato estruturado. Integrar pino (nativo Fastify) na Fase 04.</td></tr>
         </tbody>
       </table>
@@ -377,11 +377,11 @@ classDiagram
     <h2>HITLs da Fase 03</h2>
     <section class="section">
       <table class="data-table">
-        <thead><tr><th>HITL</th><th>Escopo</th><th>Agente</th><th>Decisao</th></tr></thead>
+        <thead><tr><th>HITL</th><th>Escopo</th><th>Agente</th><th>Decisão</th></tr></thead>
         <tbody>
-          <tr><td>#7</td><td>Arquitetura DDD (5 BCs, 7 ADRs, linguagem ubiqua, agregados)</td><td>Software Architect</td><td><span class="badge approved">Aprovado</span></td></tr>
-          <tr><td>#8</td><td>Backend (9 modulos, 27 endpoints, 10/10 RNs, 9 tabelas, seed)</td><td>Backend Developer</td><td><span class="badge approved">Aprovado</span></td></tr>
-          <tr><td>#9</td><td>Frontend (10 paginas, 9 componentes, design system compliance)</td><td>Frontend Developer</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#7</td><td>Arquitetura DDD (5 BCs, 7 ADRs, linguagem ubíqua, agregados)</td><td>Software Architect</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#8</td><td>Backend (9 módulos, 27 endpoints, 10/10 RNs, 9 tabelas, seed)</td><td>Backend Developer</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#9</td><td>Frontend (10 páginas, 9 componentes, design system compliance)</td><td>Frontend Developer</td><td><span class="badge approved">Aprovado</span></td></tr>
           <tr><td>#10</td><td>QA (29 test cases, 10/10 quality gates, 5 findings info/low)</td><td>QA</td><td><span class="badge approved">Aprovado</span></td></tr>
         </tbody>
       </table>

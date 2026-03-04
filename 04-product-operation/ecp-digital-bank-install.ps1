@@ -1,5 +1,5 @@
-# ============================================================================
-#  ECP Banco Digital v3.0 — Script de Instalacao Completo
+﻿# ============================================================================
+#  ECP Banco Digital v3.0  -  Script de Instalacao Completo
 #  Windows 11 | PowerShell 5.1+
 #  Executar: PowerShell -ExecutionPolicy Bypass -File .\ecp-digital-bank-install.ps1
 # ============================================================================
@@ -65,7 +65,7 @@ function Test-Command($cmd) {
 # ============================================================================
 
 Clear-Host
-Write-Banner "ECP Banco Digital v3.0 — Instalacao Completa"
+Write-Banner "ECP Banco Digital v3.0  -  Instalacao Completa"
 Write-Host "  Sistema:   Windows 11 + PowerShell" -ForegroundColor Gray
 Write-Host "  Stack:     Node.js + Fastify + SQLite3 + React + Vite" -ForegroundColor Gray
 Write-Host "  Data:      $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Gray
@@ -98,10 +98,10 @@ Write-Ok "Diretorio do projeto localizado"
 Write-Host ""
 
 # ============================================================================
-#  FASE 1 — VERIFICACAO DE PRE-REQUISITOS
+#  FASE 1  -  VERIFICACAO DE PRE-REQUISITOS
 # ============================================================================
 
-Write-Banner "FASE 1 / 6 — Verificacao de Pre-requisitos"
+Write-Banner "FASE 1 / 6  -  Verificacao de Pre-requisitos"
 
 $prereqOk = $true
 
@@ -114,9 +114,9 @@ if (Test-Command "node") {
 
     $major = [int]($nodeVersion -replace 'v','').Split('.')[0]
     if ($major -ge 18) {
-        Write-Ok "Node.js $nodeVersion — compativel"
+        Write-Ok "Node.js $nodeVersion  -  compativel"
     } else {
-        Write-Fail "Node.js $nodeVersion — versao muito antiga (minimo: 18)"
+        Write-Fail "Node.js $nodeVersion  -  versao muito antiga (minimo: 18)"
         $prereqOk = $false
     }
 } else {
@@ -174,43 +174,52 @@ if (Test-Command "git") {
 }
 
 # --- 1.5 Visual Studio Build Tools ---
-Write-Step "1.5" "Visual Studio Build Tools 2022 (compilador C++)"
+Write-Step "1.5" "Visual Studio Build Tools (compilador C++)"
 
-$vsPath = "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
-$vsProfPath = "C:\Program Files\Microsoft Visual Studio\2022\Professional"
-$vsCommPath = "C:\Program Files\Microsoft Visual Studio\2022\Community"
+# Detectar versao instalada automaticamente (suporta 2022, 2026 e futuras)
+$vsInstalls = @(
+    @{ Year = "2026"; InternalVer = "18"; Editions = @("BuildTools","Professional","Community","Enterprise") },
+    @{ Year = "2022"; InternalVer = "2022"; Editions = @("BuildTools","Professional","Community","Enterprise") }
+)
+$detectedVsYear = $null
+$detectedVsPath = $null
 
-if ((Test-Path $vsPath) -or (Test-Path $vsProfPath) -or (Test-Path $vsCommPath)) {
-    Write-Ok "Visual Studio 2022 encontrado"
-
-    # Verificar se o workload C++ esta instalado
-    $msbuildPath = Get-ChildItem -Path "C:\Program Files (x86)\Microsoft Visual Studio\2022" -Recurse -Filter "MSBuild.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $msbuildPath) {
-        $msbuildPath = Get-ChildItem -Path "C:\Program Files\Microsoft Visual Studio\2022" -Recurse -Filter "MSBuild.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+foreach ($vs in $vsInstalls) {
+    foreach ($edition in $vs.Editions) {
+        $p86 = "C:\Program Files (x86)\Microsoft Visual Studio\$($vs.InternalVer)\$edition"
+        $p64 = "C:\Program Files\Microsoft Visual Studio\$($vs.InternalVer)\$edition"
+        if (Test-Path $p86) { $detectedVsYear = $vs.Year; $detectedVsPath = $p86; break }
+        if (Test-Path $p64) { $detectedVsYear = $vs.Year; $detectedVsPath = $p64; break }
     }
+    if ($detectedVsYear) { break }
+}
+
+if ($detectedVsYear) {
+    Write-Ok "Visual Studio $detectedVsYear encontrado em: $detectedVsPath"
+    $msbuildPath = Get-ChildItem -Path $detectedVsPath -Recurse -Filter "MSBuild.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($msbuildPath) {
         Write-Ok "MSBuild encontrado: $($msbuildPath.DirectoryName)"
     } else {
-        Write-Warn "MSBuild nao localizado — o workload C++ pode nao estar instalado"
+        Write-Warn "MSBuild nao localizado - workload C++ pode nao estar instalado"
         Write-Info "Abra o Visual Studio Installer e instale 'Desktop development with C++'"
     }
 } else {
-    Write-Warn "Visual Studio Build Tools 2022 nao encontrado no caminho padrao"
-    Write-Info "Se ja tem VS 2022 (Professional/Community/Enterprise), esta OK"
-    Write-Info "Caso contrario: winget install Microsoft.VisualStudio.2022.BuildTools"
+    Write-Warn "Visual Studio Build Tools nao encontrado no caminho padrao"
+    Write-Info "Instale com: winget install Microsoft.VisualStudio.2022.BuildTools"
     Write-Info "Depois instale o workload 'Desktop development with C++'"
 }
 
 # --- 1.6 npm config ---
 Write-Step "1.6" "Configuracao do npm (msvs_version)"
 
+$targetMsvs = if ($detectedVsYear) { $detectedVsYear } else { "2022" }
 $currentMsvs = (npm config get msvs_version 2>$null)
-if ($currentMsvs -eq "2022") {
-    Write-Ok "npm msvs_version ja configurado: 2022"
+if ($currentMsvs -eq $targetMsvs) {
+    Write-Ok "npm msvs_version ja configurado: $targetMsvs"
 } else {
-    Write-SubStep "Configurando npm msvs_version = 2022..."
-    npm config set msvs_version 2022 2>$null
-    Write-Ok "npm msvs_version configurado para 2022"
+    Write-SubStep "Configurando npm msvs_version = $targetMsvs..."
+    npm config set msvs_version $targetMsvs 2>$null
+    Write-Ok "npm msvs_version configurado para $targetMsvs"
 }
 
 if ($pythonCmd) {
@@ -249,7 +258,7 @@ foreach ($f in $requiredFiles) {
 if ($missingFiles.Count -eq 0) {
     Write-Ok "Todos os $($requiredFiles.Count) arquivos criticos presentes"
 } else {
-    Write-Fail "$($missingFiles.Count) arquivo(s) faltando — o projeto pode estar incompleto"
+    Write-Fail "$($missingFiles.Count) arquivo(s) faltando  -  o projeto pode estar incompleto"
     $prereqOk = $false
 }
 
@@ -277,10 +286,10 @@ if (-not $prereqOk) {
 }
 
 # ============================================================================
-#  FASE 2 — INSTALACAO DE DEPENDENCIAS
+#  FASE 2  -  INSTALACAO DE DEPENDENCIAS
 # ============================================================================
 
-Write-Banner "FASE 2 / 6 — Instalacao de Dependencias"
+Write-Banner "FASE 2 / 6  -  Instalacao de Dependencias"
 
 # --- 2.1 Raiz ---
 Write-Step "2.1" "Dependencias da raiz (concurrently)"
@@ -300,10 +309,47 @@ if (Test-Path "$PROJECT_DIR\node_modules\concurrently") {
 # --- 2.2 Server ---
 Write-Step "2.2" "Dependencias do server (Fastify, better-sqlite3, bcryptjs, etc.)"
 Write-SubStep "Executando: npm install (server/)"
-Write-Warn "Este passo compila better-sqlite3 com node-gyp — pode levar 1-2 min"
+Write-Warn "Este passo compila better-sqlite3 com node-gyp  -  pode levar 1-2 min"
+
+# Entrar no diretorio server ANTES de qualquer verificacao ou instalacao
+Set-Location "$PROJECT_DIR\server"
+
+# Node 22+ requer better-sqlite3 >= 11.x (suporte C++20).
+# Corrigir diretamente no server/package.json e limpar build antigo.
+if ($major -ge 22) {
+    Write-SubStep "Node.js $major detectado - verificando versao do better-sqlite3..."
+    $serverPkgPath = "$PROJECT_DIR\server\package.json"
+    $serverPkgJson = Get-Content $serverPkgPath -Raw | ConvertFrom-Json
+    $bsqliteVer = $serverPkgJson.dependencies.'better-sqlite3'
+    if ($bsqliteVer) {
+        $bsqliteVerNum = $bsqliteVer -replace '[^0-9\.]',''
+        $bsqliteMajor = [int]($bsqliteVerNum.Split('.')[0])
+        if ($bsqliteMajor -lt 11) {
+            Write-Warn "better-sqlite3 $bsqliteVer incompativel com Node $major - atualizando para ^11.0.0..."
+
+            # Patch server/package.json diretamente (sem depender do npm install da raiz)
+            $serverPkgRaw = Get-Content $serverPkgPath -Raw
+            $serverPkgRaw = $serverPkgRaw -replace '"better-sqlite3"\s*:\s*"[^"]+"', '"better-sqlite3": "^11.0.0"'
+            $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+            [System.IO.File]::WriteAllText($serverPkgPath, $serverPkgRaw, $utf8NoBom)
+            Write-Ok "server/package.json atualizado: better-sqlite3 -> ^11.0.0"
+
+            # Remover build antigo e lockfile do server para forcar recompilacao limpa
+            if (Test-Path "node_modules\better-sqlite3") {
+                Remove-Item "node_modules\better-sqlite3" -Recurse -Force -ErrorAction SilentlyContinue
+                Write-SubStep "Build antigo do better-sqlite3 removido"
+            }
+            if (Test-Path "package-lock.json") {
+                Remove-Item "package-lock.json" -Force -ErrorAction SilentlyContinue
+                Write-SubStep "package-lock.json do server removido para forcar resolucao correta"
+            }
+        } else {
+            Write-Ok "better-sqlite3 $bsqliteVer compativel com Node $major"
+        }
+    }
+}
 Write-Host ""
 
-Set-Location "$PROJECT_DIR\server"
 npm install 2>&1 | ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
 
 Write-Host ""
@@ -326,7 +372,7 @@ foreach ($check in $serverChecks) {
     if (Test-Path $check.path) {
         Write-Ok $check.name
     } else {
-        Write-Fail "$($check.name) — nao encontrado"
+        Write-Fail "$($check.name)  -  nao encontrado"
         $serverOk = $false
     }
 }
@@ -362,7 +408,7 @@ foreach ($check in $webChecks) {
     if (Test-Path $check.path) {
         Write-Ok $check.name
     } else {
-        Write-Fail "$($check.name) — nao encontrado"
+        Write-Fail "$($check.name)  -  nao encontrado"
         $webOk = $false
     }
 }
@@ -380,24 +426,24 @@ Write-Host ("  " + ("=" * 60)) -ForegroundColor DarkCyan
 Pause-Step "Revise a instalacao de dependencias"
 
 # ============================================================================
-#  FASE 3 — CONFIGURACAO DE AMBIENTE
+#  FASE 3  -  CONFIGURACAO DE AMBIENTE
 # ============================================================================
 
-Write-Banner "FASE 3 / 6 — Configuracao de Ambiente"
+Write-Banner "FASE 3 / 6  -  Configuracao de Ambiente"
 
 Write-Step "3.1" "Arquivo .env do server"
 
 $envFile = "$PROJECT_DIR\server\.env"
 
 if (Test-Path $envFile) {
-    Write-Warn "Arquivo server\.env ja existe — mantendo o existente"
+    Write-Warn "Arquivo server\.env ja existe  -  mantendo o existente"
     Write-SubStep "Conteudo atual:"
     Get-Content $envFile | ForEach-Object { Write-Host "      | $_" -ForegroundColor DarkGray }
 } else {
     Write-SubStep "Criando server\.env com valores de desenvolvimento..."
 
     $envContent = @"
-# ECP Banco Digital — Variaveis de Ambiente (Desenvolvimento)
+# ECP Banco Digital  -  Variaveis de Ambiente (Desenvolvimento)
 # Gerado automaticamente pelo script de instalacao em $(Get-Date -Format 'yyyy-MM-dd HH:mm')
 
 # Servidor
@@ -416,7 +462,8 @@ DATABASE_PATH=./database.sqlite
 CORS_ORIGIN=http://localhost:5173
 "@
 
-    $envContent | Out-File -Encoding utf8NoBOM -FilePath $envFile
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($envFile, $envContent, $utf8NoBom)
     Write-Ok "Arquivo server\.env criado"
     Write-SubStep "Conteudo:"
     Get-Content $envFile | ForEach-Object { Write-Host "      | $_" -ForegroundColor DarkGray }
@@ -431,10 +478,10 @@ Write-Info "JWT:      Secret de desenvolvimento (trocar em producao!)"
 Write-Info "Proxy:    Vite redireciona /api/* para a API automaticamente"
 
 # ============================================================================
-#  FASE 4 — BANCO DE DADOS
+#  FASE 4  -  BANCO DE DADOS
 # ============================================================================
 
-Write-Banner "FASE 4 / 6 — Banco de Dados (SQLite3)"
+Write-Banner "FASE 4 / 6  -  Banco de Dados (SQLite3)"
 
 # --- 4.1 Limpar banco existente ---
 Write-Step "4.1" "Verificar banco existente"
@@ -456,7 +503,7 @@ if (Test-Path $dbFile) {
         Write-Info "Mantendo banco existente"
     }
 } else {
-    Write-Info "Nenhum banco existente — sera criado agora"
+    Write-Info "Nenhum banco existente  -  sera criado agora"
 }
 
 # --- 4.2 Migrations ---
@@ -465,52 +512,25 @@ Write-SubStep "Executando: npm run db:migrate"
 Write-Host ""
 
 Set-Location $PROJECT_DIR
-npm run db:migrate 2>&1 | ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
+$migrateOutput = npm run db:migrate 2>&1
+$migrateOutput | ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
 
 Write-Host ""
 
 if (Test-Path $dbFile) {
     $dbSize = [math]::Round((Get-Item $dbFile).Length / 1KB, 1)
     Write-Ok "Banco criado: server\database.sqlite ($dbSize KB)"
-
-    # Contar tabelas
-    Write-SubStep "Verificando tabelas criadas..."
-    Set-Location "$PROJECT_DIR\server"
-
-    $tableCheck = node -e "
-        const Database = require('better-sqlite3');
-        const db = new Database('database.sqlite');
-        const tables = db.prepare(""SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE '__%' ORDER BY name"").all();
-        console.log('TABLES:' + tables.length);
-        tables.forEach(t => console.log('TABLE:' + t.name));
-        const indexes = db.prepare(""SELECT name FROM sqlite_master WHERE type='index' AND name LIKE 'idx_%'"").all();
-        console.log('INDEXES:' + indexes.length);
-        db.close();
-    " 2>$null
-
-    Set-Location $PROJECT_DIR
-
-    $tableCount = 0
-    $indexCount = 0
-    $tableNames = @()
-    foreach ($line in $tableCheck -split "`n") {
-        $line = $line.Trim()
-        if ($line -match "^TABLES:(\d+)") { $tableCount = [int]$Matches[1] }
-        if ($line -match "^TABLE:(.+)") { $tableNames += $Matches[1] }
-        if ($line -match "^INDEXES:(\d+)") { $indexCount = [int]$Matches[1] }
-    }
-
-    if ($tableCount -ge 9) {
-        Write-Ok "$tableCount tabelas criadas:"
-        foreach ($t in $tableNames) {
-            Write-SubStep "  - $t"
-        }
-        Write-Ok "$indexCount indices criados"
+    # Verificacao via log de saida (evita problemas de quoting/ABI do node -e no PS 5.1)
+    if ($migrateOutput -match "All migrations applied") {
+        Write-Ok "Migrations aplicadas com sucesso"
     } else {
-        Write-Warn "Apenas $tableCount tabelas encontradas (esperado: 9)"
+        Write-Warn "Nao foi possivel confirmar migrations pelo log  -  verifique a saida acima"
+    }
+    if ($migrateOutput -match "Applied\s+(\d+)") {
+        Write-Ok "Arquivos aplicados: $($Matches[1])"
     }
 } else {
-    Write-Fail "Banco nao foi criado — verifique erros acima"
+    Write-Fail "Banco nao foi criado  -  verifique erros acima"
 }
 
 # --- 4.3 Seed ---
@@ -520,52 +540,20 @@ Write-SubStep "Criando usuario Marina Silva (marina@email.com / Senha@123)"
 Write-Host ""
 
 Set-Location $PROJECT_DIR
-npm run db:seed 2>&1 | ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
+$seedOutput = npm run db:seed 2>&1
+$seedOutput | ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
 
 Write-Host ""
 
-# Verificar seed
+# Verificar seed pelo log de saida (capturado acima)
 Write-SubStep "Verificando dados inseridos..."
-Set-Location "$PROJECT_DIR\server"
-
-$seedCheck = node -e "
-    const Database = require('better-sqlite3');
-    const db = new Database('database.sqlite');
-    const u = db.prepare('SELECT COUNT(*) as c FROM users').get();
-    const a = db.prepare('SELECT balance FROM accounts LIMIT 1').get();
-    const p = db.prepare('SELECT COUNT(*) as c FROM pix_keys').get();
-    const t = db.prepare('SELECT COUNT(*) as c FROM transactions').get();
-    const c = db.prepare('SELECT COUNT(*) as c FROM cards').get();
-    const n = db.prepare('SELECT COUNT(*) as c FROM notifications').get();
-    console.log('USERS:' + u.c);
-    console.log('BALANCE:' + (a ? a.balance : 0));
-    console.log('PIX_KEYS:' + p.c);
-    console.log('TRANSACTIONS:' + t.c);
-    console.log('CARDS:' + c.c);
-    console.log('NOTIFICATIONS:' + n.c);
-    db.close();
-" 2>$null
-
-Set-Location $PROJECT_DIR
-
-$seedData = @{}
-foreach ($line in $seedCheck -split "`n") {
-    $line = $line.Trim()
-    if ($line -match "^(\w+):(.+)") {
-        $seedData[$Matches[1]] = $Matches[2]
-    }
-}
-
-if ($seedData["USERS"] -ge 1) {
-    Write-Ok "Usuarios: $($seedData['USERS'])"
-    $balReais = [math]::Round([int]$seedData["BALANCE"] / 100, 2)
-    Write-Ok "Saldo: R$ $($balReais.ToString('N2')) ($($seedData['BALANCE']) centavos)"
-    Write-Ok "Chaves Pix: $($seedData['PIX_KEYS'])"
-    Write-Ok "Transacoes: $($seedData['TRANSACTIONS'])"
-    Write-Ok "Cartoes: $($seedData['CARDS'])"
-    Write-Ok "Notificacoes: $($seedData['NOTIFICATIONS'])"
+$seedOutputStr = $seedOutput -join "`n"
+if ($seedOutputStr -match "seeded successfully|seed.*success") {
+    Write-Ok "Seed executado com sucesso"
+    Write-Ok "Usuario: marina@email.com / Senha@123"
 } else {
-    Write-Warn "Nenhum dado encontrado — seed pode ter falhado"
+    Write-Warn "Nenhum dado encontrado  -  seed pode ter falhado (veja saida acima)"
+}
 }
 
 Write-Host ""
@@ -575,13 +563,13 @@ Write-Host "  Email:  marina@email.com" -ForegroundColor White
 Write-Host "  Senha:  Senha@123" -ForegroundColor White
 Write-Host ("  " + ("=" * 60)) -ForegroundColor DarkCyan
 
-Pause-Step "Banco de dados configurado — revise os dados acima"
+Pause-Step "Banco de dados configurado  -  revise os dados acima"
 
 # ============================================================================
-#  FASE 5 — SUBIR A APLICACAO
+#  FASE 5  -  SUBIR A APLICACAO
 # ============================================================================
 
-Write-Banner "FASE 5 / 6 — Subir a Aplicacao"
+Write-Banner "FASE 5 / 6  -  Subir a Aplicacao"
 
 # --- Verificar portas ---
 Write-Step "5.1" "Verificar portas disponiveis"
@@ -609,7 +597,8 @@ Write-Step "5.2" "Iniciando API Fastify (porta 3333)"
 Write-SubStep "Executando: npm run dev:server (em background)"
 
 Set-Location $PROJECT_DIR
-$serverJob = Start-Process -FilePath "npm" -ArgumentList "run","dev:server" `
+$serverJob = Start-Process -FilePath "cmd.exe" `
+    -ArgumentList "/c","npm","run","dev:server" `
     -WorkingDirectory $PROJECT_DIR `
     -PassThru -WindowStyle Hidden `
     -RedirectStandardOutput "$PROJECT_DIR\server-stdout.log" `
@@ -639,16 +628,62 @@ if ($apiReady) {
     Write-Ok "Health check: status = ok"
 } else {
     Write-Fail "API nao respondeu em 30 segundos"
-    Write-Info "Verifique os logs:"
-    Write-Info "  Get-Content server-stdout.log"
-    Write-Info "  Get-Content server-stderr.log"
 
     if (Test-Path "$PROJECT_DIR\server-stderr.log") {
-        $errLog = Get-Content "$PROJECT_DIR\server-stderr.log" -Tail 10 -ErrorAction SilentlyContinue
+        $errLog = Get-Content "$PROJECT_DIR\server-stderr.log" -Raw -ErrorAction SilentlyContinue
         if ($errLog) {
             Write-Host ""
             Write-SubStep "Ultimas linhas do log de erro:"
-            $errLog | ForEach-Object { Write-Host "      | $_" -ForegroundColor Red }
+            ($errLog -split "`n" | Select-Object -Last 10) | ForEach-Object { Write-Host "      | $_" -ForegroundColor Red }
+
+            # Detectar e corrigir FST_ERR_PLUGIN_VERSION_MISMATCH automaticamente
+            if ($errLog -match "FST_ERR_PLUGIN_VERSION_MISMATCH") {
+                Write-Host ""
+                Write-Warn "Detectado: incompatibilidade de versao entre Fastify e seus plugins"
+                Write-Info "Causa provavel: npm resolveu versoes incompativeis apos remocao do lockfile"
+                Write-SubStep "Tentando correcao automatica: fixando versoes compativeis..."
+
+                Set-Location "$PROJECT_DIR\server"
+
+                # Instalar versoes compativeis de forma coesa
+                npm install fastify@4 @fastify/cors@8 @fastify/jwt@8 2>&1 |
+                    ForEach-Object { Write-Host "      $_" -ForegroundColor DarkGray }
+
+                Write-SubStep "Reiniciando API com versoes corrigidas..."
+                if ($serverJob) {
+                    Stop-Process -Id $serverJob.Id -Force -ErrorAction SilentlyContinue
+                    Start-Sleep -Seconds 2
+                }
+                Set-Location $PROJECT_DIR
+                $serverJob = Start-Process -FilePath "cmd.exe" `
+                    -ArgumentList "/c","npm","run","dev:server" `
+                    -WorkingDirectory $PROJECT_DIR `
+                    -PassThru -WindowStyle Hidden `
+                    -RedirectStandardOutput "$PROJECT_DIR\server-stdout.log" `
+                    -RedirectStandardError "$PROJECT_DIR\server-stderr.log"
+
+                Write-SubStep "Aguardando API (nova tentativa)..."
+                $apiReady = $false
+                for ($i = 1; $i -le 30; $i++) {
+                    Start-Sleep -Seconds 1
+                    Write-Host "`r      Tentativa $i/30..." -NoNewline -ForegroundColor DarkGray
+                    try {
+                        $health = Invoke-RestMethod "$HOST_API/health" -TimeoutSec 2 -ErrorAction Stop
+                        if ($health.status -eq "ok") { $apiReady = $true; break }
+                    } catch {}
+                }
+                Write-Host ""
+                if ($apiReady) {
+                    Write-Ok "API Fastify rodando apos correcao de versoes"
+                } else {
+                    Write-Fail "API ainda nao responde. Verifique server-stderr.log manualmente."
+                    Write-Info "Dica: cd server && npm install fastify@latest @fastify/cors@latest @fastify/jwt@latest"
+                }
+            } else {
+                Write-Info "Verifique os logs:"
+                Write-Info "  Get-Content server-stdout.log"
+                Write-Info "  Get-Content server-stderr.log"
+            }
         }
     }
 }
@@ -657,7 +692,8 @@ if ($apiReady) {
 Write-Step "5.3" "Iniciando Frontend Vite (porta 5173)"
 Write-SubStep "Executando: npm run dev:web (em background)"
 
-$webJob = Start-Process -FilePath "npm" -ArgumentList "run","dev:web" `
+$webJob = Start-Process -FilePath "cmd.exe" `
+    -ArgumentList "/c","npm","run","dev:web" `
     -WorkingDirectory $PROJECT_DIR `
     -PassThru -WindowStyle Hidden `
     -RedirectStandardOutput "$PROJECT_DIR\web-stdout.log" `
@@ -683,7 +719,7 @@ Write-Host ""
 if ($webReady) {
     Write-Ok "Frontend Vite rodando em $HOST_WEB"
 } else {
-    Write-Warn "Frontend nao respondeu em 30 segundos — pode estar compilando"
+    Write-Warn "Frontend nao respondeu em 30 segundos  -  pode estar compilando"
     Write-Info "Verifique: Get-Content web-stdout.log"
 }
 
@@ -696,13 +732,13 @@ Write-Host "  API PID:  $($serverJob.Id)" -ForegroundColor Gray
 Write-Host "  Web PID:  $($webJob.Id)" -ForegroundColor Gray
 Write-Host ("  " + ("=" * 60)) -ForegroundColor DarkCyan
 
-Pause-Step "Aplicacao iniciada — revise o status acima"
+Pause-Step "Aplicacao iniciada  -  revise o status acima"
 
 # ============================================================================
-#  FASE 6 — SMOKE TEST
+#  FASE 6  -  SMOKE TEST
 # ============================================================================
 
-Write-Banner "FASE 6 / 6 — Smoke Test (Validacao Completa)"
+Write-Banner "FASE 6 / 6  -  Smoke Test (Validacao Completa)"
 
 $passed = 0
 $failed = 0
@@ -719,7 +755,7 @@ function Test-Endpoint($name, $scriptBlock) {
             return $false
         }
     } catch {
-        Write-Fail "$name — $($_.Exception.Message)"
+        Write-Fail "$name  -  $($_.Exception.Message)"
         return $false
     }
 }
@@ -745,7 +781,7 @@ if (Test-Endpoint "POST /api/auth/login" {
 }) { $passed++ } else { $failed++ }
 
 if (-not $token) {
-    Write-Fail "Sem token JWT — nao e possivel testar endpoints protegidos"
+    Write-Fail "Sem token JWT  -  nao e possivel testar endpoints protegidos"
     Write-Info "Verifique se o seed foi executado corretamente"
     $failed += 8
 } else {
