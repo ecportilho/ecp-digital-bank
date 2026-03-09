@@ -1,4 +1,6 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -7,17 +9,82 @@ import {
   FileText,
   User,
   LogOut,
+  Send,
+  ArrowDownLeft,
+  Key,
+  ChevronDown,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
-const navItems = [
+interface NavItem {
+  to: string
+  icon: LucideIcon
+  label: string
+  exact?: boolean
+  children?: { to: string; icon: LucideIcon; label: string }[]
+}
+
+const navItems: NavItem[] = [
   { to: '/', icon: LayoutDashboard, label: 'Início', exact: true },
   { to: '/extrato', icon: ArrowLeftRight, label: 'Extrato' },
-  { to: '/pix/enviar', icon: Zap, label: 'Pix' },
+  {
+    to: '/pix/enviar', icon: Zap, label: 'Pix',
+    children: [
+      { to: '/pix/enviar', icon: Send, label: 'Enviar' },
+      { to: '/pix/receber', icon: ArrowDownLeft, label: 'Receber' },
+      { to: '/pix/chaves', icon: Key, label: 'Minhas Chaves' },
+    ],
+  },
   { to: '/cartoes', icon: CreditCard, label: 'Cartões' },
   { to: '/pagamentos', icon: FileText, label: 'Pagamentos' },
   { to: '/perfil', icon: User, label: 'Perfil' },
 ]
+
+function PixSubMenu({ item }: { item: NavItem }) {
+  const location = useLocation()
+  const isPixActive = location.pathname.startsWith('/pix')
+  const [isOpen, setIsOpen] = useState(isPixActive)
+
+  return (
+    <div>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center gap-3 px-3 py-2.5 rounded-control text-sm font-medium transition-colors w-full ${
+          isPixActive
+            ? 'bg-lime/10 text-lime'
+            : 'text-text-secondary hover:text-text-primary hover:bg-secondary-bg'
+        }`}
+      >
+        <item.icon size={18} />
+        <span className="flex-1 text-left">{item.label}</span>
+        <ChevronDown
+          size={14}
+          className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {isOpen && item.children && (
+        <div className="ml-4 mt-1 space-y-0.5">
+          {item.children.map((child) => (
+            <NavLink
+              key={child.to}
+              to={child.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-control text-sm transition-colors ${
+                  isActive
+                    ? 'text-lime font-medium'
+                    : 'text-text-tertiary hover:text-text-primary hover:bg-secondary-bg'
+                }`
+              }
+            >
+              <child.icon size={16} />
+              {child.label}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function Sidebar() {
   const { user, logout } = useAuth()
@@ -40,23 +107,27 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.exact}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-control text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-lime/10 text-lime'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-secondary-bg'
-              }`
-            }
-          >
-            <item.icon size={18} />
-            {item.label}
-          </NavLink>
-        ))}
+        {navItems.map((item) =>
+          item.children ? (
+            <PixSubMenu key={item.to} item={item} />
+          ) : (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.exact ?? false}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-control text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-lime/10 text-lime'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-secondary-bg'
+                }`
+              }
+            >
+              <item.icon size={18} />
+              {item.label}
+            </NavLink>
+          )
+        )}
       </nav>
 
       {/* User info + logout */}

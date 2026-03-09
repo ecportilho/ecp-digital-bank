@@ -1,12 +1,12 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { LayoutDashboard, ArrowLeftRight, Zap, CreditCard, User } from 'lucide-react'
 
 const mobileNavItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Início', exact: true },
-  { to: '/extrato', icon: ArrowLeftRight, label: 'Extrato' },
-  { to: '/pix/enviar', icon: Zap, label: 'Pix' },
-  { to: '/cartoes', icon: CreditCard, label: 'Cartões' },
-  { to: '/perfil', icon: User, label: 'Perfil' },
+  { to: '/', icon: LayoutDashboard, label: 'Início', end: true },
+  { to: '/extrato', icon: ArrowLeftRight, label: 'Extrato', end: false },
+  { to: '/pix/enviar', icon: Zap, label: 'Pix', end: false },
+  { to: '/cartoes', icon: CreditCard, label: 'Cartões', end: false },
+  { to: '/perfil', icon: User, label: 'Perfil', end: false },
 ]
 
 export function MobileNav() {
@@ -17,7 +17,7 @@ export function MobileNav() {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.exact}
+            end={item.end}
             className={({ isActive }) =>
               `flex flex-col items-center gap-0.5 px-3 py-2 rounded-control text-xs font-medium transition-colors ${
                 isActive ? 'text-lime' : 'text-text-tertiary'
