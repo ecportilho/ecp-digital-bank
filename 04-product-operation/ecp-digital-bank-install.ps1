@@ -1,4 +1,4 @@
-﻿# ============================================================================
+# ============================================================================
 #  ECP Banco Digital v3.0  -  Script de Instalacao Completo
 #  Windows 11 | PowerShell 5.1+
 #  Executar: PowerShell -ExecutionPolicy Bypass -File .\ecp-digital-bank-install.ps1
@@ -553,7 +553,6 @@ if ($seedOutputStr -match "seeded successfully|seed.*success") {
     Write-Ok "Usuario: marina@email.com / Senha@123"
 } else {
     Write-Warn "Nenhum dado encontrado  -  seed pode ter falhado (veja saida acima)"
-}
 }
 
 Write-Host ""
