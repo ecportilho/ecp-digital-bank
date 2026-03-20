@@ -7,7 +7,10 @@ export const CardSchema = z.object({
   userId: z.string(),
   accountId: z.string(),
   type: CardTypeEnum,
+  cardNumber: z.string(),
   last4: z.string().length(4),
+  cardHolder: z.string(),
+  cardExpiry: z.string(),
   limitCents: z.number().int(),
   usedCents: z.number().int(),
   availableCents: z.number().int(),
@@ -58,5 +61,21 @@ export const CardPurchaseSchema = z.object({
 export type Card = z.infer<typeof CardSchema>
 export type Invoice = z.infer<typeof InvoiceSchema>
 export type CardPurchase = z.infer<typeof CardPurchaseSchema>
+export const CardPurchaseInputSchema = z.object({
+  amountCents: z.number().int().min(1, 'Valor minimo e R$ 0,01'),
+  description: z.string().min(1).max(200),
+  merchantName: z.string().min(1).max(100),
+  merchantCategory: z.string().max(50).optional(),
+})
+
+export const CardPurchaseByNumberSchema = z.object({
+  cardNumber: z.string().min(13).max(19),
+  amountCents: z.number().int().min(1, 'Valor minimo e R$ 0,01'),
+  description: z.string().min(1).max(200),
+  merchantName: z.string().min(1).max(100),
+  merchantCategory: z.string().max(50).optional(),
+})
+
 export type UpdateCardLimitInput = z.infer<typeof UpdateCardLimitSchema>
 export type BlockCardInput = z.infer<typeof BlockCardSchema>
+export type CardPurchaseInput = z.infer<typeof CardPurchaseInputSchema>

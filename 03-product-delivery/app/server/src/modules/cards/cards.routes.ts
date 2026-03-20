@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { authenticate } from '../../shared/middleware/auth.js'
 import { CardsService } from './cards.service.js'
-import { UpdateCardLimitSchema, BlockCardSchema } from './cards.schema.js'
+import { UpdateCardLimitSchema, BlockCardSchema, CardPurchaseInputSchema, CardPurchaseByNumberSchema } from './cards.schema.js'
 
 export const cardsRoutes: FastifyPluginAsync = async (app) => {
   const cardsService = new CardsService()
@@ -40,5 +40,26 @@ export const cardsRoutes: FastifyPluginAsync = async (app) => {
     const { id } = request.params as { id: string }
     const result = cardsService.getCurrentInvoice(request.currentUser.id, id)
     return reply.send(result)
+  })
+
+  // POST /api/cards/:id/purchase — process a card purchase
+  app.post('/:id/purchase', { preHandler: [authenticate] }, async (request, reply) => {
+    const { id } = request.params as { id: string }
+    const input = CardPurchaseInputSchema.parse(request.body)
+    const result = cardsService.cardPurchase(request.currentUser.id, id, input)
+    return reply.status(201).send(result)
+  })
+
+  // POST /api/cards/purchase-by-number — process a purchase by card number (merchant/gateway)
+  app.post('/purchase-by-number', { preHandler: [authenticate] }, async (request, reply) => {
+    const input = CardPurchaseByNumberSchema.parse(request.body)
+    const card = cardsService.findCardByNumber(input.cardNumber)
+    const result = cardsService.cardPurchase(card.userId, card.id, {
+      amountCents: input.amountCents,
+      description: input.description,
+      merchantName: input.merchantName,
+      merchantCategory: input.merchantCategory,
+    })
+    return reply.status(201).send(result)
   })
 }

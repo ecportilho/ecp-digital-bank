@@ -1,14 +1,18 @@
 import { getDb } from '../../database/connection.js'
 import { AppError, Errors } from '../../shared/errors/app-error.js'
 import { ErrorCode } from '../../shared/errors/error-codes.js'
-import type { UpdateCardLimitInput, BlockCardInput } from './cards.schema.js'
+import { generateId } from '../../shared/utils/uuid.js'
+import type { UpdateCardLimitInput, BlockCardInput, CardPurchaseInput } from './cards.schema.js'
 
 interface CardRow {
   id: string
   user_id: string
   account_id: string
   type: string
+  card_number: string
   last4: string
+  card_holder: string
+  card_expiry: string
   limit_cents: number
   used_cents: number
   due_day: number
@@ -50,7 +54,10 @@ function toCardResponse(row: CardRow) {
     userId: row.user_id,
     accountId: row.account_id,
     type: row.type,
+    cardNumber: row.card_number,
     last4: row.last4,
+    cardHolder: row.card_holder,
+    cardExpiry: row.card_expiry,
     limitCents: row.limit_cents,
     usedCents: row.used_cents,
     availableCents: row.limit_cents - row.used_cents,
@@ -180,5 +187,102 @@ export class CardsService {
         purchasedAt: p.purchased_at,
       })),
     }
+  }
+
+  /**
+   * Process a card purchase: validate limit, create purchase record, update used_cents.
+   */
+  cardPurchase(userId: string, cardId: string, input: CardPurchaseInput) {
+    const db = getDb()
+
+    const card = db
+      .prepare('SELECT * FROM cards WHERE id = ? AND user_id = ? AND is_active = 1')
+      .get(cardId, userId) as CardRow | undefined
+
+    if (!card) {
+      throw new AppError(ErrorCode.CARD_NOT_FOUND, 'Cartao nao encontrado', 404)
+    }
+
+    if (card.is_blocked) {
+      throw new AppError(ErrorCode.CARD_BLOCKED, 'Cartao bloqueado', 422)
+    }
+
+    const available = card.limit_cents - card.used_cents
+    if (input.amountCents > available) {
+      throw new AppError(
+        ErrorCode.CARD_LIMIT_EXCEEDED,
+        `Limite insuficiente. Disponivel: R$ ${(available / 100).toFixed(2)}`,
+        422
+      )
+    }
+
+    // Get or create current invoice
+    const now = new Date()
+    const refMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    let invoice = db
+      .prepare("SELECT * FROM invoices WHERE card_id = ? AND reference_month = ? AND status IN ('open', 'closed')")
+      .get(cardId, refMonth) as InvoiceRow | undefined
+
+    if (!invoice) {
+      const invoiceId = generateId()
+      const dueDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(card.due_day).padStart(2, '0')}`
+      db.prepare(`
+        INSERT INTO invoices (id, card_id, reference_month, total_cents, due_date, status)
+        VALUES (?, ?, ?, 0, ?, 'open')
+      `).run(invoiceId, cardId, refMonth, dueDate)
+      invoice = db.prepare('SELECT * FROM invoices WHERE id = ?').get(invoiceId) as InvoiceRow
+    }
+
+    const purchaseId = generateId()
+
+    const doPurchase = db.transaction(() => {
+      // Create card purchase
+      db.prepare(`
+        INSERT INTO card_purchases (id, card_id, invoice_id, description, merchant_name, merchant_category, amount_cents, installments, current_installment, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1, 'completed')
+      `).run(
+        purchaseId, cardId, invoice!.id,
+        input.description, input.merchantName, input.merchantCategory || 'Alimentacao',
+        input.amountCents
+      )
+
+      // Update card used_cents
+      db.prepare(`
+        UPDATE cards SET used_cents = used_cents + ?, updated_at = datetime('now') WHERE id = ?
+      `).run(input.amountCents, cardId)
+
+      // Update invoice total
+      db.prepare(`
+        UPDATE invoices SET total_cents = total_cents + ?, updated_at = datetime('now') WHERE id = ?
+      `).run(input.amountCents, invoice!.id)
+    })
+
+    doPurchase()
+
+    return {
+      purchaseId,
+      cardId,
+      amountCents: input.amountCents,
+      description: input.description,
+      merchantName: input.merchantName,
+      status: 'completed',
+      availableAfterCents: available - input.amountCents,
+    }
+  }
+
+  /**
+   * Find a card by its full card number (for merchant/gateway use).
+   */
+  findCardByNumber(cardNumber: string) {
+    const db = getDb()
+    const card = db
+      .prepare('SELECT * FROM cards WHERE card_number = ? AND is_active = 1')
+      .get(cardNumber) as CardRow | undefined
+
+    if (!card) {
+      throw new AppError(ErrorCode.CARD_NOT_FOUND, 'Cartao nao encontrado', 404)
+    }
+
+    return toCardResponse(card)
   }
 }

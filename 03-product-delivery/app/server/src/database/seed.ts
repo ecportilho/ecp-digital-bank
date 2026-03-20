@@ -76,8 +76,8 @@ async function seed() {
   // Virtual card
   const cardId = uuidv4()
   db.prepare(`
-    INSERT INTO cards (id, user_id, account_id, type, last4, limit_cents, used_cents, due_day, is_active)
-    VALUES (?, ?, ?, 'virtual', '4832', 300000, 124750, 10, 1)
+    INSERT INTO cards (id, user_id, account_id, type, card_number, last4, card_holder, card_expiry, limit_cents, used_cents, due_day, is_active)
+    VALUES (?, ?, ?, 'virtual', '4539620189474832', '4832', 'MARINA SILVA', '12/28', 300000, 124750, 10, 1)
   `).run(cardId, userId, accountId)
 
   // Current invoice
@@ -240,7 +240,10 @@ async function seed() {
       balanceCents: 1589320,    // R$ 15.893,20
       accountNumber: '00023456',
       dailyLimitCents: 1000000, // R$ 10.000
+      cardNumber: '5287341098567291',
       cardLast4: '7291',
+      cardHolder: 'CARLOS EDUARDO MENDES',
+      cardExpiry: '06/29',
       cardLimitCents: 500000,   // R$ 5.000
       cardUsedCents: 87600,
       pixKeys: [
@@ -275,7 +278,10 @@ async function seed() {
       balanceCents: 52340,      // R$ 523,40
       accountNumber: '00034567',
       dailyLimitCents: 300000,  // R$ 3.000
+      cardNumber: '4916783255011053',
       cardLast4: '1053',
+      cardHolder: 'AISHA OLIVEIRA SANTOS',
+      cardExpiry: '03/27',
       cardLimitCents: 150000,   // R$ 1.500
       cardUsedCents: 134200,
       pixKeys: [
@@ -308,7 +314,10 @@ async function seed() {
       balanceCents: 8745600,    // R$ 87.456,00
       accountNumber: '00045678',
       dailyLimitCents: 2000000, // R$ 20.000
+      cardNumber: '5412750012348814',
       cardLast4: '8814',
+      cardHolder: 'ROBERTO YUKIO TANAKA',
+      cardExpiry: '09/28',
       cardLimitCents: 1500000,  // R$ 15.000
       cardUsedCents: 432100,
       pixKeys: [
@@ -346,7 +355,10 @@ async function seed() {
       balanceCents: 189450,     // R$ 1.894,50
       accountNumber: '00056789',
       dailyLimitCents: 200000,  // R$ 2.000
+      cardNumber: '4024007188533347',
       cardLast4: '3347',
+      cardHolder: 'FRANCISCA DAS CHAGAS LIMA',
+      cardExpiry: '01/27',
       cardLimitCents: 80000,    // R$ 800
       cardUsedCents: 45600,
       pixKeys: [
@@ -378,7 +390,10 @@ async function seed() {
       balanceCents: 345890,     // R$ 3.458,90
       accountNumber: '00067890',
       dailyLimitCents: 500000,  // R$ 5.000
+      cardNumber: '5168941237005590',
       cardLast4: '5590',
+      cardHolder: 'LUCAS GABRIEL NDONGO',
+      cardExpiry: '11/29',
       cardLimitCents: 250000,   // R$ 2.500
       cardUsedCents: 198700,
       pixKeys: [
@@ -412,7 +427,10 @@ async function seed() {
       balanceCents: 2567800,    // R$ 25.678,00
       accountNumber: '00078901',
       dailyLimitCents: 1500000, // R$ 15.000
+      cardNumber: '4556219083466178',
       cardLast4: '6178',
+      cardHolder: 'PATRICIA WERNECK DE SOUZA',
+      cardExpiry: '07/28',
       cardLimitCents: 800000,   // R$ 8.000
       cardUsedCents: 356000,
       pixKeys: [
@@ -450,7 +468,10 @@ async function seed() {
       balanceCents: 15670,      // R$ 156,70
       accountNumber: '00089012',
       dailyLimitCents: 100000,  // R$ 1.000
+      cardNumber: '5321408765129921',
       cardLast4: '9921',
+      cardHolder: 'DAVI HENRIQUE RIBEIRO',
+      cardExpiry: '04/27',
       cardLimitCents: 50000,    // R$ 500
       cardUsedCents: 49800,
       pixKeys: [
@@ -482,7 +503,10 @@ async function seed() {
       balanceCents: 678900,     // R$ 6.789,00
       accountNumber: '00090123',
       dailyLimitCents: 800000,  // R$ 8.000
+      cardNumber: '4716839012452467',
       cardLast4: '2467',
+      cardHolder: 'CAMILA FERREIRA DUARTE',
+      cardExpiry: '10/28',
       cardLimitCents: 400000,   // R$ 4.000
       cardUsedCents: 215300,
       pixKeys: [
@@ -517,7 +541,10 @@ async function seed() {
       balanceCents: 4523400,    // R$ 45.234,00
       accountNumber: '00001234',
       dailyLimitCents: 2000000, // R$ 20.000
+      cardNumber: '5489720136583856',
       cardLast4: '3856',
+      cardHolder: 'MOHAMMAD ALI KHALIL',
+      cardExpiry: '08/29',
       cardLimitCents: 1200000,  // R$ 12.000
       cardUsedCents: 567800,
       pixKeys: [
@@ -553,7 +580,10 @@ async function seed() {
       balanceCents: 1234500,    // R$ 12.345,00
       accountNumber: '00011234',
       dailyLimitCents: 1000000, // R$ 10.000
+      cardNumber: '4929518063477703',
       cardLast4: '7703',
+      cardHolder: 'YUKI NAKAMURA PRADO',
+      cardExpiry: '05/28',
       cardLimitCents: 600000,   // R$ 6.000
       cardUsedCents: 289400,
       pixKeys: [
@@ -609,9 +639,9 @@ async function seed() {
     // Card
     const cId = uuidv4()
     db.prepare(`
-      INSERT INTO cards (id, user_id, account_id, type, last4, limit_cents, used_cents, due_day, is_active)
-      VALUES (?, ?, ?, 'virtual', ?, ?, ?, 10, 1)
-    `).run(cId, uId, aId, u.cardLast4, u.cardLimitCents, u.cardUsedCents)
+      INSERT INTO cards (id, user_id, account_id, type, card_number, last4, card_holder, card_expiry, limit_cents, used_cents, due_day, is_active)
+      VALUES (?, ?, ?, 'virtual', ?, ?, ?, ?, ?, ?, 10, 1)
+    `).run(cId, uId, aId, u.cardNumber, u.cardLast4, u.cardHolder, u.cardExpiry, u.cardLimitCents, u.cardUsedCents)
 
     // Invoice
     const invId = uuidv4()
