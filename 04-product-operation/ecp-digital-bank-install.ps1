@@ -82,7 +82,7 @@ if (Test-Path "$projectRoot\package.json") {
     $PROJECT_DIR = (Get-Location).Path
 } else {
     # Tentar o caminho padrao
-    $PROJECT_DIR = "C:\Users\$env:USERNAME\projetos_git\ecp-digital-bank"
+    $PROJECT_DIR = "C:\Users\$env:USERNAME\projetos_git\ecp-digital-bank\03-product-delivery\app"
 }
 
 Write-Host "  Projeto:   $PROJECT_DIR" -ForegroundColor Gray
@@ -242,7 +242,7 @@ $requiredFiles = @(
     "server\src\database\seed.ts",
     "web\src\App.tsx",
     "web\vite.config.ts",
-    "tsconfig.base.json"
+    "server\tsconfig.json"
 )
 
 $missingFiles = @()
@@ -919,3 +919,6 @@ Write-Host ("=" * 70) -ForegroundColor DarkCyan
 Write-Host "  Script finalizado. Bom desenvolvimento!" -ForegroundColor Cyan
 Write-Host ("=" * 70) -ForegroundColor DarkCyan
 Write-Host ""
+
+
+

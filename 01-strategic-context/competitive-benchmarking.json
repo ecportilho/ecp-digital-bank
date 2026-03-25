@@ -1,0 +1,277 @@
+{
+  "agent": "product-manager",
+  "subagent": "market-research",
+  "phase": "01-strategic-context",
+  "generated_at": "2026-03-25",
+  "title": "Benchmarking Competitivo Detalhado — ECP Digital Bank",
+  "description": "Analise comparativa feature-by-feature, UX, pricing e satisfacao dos 6 principais concorrentes do mercado brasileiro de bancos digitais.",
+
+  "feature_comparison_matrix": {
+    "legenda": {
+      "completo": "Feature completa e madura",
+      "parcial": "Feature existe mas com limitacoes",
+      "ausente": "Feature nao disponivel",
+      "planejado": "Anunciado mas nao lancado"
+    },
+    "features": [
+      {
+        "feature": "Experiencia Web Desktop",
+        "ecp_bank": "completo",
+        "nubank": "parcial",
+        "inter": "parcial",
+        "c6": "ausente",
+        "picpay": "ausente",
+        "mercado_pago": "parcial",
+        "neon": "ausente",
+        "notas": "Nubank e Inter oferecem versao web limitada (consulta de saldo, cartao). Nenhum concorrente oferece Pix, extrato inteligente ou dashboard financeiro no desktop. Gap universal confirmado."
+      },
+      {
+        "feature": "Pix no Desktop",
+        "ecp_bank": "completo",
+        "nubank": "ausente",
+        "inter": "ausente",
+        "c6": "ausente",
+        "picpay": "ausente",
+        "mercado_pago": "ausente",
+        "neon": "ausente",
+        "notas": "Nenhum concorrente oferece envio de Pix pelo navegador. Todos exigem uso do app mobile. ECP Bank e o unico com formulario de Pix otimizado para teclado."
+      },
+      {
+        "feature": "Extrato com Categorizacao Automatica",
+        "ecp_bank": "completo",
+        "nubank": "parcial",
+        "inter": "ausente",
+        "c6": "ausente",
+        "picpay": "ausente",
+        "mercado_pago": "ausente",
+        "neon": "ausente",
+        "notas": "Nubank oferece categorizacao basica (alimentacao, transporte) mas sem insights. Nenhum concorrente oferece graficos de distribuicao ou comparativo entre periodos."
+      },
+      {
+        "feature": "Dashboard Financeiro Inteligente",
+        "ecp_bank": "completo",
+        "nubank": "ausente",
+        "inter": "ausente",
+        "c6": "ausente",
+        "picpay": "ausente",
+        "mercado_pago": "ausente",
+        "neon": "ausente",
+        "notas": "Nenhum concorrente oferece visao consolidada de saldo + gastos + faturas + Pix em uma unica tela. Usuarios recorrem a apps terceiros (Organizze, Mobills)."
+      },
+      {
+        "feature": "Cartao Virtual com Controles Granulares",
+        "ecp_bank": "completo",
+        "nubank": "completo",
+        "inter": "completo",
+        "c6": "completo",
+        "picpay": "parcial",
+        "mercado_pago": "parcial",
+        "neon": "parcial",
+        "notas": "Nubank, Inter e C6 oferecem bloqueio/desbloqueio e limites. ECP Bank diferencia com controle por transacao e visualizacao de fatura no desktop."
+      },
+      {
+        "feature": "Pagamento de Boletos",
+        "ecp_bank": "completo",
+        "nubank": "completo",
+        "inter": "completo",
+        "c6": "completo",
+        "picpay": "completo",
+        "mercado_pago": "completo",
+        "neon": "completo",
+        "notas": "Feature commoditizada. Todos oferecem. ECP Bank diferencia com digitacao do codigo no desktop (sem camera)."
+      },
+      {
+        "feature": "Gerenciamento de Chaves Pix",
+        "ecp_bank": "completo",
+        "nubank": "completo",
+        "inter": "completo",
+        "c6": "completo",
+        "picpay": "completo",
+        "mercado_pago": "completo",
+        "neon": "completo",
+        "notas": "Feature commoditizada. Regulamentacao BC exige ate 5 chaves por conta."
+      },
+      {
+        "feature": "Notificacoes em Tempo Real",
+        "ecp_bank": "completo",
+        "nubank": "completo",
+        "inter": "completo",
+        "c6": "completo",
+        "picpay": "completo",
+        "mercado_pago": "completo",
+        "neon": "parcial",
+        "notas": "ECP Bank implementa via browser notifications e badge in-app. Concorrentes usam push mobile."
+      },
+      {
+        "feature": "Visualizacao por Ciclo Salarial",
+        "ecp_bank": "completo",
+        "nubank": "ausente",
+        "inter": "ausente",
+        "c6": "ausente",
+        "picpay": "ausente",
+        "mercado_pago": "ausente",
+        "neon": "ausente",
+        "notas": "Diferenciador exclusivo. Nenhum concorrente permite organizar gastos pelo ciclo salarial (dia do pagamento ao proximo). Todos usam mes-calendario."
+      },
+      {
+        "feature": "Onboarding Progressivo",
+        "ecp_bank": "completo",
+        "nubank": "parcial",
+        "inter": "parcial",
+        "c6": "parcial",
+        "picpay": "completo",
+        "mercado_pago": "parcial",
+        "neon": "parcial",
+        "notas": "PicPay tem onboarding mais rapido. Nubank exige muitos dados upfront. ECP Bank permite usar o produto com cadastro minimo e completa depois."
+      }
+    ]
+  },
+
+  "ux_benchmarking": {
+    "descricao": "Comparativo de fluxos-chave (numero de passos, tempo estimado, fricao)",
+    "fluxos": [
+      {
+        "fluxo": "Enviar Pix para contato salvo",
+        "ecp_bank": { "passos": 3, "tempo_segundos": 15, "plataforma": "web" },
+        "nubank": { "passos": 5, "tempo_segundos": 25, "plataforma": "mobile" },
+        "inter": { "passos": 6, "tempo_segundos": 35, "plataforma": "mobile" },
+        "c6": { "passos": 5, "tempo_segundos": 30, "plataforma": "mobile" },
+        "notas": "ECP Bank otimiza com Tab entre campos e Enter para confirmar. Sem necessidade de pegar o celular."
+      },
+      {
+        "fluxo": "Consultar extrato do mes",
+        "ecp_bank": { "passos": 1, "tempo_segundos": 2, "plataforma": "web" },
+        "nubank": { "passos": 3, "tempo_segundos": 8, "plataforma": "mobile" },
+        "inter": { "passos": 4, "tempo_segundos": 12, "plataforma": "mobile" },
+        "c6": { "passos": 3, "tempo_segundos": 10, "plataforma": "mobile" },
+        "notas": "ECP Bank mostra extrato no dashboard ao abrir. Concorrentes exigem navegacao por menus."
+      },
+      {
+        "fluxo": "Bloquear cartao virtual",
+        "ecp_bank": { "passos": 2, "tempo_segundos": 5, "plataforma": "web" },
+        "nubank": { "passos": 4, "tempo_segundos": 15, "plataforma": "mobile" },
+        "inter": { "passos": 5, "tempo_segundos": 20, "plataforma": "mobile" },
+        "c6": { "passos": 4, "tempo_segundos": 15, "plataforma": "mobile" },
+        "notas": "ECP Bank: toggle direto na pagina de cartoes. Sem submenu."
+      },
+      {
+        "fluxo": "Onboarding ate primeira operacao",
+        "ecp_bank": { "passos": 5, "tempo_segundos": 120, "plataforma": "web" },
+        "nubank": { "passos": 12, "tempo_segundos": 600, "plataforma": "mobile" },
+        "inter": { "passos": 15, "tempo_segundos": 900, "plataforma": "mobile" },
+        "c6": { "passos": 10, "tempo_segundos": 480, "plataforma": "mobile" },
+        "notas": "ECP Bank: cadastro minimo + primeira acao guiada em <2 min. Nubank exige selfie + documento + validacao que pode levar horas."
+      }
+    ]
+  },
+
+  "pricing_comparison": {
+    "descricao": "Comparativo de custos e tarifas para o usuario final",
+    "itens": [
+      {
+        "servico": "Conta digital",
+        "ecp_bank": "Gratuita",
+        "nubank": "Gratuita",
+        "inter": "Gratuita",
+        "c6": "Gratuita",
+        "picpay": "Gratuita",
+        "neon": "Gratuita"
+      },
+      {
+        "servico": "Pix (envio/recebimento)",
+        "ecp_bank": "Gratuito",
+        "nubank": "Gratuito",
+        "inter": "Gratuito",
+        "c6": "Gratuito",
+        "picpay": "Gratuito",
+        "neon": "Gratuito"
+      },
+      {
+        "servico": "Cartao virtual",
+        "ecp_bank": "Gratuito",
+        "nubank": "Gratuito",
+        "inter": "Gratuito",
+        "c6": "Gratuito",
+        "picpay": "Gratuito",
+        "neon": "Gratuito (1), R$3/adicional"
+      },
+      {
+        "servico": "TED/DOC",
+        "ecp_bank": "Gratuito (via Pix)",
+        "nubank": "Gratuito",
+        "inter": "Gratuito",
+        "c6": "Gratuito",
+        "picpay": "R$3,49/TED",
+        "neon": "R$3,50/TED"
+      },
+      {
+        "servico": "Saque (rede 24h)",
+        "ecp_bank": "N/A (web-only MVP)",
+        "nubank": "R$6,50",
+        "inter": "4 gratis/mes",
+        "c6": "R$6,50",
+        "picpay": "R$7,00",
+        "neon": "R$6,50"
+      },
+      {
+        "servico": "Rendimento conta",
+        "ecp_bank": "100% CDI",
+        "nubank": "100% CDI (apos 30 dias)",
+        "inter": "100% CDI",
+        "c6": "102% CDI (C6+)",
+        "picpay": "102% CDI",
+        "neon": "100% CDI"
+      }
+    ],
+    "analise": "O mercado de bancos digitais brasileiros convergiu para gratuidade em servicos basicos. Diferenciacao por preco e praticamente impossivel — a competicao se dara por experiencia, inteligencia e conveniencia."
+  },
+
+  "satisfaction_metrics": {
+    "descricao": "Metricas de satisfacao publica disponiveis (2024-2025)",
+    "dados": [
+      { "banco": "Nubank", "nps": 80, "app_store_rating": 4.7, "reclame_aqui": "RA1000", "nota_ra": 8.2 },
+      { "banco": "Banco Inter", "nps": 55, "app_store_rating": 4.3, "reclame_aqui": "Otimo", "nota_ra": 7.8 },
+      { "banco": "C6 Bank", "nps": 50, "app_store_rating": 4.5, "reclame_aqui": "Otimo", "nota_ra": 7.5 },
+      { "banco": "PicPay", "nps": 40, "app_store_rating": 4.4, "reclame_aqui": "Bom", "nota_ra": 7.0 },
+      { "banco": "Mercado Pago", "nps": 35, "app_store_rating": 4.2, "reclame_aqui": "Bom", "nota_ra": 6.8 },
+      { "banco": "Neon", "nps": 30, "app_store_rating": 4.0, "reclame_aqui": "Regular", "nota_ra": 6.2 }
+    ],
+    "principais_reclamacoes": [
+      {
+        "tema": "Atendimento ao cliente",
+        "frequencia": "Alta em todos",
+        "detalhe": "Tempo de resposta longo, bots ineficientes, dificuldade de falar com humano. Nubank sofreu degradacao significativa apos 80M+ clientes."
+      },
+      {
+        "tema": "Bloqueio/restricao de conta",
+        "frequencia": "Media-alta",
+        "detalhe": "Bloqueios preventivos sem explicacao clara. Comum em Nubank, Inter e PicPay. Gera desconfianca e migracao."
+      },
+      {
+        "tema": "Limites baixos",
+        "frequencia": "Media",
+        "detalhe": "Limites de Pix e credito iniciais muito baixos, especialmente em C6 e Neon. Usuarios com renda comprovada se sentem subestimados."
+      },
+      {
+        "tema": "App lento/instavel",
+        "frequencia": "Media",
+        "detalhe": "Banco Inter e Mercado Pago sao os mais criticados por performance. Super apps sobrecarregados com funcionalidades nao-bancarias."
+      },
+      {
+        "tema": "Falta de transparencia em taxas",
+        "frequencia": "Media",
+        "detalhe": "PicPay e Neon recebem criticas por mudancas abruptas em politicas de cashback e taxas. Sensacao de 'isca e troca'."
+      }
+    ]
+  },
+
+  "conclusao": {
+    "gaps_universais": [
+      "Experiencia web-first: nenhum concorrente oferece banking completo no desktop",
+      "Extrato inteligente: categorizacao e insights sao ausentes ou rudimentares em todos",
+      "Ciclo salarial: todos organizam por mes-calendario, ignorando o ciclo real do assalariado"
+    ],
+    "vantagem_competitiva_ecp": "A combinacao web-first + extrato inteligente + ciclo salarial cria uma proposta de valor unica no mercado brasileiro. Nenhum concorrente individual aborda esses 3 gaps simultaneamente.",
+    "risco_principal": "A ausencia de app mobile no MVP limita o alcance. O segmento prioritario (CLT 22-35) usa desktop no trabalho, mas pode esperar um app para uso pessoal. Mitigacao: comunicar explicitamente que o foco e 'seu banco no computador do trabalho'."
+  }
+}

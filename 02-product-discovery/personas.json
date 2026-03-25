@@ -1,0 +1,375 @@
+{
+  "agent": "product-designer",
+  "skill": "user-research",
+  "phase": "02-product-discovery",
+  "generated_at": "2026-03-25",
+  "title": "Personas Sinteticas — ECP Digital Bank",
+  "description": "5 personas sinteticas representando os segmentos prioritarios do mercado. Construidas a partir dos 4 segmentos identificados no market-research.json, insights INS-01 a INS-07, e validadas contra as oportunidades priorizadas.",
+  "metodologia": "Personas sinteticas construidas por triangulacao de dados do IBGE PNAD 2023, FEBRABAN Pesquisa de Tecnologia Bancaria 2024, dados publicos de Nubank/Inter/C6, e analise comportamental dos 4 segmentos de mercado. Nao baseadas em entrevistas individuais — representam arquetipos estatisticamente fundamentados.",
+
+  "personas": [
+    {
+      "id": "P-01",
+      "nome": "Marina Oliveira",
+      "idade": 28,
+      "genero": "Feminino",
+      "localizacao": "Sao Paulo, SP",
+      "foto_descricao": "Mulher jovem em ambiente de escritorio moderno, laptop aberto, fones de ouvido no pescoco",
+      "segmento": "Jovens Profissionais Assalariados",
+      "prioridade": "Primaria — segmento-alvo do MVP",
+
+      "demografico": {
+        "profissao": "Analista de Marketing Digital",
+        "empresa": "Agencia de medio porte (80 funcionarios)",
+        "regime": "CLT",
+        "renda_mensal": "R$ 5.200",
+        "dia_pagamento": 5,
+        "escolaridade": "Superior completo (Publicidade e Propaganda)",
+        "estado_civil": "Solteira, mora sozinha",
+        "bairro": "Vila Mariana"
+      },
+
+      "contexto_trabalho": {
+        "horas_no_computador": "8-9h por dia",
+        "ferramentas_diarias": ["Slack", "Google Workspace", "Figma", "Meta Business Suite"],
+        "celular_no_trabalho": "Usa para mensagens pessoais, evita durante reunioes",
+        "pausas_financeiras": "Verifica saldo e faz Pix no celular 2-3x por dia, sempre interrompendo o trabalho"
+      },
+
+      "comportamento_financeiro": {
+        "banco_principal": "Nubank",
+        "bancos_secundarios": ["Banco do Brasil (conta salario)", "PicPay (cashback)"],
+        "gasto_medio_mensal": {
+          "aluguel": "R$ 1.800",
+          "alimentacao": "R$ 900",
+          "transporte": "R$ 250 (metro + Uber)",
+          "streaming": "R$ 80 (Netflix, Spotify)",
+          "lazer": "R$ 400",
+          "poupanca": "R$ 500 (quando sobra)"
+        },
+        "pix_por_semana": 8,
+        "usa_cartao_credito": true,
+        "controle_financeiro": "Planilha no Google Sheets, atualiza a cada 2 semanas (atrasa frequentemente)"
+      },
+
+      "frustrações": [
+        "Precisa pegar o celular toda vez que quer fazer um Pix ou conferir o saldo durante o expediente",
+        "Nao sabe exatamente quanto gastou em alimentacao no mes — o extrato do Nubank nao categoriza bem",
+        "O salario cai dia 5, mas o resumo financeiro do banco e por mes-calendario — nunca bate com sua realidade",
+        "Ja tentou usar Organizze e Mobills mas desistiu de cadastrar tudo manualmente",
+        "Sente que 'o dinheiro some' entre o dia 5 e o dia 25"
+      ],
+
+      "objetivos": [
+        "Conseguir fazer operacoes bancarias sem sair do computador durante o expediente",
+        "Entender para onde vai o dinheiro sem precisar anotar tudo manualmente",
+        "Ter uma visao clara de quanto pode gastar ate o proximo salario",
+        "Construir uma reserva de emergencia de 6 meses"
+      ],
+
+      "citacao": "Eu sei que ganho bem pra minha idade, mas no dia 25 eu ja to contando os dias pro proximo pagamento. Se pelo menos eu conseguisse ver meus gastos de forma organizada...",
+
+      "insights_conectados": ["INS-01", "INS-02", "INS-03", "INS-07"],
+      "oportunidades_conectadas": ["opp-01", "opp-02", "opp-04", "opp-05", "opp-06"],
+      "krs_impactados": ["kr-01", "kr-02", "kr-05"],
+
+      "cenario_de_uso": "Marina esta no escritorio as 15h, precisa transferir R$180 para rachar o almoco com a colega. Abre o ECP Bank no navegador, busca o contato, digita o valor, confirma com Enter. 15 segundos, sem pegar o celular. Enquanto espera o proximo meeting, olha o dashboard e ve que gastou 72% do orcamento de alimentacao faltando 12 dias pro salario. Decide cozinhar mais nessa semana."
+    },
+
+    {
+      "id": "P-02",
+      "nome": "Rafael Andrade Costa",
+      "idade": 32,
+      "genero": "Masculino",
+      "localizacao": "Belo Horizonte, MG",
+      "foto_descricao": "Homem de camisa social em home office, dois monitores, cafe ao lado",
+      "segmento": "Jovens Profissionais Assalariados",
+      "prioridade": "Primaria — variante home office",
+
+      "demografico": {
+        "profissao": "Desenvolvedor Backend Senior",
+        "empresa": "Startup de fintech (remote-first, 45 funcionarios)",
+        "regime": "CLT",
+        "renda_mensal": "R$ 12.500",
+        "dia_pagamento": 25,
+        "escolaridade": "Superior completo (Ciencia da Computacao)",
+        "estado_civil": "Casado, 1 filho (2 anos)",
+        "bairro": "Savassi"
+      },
+
+      "contexto_trabalho": {
+        "horas_no_computador": "10h+ por dia (home office)",
+        "ferramentas_diarias": ["VS Code", "Terminal", "GitHub", "Jira", "Notion", "Meet"],
+        "celular_no_trabalho": "Quase nao usa — prefere tudo no computador",
+        "pausas_financeiras": "Gerencia financas entre tasks, janela do browser sempre aberta"
+      },
+
+      "comportamento_financeiro": {
+        "banco_principal": "Nubank",
+        "bancos_secundarios": ["Itau (conta conjunta com esposa)", "XP (investimentos)"],
+        "gasto_medio_mensal": {
+          "aluguel": "R$ 3.200",
+          "alimentacao": "R$ 1.800 (familia)",
+          "creche": "R$ 1.500",
+          "transporte": "R$ 400 (carro)",
+          "assinaturas": "R$ 350 (streaming, cloud, gym)",
+          "investimentos": "R$ 2.000",
+          "lazer": "R$ 600"
+        },
+        "pix_por_semana": 12,
+        "usa_cartao_credito": true,
+        "controle_financeiro": "Planilha complexa no Google Sheets com formulas, atualiza semanalmente"
+      },
+
+      "frustrações": [
+        "Gerencia dinheiro da familia em 3 bancos diferentes e nao tem visao consolidada",
+        "O Nubank nao funciona direito no navegador — precisa pegar o celular pra cada Pix",
+        "Como dev, se irrita com interfaces web mal feitas e lentas",
+        "A fatura do cartao mistura gastos dele e da esposa sem diferenciar",
+        "Quer investir mais mas nao sabe exatamente quanto sobra todo mes"
+      ],
+
+      "objetivos": [
+        "Ter um banco que funcione 100% no navegador, integrado ao seu fluxo de trabalho",
+        "Visao clara de cash flow familiar sem precisar de planilha manual",
+        "Automatizar categorizacao de gastos por tipo (pessoal, familia, trabalho)",
+        "Ter controle granular do cartao virtual para assinaturas"
+      ],
+
+      "citacao": "Eu passo o dia inteiro no computador. Por que eu preciso pegar o celular pra fazer um Pix? Em 2026 isso nao faz sentido nenhum.",
+
+      "insights_conectados": ["INS-01", "INS-02", "INS-06"],
+      "oportunidades_conectadas": ["opp-01", "opp-02", "opp-13", "opp-15"],
+      "krs_impactados": ["kr-01", "kr-05"],
+
+      "cenario_de_uso": "Rafael esta no VS Code e recebe mensagem da esposa: 'Preciso que voce pague a creche, vence hoje'. Ele abre outra aba, ja logado no ECP Bank, digita o codigo do boleto, confere o valor (R$1.500), paga. Volta pro codigo em menos de 1 minuto. No fim do dia, olha o dashboard por ciclo salarial (dia 25 a 24) e ve que a familia gastou R$3.200 em alimentacao — acima do orcamento de R$2.500. Decide conversar com a esposa."
+    },
+
+    {
+      "id": "P-03",
+      "nome": "Thiago Nascimento",
+      "idade": 24,
+      "genero": "Masculino",
+      "localizacao": "Recife, PE",
+      "foto_descricao": "Jovem em coworking, mochila ao lado, notebook com adesivos",
+      "segmento": "Freelancers e Gig Economy",
+      "prioridade": "Secundaria — Ciclo 2",
+
+      "demografico": {
+        "profissao": "Designer Freelancer + Motorista Uber (renda complementar)",
+        "empresa": "Autonomo (MEI)",
+        "regime": "PJ/MEI",
+        "renda_mensal": "R$ 3.000–5.500 (variavel)",
+        "dia_pagamento": "Nao fixo — recebe Pix de clientes ao longo do mes",
+        "escolaridade": "Superior incompleto (Design Grafico)",
+        "estado_civil": "Solteiro, divide apartamento",
+        "bairro": "Boa Viagem"
+      },
+
+      "contexto_trabalho": {
+        "horas_no_computador": "6-7h por dia (design)",
+        "ferramentas_diarias": ["Figma", "Canva", "Instagram", "WhatsApp Business", "Uber Driver"],
+        "celular_no_trabalho": "Celular e ferramenta de trabalho (Uber, Instagram)",
+        "pausas_financeiras": "Checa Pix recebido apos cada entrega de projeto ou corrida"
+      },
+
+      "comportamento_financeiro": {
+        "banco_principal": "PicPay",
+        "bancos_secundarios": ["Nubank (cartao credito)", "Caixa (FGTS historico)"],
+        "gasto_medio_mensal": {
+          "aluguel": "R$ 750 (metade do apto)",
+          "alimentacao": "R$ 600",
+          "transporte": "R$ 300 (gasolina + manutencao)",
+          "internet_celular": "R$ 120",
+          "ferramentas": "R$ 150 (Adobe, dominio, hospedagem)",
+          "lazer": "R$ 300"
+        },
+        "pix_por_semana": 15,
+        "usa_cartao_credito": true,
+        "controle_financeiro": "Nenhum — 'vou olhando o saldo'"
+      },
+
+      "frustrações": [
+        "Renda variavel torna impossivel planejar — nunca sabe quanto vai entrar no mes",
+        "Mistura Pix pessoal e de clientes na mesma conta",
+        "PicPay mudou as regras de cashback duas vezes sem avisar",
+        "Nao tem como separar o que e gasto do 'negocio' (MEI) vs. pessoal",
+        "Ja ficou negativado por esquecer boleto"
+      ],
+
+      "objetivos": [
+        "Separar receitas de freelance das despesas pessoais",
+        "Ter alerta quando um boleto esta vencendo",
+        "Entender se o mes foi lucrativo ou nao (receita - despesas)",
+        "Nao depender de cashback que pode sumir"
+      ],
+
+      "citacao": "Tem mes que eu ganho 5 mil, tem mes que mal fecha 3. O problema e que eu so descubro isso quando ja gastei.",
+
+      "insights_conectados": ["INS-02", "INS-05"],
+      "oportunidades_conectadas": ["opp-02", "opp-11"],
+      "krs_impactados": ["kr-01", "kr-03"],
+
+      "cenario_de_uso": "Thiago abre o ECP Bank no notebook do coworking. O dashboard mostra que recebeu R$2.800 em Pix este mes (3 clientes) e gastou R$1.950. O extrato categorizado mostra que R$450 foram em ferramentas de trabalho. Ele percebe que esta tendo lucro e decide separar R$500 como reserva."
+    },
+
+    {
+      "id": "P-04",
+      "nome": "Camila Santos Ferreira",
+      "idade": 22,
+      "genero": "Feminino",
+      "localizacao": "Curitiba, PR",
+      "foto_descricao": "Jovem em biblioteca universitaria, laptop e livros na mesa",
+      "segmento": "Nativos Digitais Universitarios",
+      "prioridade": "Terciaria — Ciclo 2+",
+
+      "demografico": {
+        "profissao": "Estagiaria de RH + Estudante de Psicologia",
+        "empresa": "Multinacional de tecnologia",
+        "regime": "Estagio CLT",
+        "renda_mensal": "R$ 1.800 (bolsa estagio)",
+        "dia_pagamento": 1,
+        "escolaridade": "Superior em andamento (6o periodo)",
+        "estado_civil": "Solteira, mora com os pais",
+        "bairro": "Batel"
+      },
+
+      "contexto_trabalho": {
+        "horas_no_computador": "6h (estagio) + 3h (faculdade online)",
+        "ferramentas_diarias": ["Teams", "Excel", "Google Classroom", "TikTok", "WhatsApp"],
+        "celular_no_trabalho": "Usa constantemente — geracao mobile-first",
+        "pausas_financeiras": "Faz Pix pelo celular sem pensar, nao acompanha gastos"
+      },
+
+      "comportamento_financeiro": {
+        "banco_principal": "Nubank",
+        "bancos_secundarios": ["Caixa (estagio deposita la)"],
+        "gasto_medio_mensal": {
+          "transporte": "R$ 200",
+          "alimentacao": "R$ 350 (almoco fora)",
+          "streaming": "R$ 40 (Spotify familia do pai)",
+          "roupas_cosmeticos": "R$ 250",
+          "lazer": "R$ 300",
+          "faculdade": "R$ 0 (bolsa integral)"
+        },
+        "pix_por_semana": 10,
+        "usa_cartao_credito": true,
+        "controle_financeiro": "Zero — 'se caiu notificacao de compra aprovada, ta tudo bem'"
+      },
+
+      "frustrações": [
+        "Recebe R$1.800 e no dia 15 ja nao tem nada — nao sabe pra onde foi",
+        "Pai vive perguntando se ela esta economizando e ela nao tem resposta",
+        "Cartao de credito esta sempre no limite (R$1.200)",
+        "Quer comecar a guardar dinheiro mas nao sabe por onde comecar",
+        "Acha apps de financas 'chatos e complicados'"
+      ],
+
+      "objetivos": [
+        "Entender pra onde o dinheiro vai sem esforco (categorizacao automatica)",
+        "Nao estourar o cartao de credito",
+        "Comecar a guardar pelo menos R$200/mes",
+        "Ter uma ferramenta que nao pareca 'coisa de adulto chato'"
+      ],
+
+      "citacao": "Eu sei que devia controlar meus gastos, mas abrir planilha da preguica. Se o banco me mostrasse isso automaticamente, eu ate olhava.",
+
+      "insights_conectados": ["INS-02", "INS-03", "INS-05"],
+      "oportunidades_conectadas": ["opp-02", "opp-04", "opp-05", "opp-11"],
+      "krs_impactados": ["kr-02", "kr-03"],
+
+      "cenario_de_uso": "Camila abre o ECP Bank no computador do estagio durante o almoco. O dashboard mostra que ela ja gastou R$280 em 'Roupas e Cosmeticos' este ciclo — 112% do que gastou no ciclo passado. Uma notificacao sutil diz 'Voce tem R$320 disponiveis ate dia 1'. Ela pensa duas vezes antes de comprar a blusa que viu no Instagram."
+    },
+
+    {
+      "id": "P-05",
+      "nome": "Roberto Almeida",
+      "idade": 41,
+      "genero": "Masculino",
+      "localizacao": "Porto Alegre, RS",
+      "foto_descricao": "Homem de meia idade em escritorio corporativo, terno casual, dois celulares na mesa",
+      "segmento": "Adultos Pragmaticos em Transicao Digital",
+      "prioridade": "Secundaria — Ciclo 2",
+
+      "demografico": {
+        "profissao": "Gerente de Operacoes",
+        "empresa": "Industria metalurgica (500+ funcionarios)",
+        "regime": "CLT",
+        "renda_mensal": "R$ 14.000",
+        "dia_pagamento": 28,
+        "escolaridade": "MBA em Gestao Empresarial",
+        "estado_civil": "Casado, 2 filhos (8 e 12 anos)",
+        "bairro": "Moinhos de Vento"
+      },
+
+      "contexto_trabalho": {
+        "horas_no_computador": "7h por dia (emails, SAP, planilhas)",
+        "ferramentas_diarias": ["Outlook", "Excel", "SAP", "PowerPoint", "Teams"],
+        "celular_no_trabalho": "Usa para WhatsApp e ligacoes, evita apps bancarios em reunioes",
+        "pausas_financeiras": "Faz transferencias no celular no final do dia, em casa"
+      },
+
+      "comportamento_financeiro": {
+        "banco_principal": "Itau (20+ anos de conta)",
+        "bancos_secundarios": ["Nubank (cartao credito)", "XP (investimentos)"],
+        "gasto_medio_mensal": {
+          "financiamento_casa": "R$ 3.500",
+          "escola_filhos": "R$ 2.800",
+          "alimentacao": "R$ 2.200",
+          "plano_saude": "R$ 1.200",
+          "carro": "R$ 800",
+          "investimentos": "R$ 2.000",
+          "lazer_familia": "R$ 800"
+        },
+        "pix_por_semana": 5,
+        "usa_cartao_credito": true,
+        "controle_financeiro": "Planilha Excel detalhada, atualizada religiosamente todo domingo"
+      },
+
+      "frustrações": [
+        "O Itau cobra R$32/mes de tarifa e ele continua pagando por inércia e medo de migrar",
+        "A interface web do Itau e dos anos 2000 — lenta, confusa, pede token fisico",
+        "Quer sair do banco tradicional mas tem medo de confiar dinheiro a um banco digital",
+        "Nao confia em apps — prefere fazer operacoes financeiras no computador",
+        "A esposa usa outro banco e eles nao conseguem consolidar as financas da familia"
+      ],
+
+      "objetivos": [
+        "Encontrar um banco digital confiavel que funcione bem no computador",
+        "Parar de pagar tarifa bancaria",
+        "Ter seguranca visivel e controles claros para operacoes de alto valor",
+        "Consolidar a visao financeira da familia em um unico lugar"
+      ],
+
+      "citacao": "Eu nao tenho nada contra banco digital, mas R$14 mil do meu salario nao vai pra um lugar que eu nao confio. Me mostra que e seguro e eu troco na hora.",
+
+      "insights_conectados": ["INS-01", "INS-04", "INS-05"],
+      "oportunidades_conectadas": ["opp-01", "opp-10", "opp-11", "opp-15"],
+      "krs_impactados": ["kr-02", "kr-04", "kr-05"],
+
+      "cenario_de_uso": "Roberto acessa o ECP Bank no computador do escritorio. Antes de fazer um Pix de R$3.500 (financiamento), o sistema mostra um selo de seguranca e pede confirmacao reforçada (RN-03: valor >R$2.000). Ele confirma e ve o comprovante com detalhes completos. Na tela de historico de acessos, ve que ninguem mais entrou na conta. Sente-se seguro. No domingo, abre o dashboard e ve o resumo por ciclo salarial — gastos fixos ja comprometeram 72% da renda. Decide adiar a troca do carro."
+    }
+  ],
+
+  "mapa_personas_x_segmentos": {
+    "jovens_profissionais_assalariados": ["P-01 (Marina)", "P-02 (Rafael)"],
+    "freelancers_gig_economy": ["P-03 (Thiago)"],
+    "nativos_digitais_universitarios": ["P-04 (Camila)"],
+    "adultos_pragmaticos_transicao": ["P-05 (Roberto)"]
+  },
+
+  "mapa_personas_x_mvp": {
+    "mvp_ciclo_1": {
+      "personas_primarias": ["P-01 (Marina)", "P-02 (Rafael)"],
+      "justificativa": "Segmento Jovens Profissionais Assalariados (40-45% do SAM). Maior fit com proposta web-first, maior propensao a adocao e indicacao, menor CAC."
+    },
+    "ciclo_2": {
+      "personas_secundarias": ["P-03 (Thiago)", "P-05 (Roberto)"],
+      "justificativa": "Freelancers precisam de separacao PJ/pessoal. Pragmaticos precisam de mais sinais de seguranca e confianca."
+    },
+    "ciclo_3_plus": {
+      "personas_terciarias": ["P-04 (Camila)"],
+      "justificativa": "Universitarios sao mobile-first — precisam de app mobile para plena adocao."
+    }
+  }
+}

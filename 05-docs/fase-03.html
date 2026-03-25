@@ -220,6 +220,212 @@ classDiagram
       </div>
     </section>
 
+    <!-- Sequence Diagrams -->
+    <h2>Diagramas de Sequ&ecirc;ncia</h2>
+    <section class="section">
+
+      <h3>Autentica&ccedil;&atilde;o &mdash; Registro e Login</h3>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as Usu&aacute;rio (Browser)
+    participant F as Frontend (React)
+    participant A as API (Fastify)
+    participant DB as SQLite
+
+    Note over U,DB: Registro de nova conta
+
+    U->>F: Preenche nome, email, CPF, senha
+    F->>A: POST /api/auth/register
+    A->>DB: SELECT user WHERE email = ?
+    DB-->>A: null (n&atilde;o existe)
+    A->>A: bcrypt.hash(senha, 12)
+    A->>DB: INSERT users + INSERT accounts
+    DB-->>A: userId, accountId
+    A->>A: jwt.sign({ id, email })
+    A-->>F: { token, user }
+    F->>F: localStorage.set(ecp_token)
+    F-->>U: Redirect /dashboard
+
+    Note over U,DB: Login
+
+    U->>F: Preenche email, senha
+    F->>A: POST /api/auth/login
+    A->>DB: SELECT user WHERE email = ?
+    DB-->>A: user (com password_hash)
+    A->>A: bcrypt.compare(senha, hash)
+    A->>A: jwt.sign({ id, email }, 7d)
+    A-->>F: { token, user }
+    F->>F: localStorage.set(ecp_token)
+    F-->>U: Redirect /dashboard
+      </div>
+
+      <h3>Envio de Pix &mdash; Fluxo Completo com Valida&ccedil;&otilde;es</h3>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as Usu&aacute;rio (Browser)
+    participant F as Frontend (React)
+    participant A as API (Fastify)
+    participant DB as SQLite
+
+    U->>F: Informa chave Pix destino
+    F->>A: GET /api/pix/lookup?key=...
+    A->>DB: SELECT pix_key WHERE key_value = ?
+    DB-->>A: { userId, name, keyType }
+    A-->>F: { name: "Jo&atilde;o Silva", keyType: "cpf" }
+    F-->>U: Exibe destinat&aacute;rio
+
+    U->>F: Informa valor (ex: R$ 500)
+    F->>A: POST /api/pix/transfer
+    Note over A: Middleware: JWT auth
+
+    A->>A: Verificar rate limit (RN-10: max 10/hora)
+    A->>DB: SELECT COUNT pix_rate_limit (ultima hora)
+    DB-->>A: count = 3 (OK)
+
+    A->>A: Verificar limite hor&aacute;rio
+    alt 22h-6h (noturno)
+        A->>A: RN-02: valor <= R$ 1.000?
+    else 6h-22h (diurno)
+        A->>A: RN-01: acumulado dia <= R$ 5.000?
+    end
+
+    alt Valor > R$ 2.000
+        A-->>F: Requer autentica&ccedil;&atilde;o refor&ccedil;ada (RN-03)
+        F-->>U: Modal de confirma&ccedil;&atilde;o + senha
+        U->>F: Confirma com senha
+        F->>A: POST /api/pix/transfer (com confirma&ccedil;&atilde;o)
+    end
+
+    A->>A: Verificar saldo (RN-04)
+    A->>DB: SELECT balance_cents FROM accounts
+    DB-->>A: balance = 150000 (R$ 1.500)
+
+    Note over A,DB: Transa&ccedil;&atilde;o at&ocirc;mica (SQLite)
+    A->>DB: BEGIN TRANSACTION
+    A->>DB: UPDATE accounts SET balance -= 50000 (remetente)
+    A->>DB: UPDATE accounts SET balance += 50000 (destinat&aacute;rio)
+    A->>DB: INSERT transactions (d&eacute;bito remetente)
+    A->>DB: INSERT transactions (cr&eacute;dito destinat&aacute;rio)
+    A->>DB: INSERT pix_rate_limit
+    A->>DB: INSERT notifications (destinat&aacute;rio)
+    A->>DB: COMMIT
+
+    A-->>F: { transactionId, status: "completed", balanceAfter }
+    F-->>U: Tela de sucesso com comprovante
+      </div>
+
+      <h3>Compra com Cart&atilde;o Virtual</h3>
+      <div class="mermaid">
+sequenceDiagram
+    participant M as Merchant / FoodFlow
+    participant A as API (Fastify)
+    participant DB as SQLite
+
+    M->>A: POST /api/cards/:id/purchase
+    Note over A: { amountCents, description, merchantName }
+    Note over A: Middleware: JWT auth
+
+    A->>DB: SELECT card WHERE id = ? AND user_id = ?
+    DB-->>A: card { limitCents: 300000, usedCents: 124750, isBlocked: false }
+
+    A->>A: Verificar cart&atilde;o ativo e n&atilde;o bloqueado
+    A->>A: Verificar limite dispon&iacute;vel
+    Note over A: disponivel = 300000 - 124750 = 175250
+
+    alt amountCents > dispon&iacute;vel
+        A-->>M: 400 CARD_LIMIT_EXCEEDED
+    else amountCents <= dispon&iacute;vel
+        A->>DB: SELECT/CREATE invoice (m&ecirc;s atual, status open)
+        DB-->>A: invoice { id, totalCents }
+
+        Note over A,DB: Transa&ccedil;&atilde;o at&ocirc;mica
+        A->>DB: BEGIN TRANSACTION
+        A->>DB: INSERT card_purchases
+        A->>DB: UPDATE cards SET used_cents += amountCents
+        A->>DB: UPDATE invoices SET total_cents += amountCents
+        A->>DB: COMMIT
+
+        A-->>M: 201 { purchaseId, status: "completed", availableAfterCents }
+    end
+      </div>
+
+      <h3>Pagamento de Boleto</h3>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as Usu&aacute;rio (Browser)
+    participant F as Frontend (React)
+    participant A as API (Fastify)
+    participant DB as SQLite
+
+    U->>F: Cola c&oacute;digo de barras do boleto
+    F->>F: Decodifica linha digit&aacute;vel (valor, vencimento, benefici&aacute;rio)
+    F-->>U: Exibe breakdown de transpar&ecirc;ncia
+
+    U->>F: Confirma pagamento
+    F->>A: POST /api/payments/boleto
+    Note over A: { barcode, amount, scheduledFor? }
+    Note over A: Middleware: JWT auth
+
+    A->>A: Verificar saldo (RN-04)
+    A->>DB: SELECT balance_cents FROM accounts
+    DB-->>A: balance = 423578
+
+    alt scheduledFor (agendado)
+        A->>DB: INSERT transactions (status: pending, scheduled_for)
+        A-->>F: { transactionId, status: "pending", scheduledFor }
+        F-->>U: "Boleto agendado para DD/MM"
+    else Pagamento imediato
+        Note over A,DB: Transa&ccedil;&atilde;o at&ocirc;mica
+        A->>DB: BEGIN TRANSACTION
+        A->>DB: UPDATE accounts SET balance -= amountCents
+        A->>DB: INSERT transactions (status: completed, category: boleto)
+        A->>DB: INSERT notifications
+        A->>DB: COMMIT
+
+        A-->>F: { transactionId, status: "completed", balanceAfter }
+        F-->>U: Tela de sucesso com comprovante
+    end
+      </div>
+
+      <h3>Dashboard &mdash; Carregamento Inicial</h3>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as Usu&aacute;rio (Browser)
+    participant F as Frontend (React)
+    participant A as API (Fastify)
+    participant DB as SQLite
+
+    U->>F: Acessa /dashboard
+    F->>F: Verifica JWT no localStorage
+
+    par Chamadas paralelas
+        F->>A: GET /api/accounts/me/balance
+        A->>DB: SELECT balance_cents FROM accounts
+        A-->>F: { balanceCents: 423578 }
+    and
+        F->>A: GET /api/transactions?limit=5
+        A->>DB: SELECT * FROM transactions ORDER BY created_at DESC LIMIT 5
+        A-->>F: { transactions: [...] }
+    and
+        F->>A: GET /api/transactions/summary
+        A->>DB: SELECT category, SUM(amount) GROUP BY category
+        A-->>F: { categories: [...], totalIncome, totalExpense }
+    and
+        F->>A: GET /api/cards
+        A->>DB: SELECT * FROM cards WHERE user_id = ?
+        A-->>F: { cards: [...] }
+    and
+        F->>A: GET /api/notifications/unread-count
+        A->>DB: SELECT COUNT(*) WHERE is_read = 0
+        A-->>F: { count: 3 }
+    end
+
+    F->>F: Renderiza dashboard completo
+    F-->>U: Saldo + Donut chart + Transa&ccedil;&otilde;es + Cart&atilde;o + Notifica&ccedil;&otilde;es
+      </div>
+
+    </section>
+
     <!-- API Endpoints -->
     <h2>API &mdash; 9 Módulos, 27 Endpoints</h2>
     <section class="section">
@@ -270,6 +476,161 @@ classDiagram
 
       <h3>Dashboard (1 endpoint)</h3>
       <div class="endpoint"><span class="method get">GET</span><span class="path">/api/dashboard</span></div>
+    </section>
+
+    <!-- ER Diagram -->
+    <h2>Modelo Entidade-Relacionamento (MER)</h2>
+    <section class="section">
+      <p>9 tabelas, 12 &iacute;ndices. SQLite3 com WAL mode e foreign keys habilitadas. Valores monet&aacute;rios em centavos (INTEGER).</p>
+
+      <div class="mermaid">
+erDiagram
+    users {
+        TEXT id PK
+        TEXT name
+        TEXT email UK
+        TEXT cpf UK
+        TEXT password_hash
+        TEXT phone
+        TEXT avatar_url
+        INTEGER is_active
+        TEXT created_at
+        TEXT updated_at
+    }
+
+    accounts {
+        TEXT id PK
+        TEXT user_id FK "UK"
+        TEXT agency
+        TEXT number UK
+        INTEGER balance_cents
+        INTEGER daily_transfer_limit_cents
+        INTEGER daily_transferred_cents
+        TEXT last_transfer_date
+        INTEGER is_active
+        TEXT created_at
+        TEXT updated_at
+    }
+
+    pix_keys {
+        TEXT id PK
+        TEXT user_id FK
+        TEXT account_id FK
+        TEXT key_type "cpf email phone random"
+        TEXT key_value UK
+        INTEGER is_active
+        TEXT created_at
+        TEXT deleted_at "soft delete"
+    }
+
+    transactions {
+        TEXT id PK
+        TEXT account_id FK
+        TEXT type "credit debit"
+        TEXT category "pix boleto card_purchase transfer deposit withdrawal refund fee"
+        INTEGER amount_cents
+        INTEGER balance_after_cents
+        TEXT description
+        TEXT counterpart_name
+        TEXT counterpart_document
+        TEXT counterpart_institution
+        TEXT pix_key
+        TEXT pix_key_type
+        TEXT boleto_code
+        TEXT status "pending completed failed cancelled"
+        TEXT scheduled_for
+        TEXT created_at
+    }
+
+    cards {
+        TEXT id PK
+        TEXT user_id FK
+        TEXT account_id FK
+        TEXT type "physical virtual"
+        TEXT card_number
+        TEXT last4
+        TEXT card_holder
+        TEXT card_expiry
+        INTEGER limit_cents
+        INTEGER used_cents
+        INTEGER due_day
+        INTEGER is_active
+        INTEGER is_blocked
+        TEXT created_at
+        TEXT updated_at
+    }
+
+    invoices {
+        TEXT id PK
+        TEXT card_id FK
+        TEXT reference_month
+        INTEGER total_cents
+        TEXT due_date
+        TEXT status "open closed paid overdue"
+        TEXT paid_at
+        TEXT created_at
+        TEXT updated_at
+    }
+
+    card_purchases {
+        TEXT id PK
+        TEXT card_id FK
+        TEXT invoice_id FK
+        TEXT description
+        TEXT merchant_name
+        TEXT merchant_category
+        INTEGER amount_cents
+        INTEGER installments
+        INTEGER current_installment
+        TEXT status "pending completed cancelled refunded"
+        TEXT purchased_at
+    }
+
+    notifications {
+        TEXT id PK
+        TEXT user_id FK
+        TEXT title
+        TEXT body
+        TEXT type "transaction security marketing system"
+        INTEGER is_read
+        TEXT created_at
+    }
+
+    pix_rate_limit {
+        TEXT id PK
+        TEXT account_id FK
+        TEXT window_start
+        INTEGER transfer_count
+    }
+
+    users ||--|| accounts : "1:1 possui"
+    users ||--o{ pix_keys : "1:N registra"
+    users ||--o{ cards : "1:N possui"
+    users ||--o{ notifications : "1:N recebe"
+    accounts ||--o{ pix_keys : "1:N vincula"
+    accounts ||--o{ transactions : "1:N movimenta"
+    accounts ||--o{ cards : "1:N associa"
+    accounts ||--o{ pix_rate_limit : "1:N controla"
+    cards ||--o{ invoices : "1:N gera"
+    cards ||--o{ card_purchases : "1:N registra"
+    invoices ||--o{ card_purchases : "1:N agrupa"
+      </div>
+
+      <h3>Cardinalidades</h3>
+      <table class="data-table">
+        <thead><tr><th>Relacionamento</th><th>Tipo</th><th>Descri&ccedil;&atilde;o</th></tr></thead>
+        <tbody>
+          <tr><td>users &harr; accounts</td><td><strong>1:1</strong></td><td>Cada usu&aacute;rio possui exatamente uma conta banc&aacute;ria</td></tr>
+          <tr><td>users &harr; pix_keys</td><td><strong>1:N</strong></td><td>At&eacute; 5 chaves Pix por usu&aacute;rio (RN-05)</td></tr>
+          <tr><td>users &harr; cards</td><td><strong>1:N</strong></td><td>M&uacute;ltiplos cart&otilde;es virtuais por usu&aacute;rio</td></tr>
+          <tr><td>users &harr; notifications</td><td><strong>1:N</strong></td><td>Notifica&ccedil;&otilde;es de eventos financeiros e seguran&ccedil;a</td></tr>
+          <tr><td>accounts &harr; transactions</td><td><strong>1:N</strong></td><td>Ledger imut&aacute;vel de movimenta&ccedil;&otilde;es (cr&eacute;dito/d&eacute;bito)</td></tr>
+          <tr><td>accounts &harr; pix_rate_limit</td><td><strong>1:N</strong></td><td>Controle de 10 Pix/hora por conta (RN-10)</td></tr>
+          <tr><td>cards &harr; invoices</td><td><strong>1:N</strong></td><td>Uma fatura por m&ecirc;s de refer&ecirc;ncia por cart&atilde;o</td></tr>
+          <tr><td>cards &harr; card_purchases</td><td><strong>1:N</strong></td><td>Compras registradas no cart&atilde;o (merchant + categoria)</td></tr>
+          <tr><td>invoices &harr; card_purchases</td><td><strong>1:N</strong></td><td>Compras agrupadas na fatura do m&ecirc;s</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <!-- Database -->
