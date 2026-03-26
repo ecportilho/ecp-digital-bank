@@ -82,4 +82,16 @@ export const Errors = {
       'Esta chave Pix já está cadastrada',
       409
     ),
+
+  chatConversationNotFound: () =>
+    new AppError(ErrorCode.CHAT_CONVERSATION_NOT_FOUND, 'Conversa não encontrada', 404),
+
+  chatMessageTooLong: () =>
+    new AppError(ErrorCode.CHAT_MESSAGE_TOO_LONG, 'Mensagem excede o limite de 2000 caracteres', 422),
+
+  chatRateLimited: () =>
+    new AppError(ErrorCode.CHAT_RATE_LIMITED, 'Muitas mensagens em pouco tempo. Aguarde alguns segundos.', 429),
+
+  chatAiError: (message = 'Erro ao processar mensagem com IA') =>
+    new AppError(ErrorCode.CHAT_AI_ERROR, message, 502),
 }

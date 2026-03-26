@@ -13,6 +13,7 @@ import {
   ArrowDownLeft,
   Key,
   ChevronDown,
+  MessageCircle,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
@@ -37,6 +38,7 @@ const navItems: NavItem[] = [
   },
   { to: '/cartoes', icon: CreditCard, label: 'Cartões' },
   { to: '/pagamentos', icon: FileText, label: 'Pagamentos' },
+  { to: '/chat', icon: MessageCircle, label: 'Assistente IA' },
   { to: '/perfil', icon: User, label: 'Perfil' },
 ]
 

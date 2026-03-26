@@ -13,6 +13,8 @@ import { PixChavesPage } from './routes/pix/chaves'
 import { CartoesPage } from './routes/cartoes'
 import { PagamentosPage } from './routes/pagamentos'
 import { PerfilPage } from './routes/perfil'
+import { ChatPage } from './routes/chat'
+import { ChatWidget } from './components/chat/ChatWidget'
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -31,6 +33,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <MobileNav />
+      <ChatWidget />
     </div>
   )
 }
@@ -104,6 +107,11 @@ export default function App() {
         <Route path="/perfil" element={
           <ProtectedLayout>
             <PerfilPage />
+          </ProtectedLayout>
+        } />
+        <Route path="/chat" element={
+          <ProtectedLayout>
+            <ChatPage />
           </ProtectedLayout>
         } />
 

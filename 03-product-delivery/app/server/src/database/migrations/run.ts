@@ -19,7 +19,7 @@ async function runMigrations() {
     )
   `)
 
-  const migrationFiles = ['001-initial.sql']
+  const migrationFiles = ['001-initial.sql', '002-chat.sql']
 
   for (const file of migrationFiles) {
     const alreadyApplied = db.prepare('SELECT id FROM _migrations WHERE name = ?').get(file)

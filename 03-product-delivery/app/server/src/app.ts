@@ -12,6 +12,7 @@ import { paymentsRoutes } from './modules/payments/payments.routes.js'
 import { usersRoutes } from './modules/users/users.routes.js'
 import { notificationsRoutes } from './modules/notifications/notifications.routes.js'
 import { dashboardRoutes } from './modules/dashboard/dashboard.routes.js'
+import { chatRoutes } from './modules/chat/chat.routes.js'
 
 export async function buildApp() {
   const app = Fastify({
@@ -50,6 +51,7 @@ export async function buildApp() {
   await app.register(usersRoutes, { prefix: '/api/users' })
   await app.register(notificationsRoutes, { prefix: '/api/notifications' })
   await app.register(dashboardRoutes, { prefix: '/api/dashboard' })
+  await app.register(chatRoutes, { prefix: '/api/chat' })
 
   // Health check
   app.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))

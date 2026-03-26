@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Zap, CreditCard, User } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Zap, MessageCircle, User } from 'lucide-react'
 
 const mobileNavItems = [
   { to: '/', icon: LayoutDashboard, label: 'Início', end: true },
   { to: '/extrato', icon: ArrowLeftRight, label: 'Extrato', end: false },
   { to: '/pix/enviar', icon: Zap, label: 'Pix', end: false },
-  { to: '/cartoes', icon: CreditCard, label: 'Cartões', end: false },
+  { to: '/chat', icon: MessageCircle, label: 'Chat IA', end: false },
   { to: '/perfil', icon: User, label: 'Perfil', end: false },
 ]
 
