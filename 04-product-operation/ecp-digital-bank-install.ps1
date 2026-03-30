@@ -73,11 +73,13 @@ Write-Host ""
 
 # --- Detectar diretorio do projeto ---
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$projectRoot = Split-Path -Parent $scriptDir
+$repoRoot = Split-Path -Parent $scriptDir
 
-# Se o script esta em 04-product-operation, o projeto esta um nivel acima
-if (Test-Path "$projectRoot\package.json") {
-    $PROJECT_DIR = $projectRoot
+# O codigo-fonte esta em 03-product-delivery/app (ecp-digital-bank tem subpasta app)
+$DELIVERY_DIR = "$repoRoot\03-product-delivery\app"
+
+if (Test-Path "$DELIVERY_DIR\package.json") {
+    $PROJECT_DIR = $DELIVERY_DIR
 } elseif (Test-Path ".\package.json") {
     $PROJECT_DIR = (Get-Location).Path
 } else {
