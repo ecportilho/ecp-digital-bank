@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { authenticate } from '../../shared/middleware/auth.js'
 import { PixService } from './pix.service.js'
-import { CreatePixKeySchema, PixTransferSchema } from './pix.schema.js'
+import { CreatePixKeySchema, PixTransferSchema, PixQrCodeSchema } from './pix.schema.js'
 import { z } from 'zod'
 
 export const pixRoutes: FastifyPluginAsync = async (app) => {
@@ -38,6 +38,20 @@ export const pixRoutes: FastifyPluginAsync = async (app) => {
       request.currentUser.id,
       request.currentUser.accountId,
       input
+    )
+    return reply.status(201).send(result)
+  })
+
+  // POST /api/pix/qrcode — Generate QR code for receiving Pix payments via ECP Pay
+  app.post('/qrcode', { preHandler: [authenticate] }, async (request, reply) => {
+    const input = PixQrCodeSchema.parse(request.body)
+    const result = await pixService.generatePixQrCode(
+      request.currentUser.id,
+      request.currentUser.accountId,
+      input.amountCents,
+      request.currentUser.name,
+      request.currentUser.cpf,
+      input.description
     )
     return reply.status(201).send(result)
   })

@@ -38,7 +38,16 @@ export const PixTransferResponseSchema = z.object({
   createdAt: z.string(),
 })
 
+export const PixQrCodeSchema = z.object({
+  amountCents: z
+    .number()
+    .int('Valor deve ser inteiro (centavos)')
+    .min(1, 'Valor mínimo é R$ 0,01'),
+  description: z.string().max(140).optional(),
+})
+
 export type CreatePixKeyInput = z.infer<typeof CreatePixKeySchema>
 export type PixTransferInput = z.infer<typeof PixTransferSchema>
+export type PixQrCodeInput = z.infer<typeof PixQrCodeSchema>
 export type PixKey = z.infer<typeof PixKeySchema>
 export type PixTransferResponse = z.infer<typeof PixTransferResponseSchema>

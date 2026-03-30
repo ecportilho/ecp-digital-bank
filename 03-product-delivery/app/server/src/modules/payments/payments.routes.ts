@@ -9,10 +9,12 @@ export const paymentsRoutes: FastifyPluginAsync = async (app) => {
   // POST /api/payments/boleto
   app.post('/boleto', { preHandler: [authenticate] }, async (request, reply) => {
     const input = PayBoletoSchema.parse(request.body)
-    const result = paymentsService.payBoleto(
+    const result = await paymentsService.payBoleto(
       request.currentUser.id,
       request.currentUser.accountId,
-      input
+      input,
+      request.currentUser.name,
+      request.currentUser.cpf
     )
     return reply.status(201).send(result)
   })

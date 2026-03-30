@@ -2,6 +2,7 @@ import { getDb } from '../../database/connection.js'
 import { AppError, Errors } from '../../shared/errors/app-error.js'
 import { ErrorCode } from '../../shared/errors/error-codes.js'
 import { generateId } from '../../shared/utils/uuid.js'
+import { ecpPayClient } from '../../services/ecp-pay-client.js'
 import type { CreatePixKeyInput, PixTransferInput } from './pix.schema.js'
 
 // Business rules constants
@@ -283,6 +284,55 @@ export class PixService {
       keyType: pixKey.key_type,
       keyValue: pixKey.key_value,
       holderName: pixKey.name,
+    }
+  }
+
+  /**
+   * Generate a Pix QR Code for RECEIVING payments via ECP Pay.
+   * This is separate from the P2P transfer flow — it creates a charge
+   * that external payers can scan to send money.
+   */
+  async generatePixQrCode(userId: string, accountId: string, amountCents: number, userName: string, userCpf: string, description?: string) {
+    const db = getDb()
+
+    const account = db
+      .prepare('SELECT * FROM accounts WHERE id = ? AND is_active = 1')
+      .get(accountId) as AccountRow | undefined
+
+    if (!account) {
+      throw new AppError(ErrorCode.ACCOUNT_NOT_FOUND, 'Conta não encontrada', 404)
+    }
+
+    const ecpPayResult = await ecpPayClient.createPixCharge(
+      amountCents,
+      userName,
+      userCpf,
+      description ?? 'Cobrança Pix'
+    )
+
+    // Record the pending incoming transaction locally
+    const transactionId = generateId()
+    const now = new Date().toISOString()
+
+    db.prepare(`
+      INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, status, metadata, created_at)
+      VALUES (?, ?, 'credit', 'pix', ?, ?, ?, 'pending', ?, ?)
+    `).run(
+      transactionId, accountId, amountCents, account.balance_cents,
+      description ?? 'Cobrança Pix via QR Code',
+      JSON.stringify({ ecp_pay_tx_id: ecpPayResult.transaction_id }),
+      now
+    )
+
+    return {
+      transactionId,
+      ecpPayTxId: ecpPayResult.transaction_id,
+      qrCode: ecpPayResult.qr_code,
+      qrCodeText: ecpPayResult.qr_code_text,
+      expiration: ecpPayResult.expiration,
+      amountCents,
+      status: ecpPayResult.status,
+      createdAt: now,
     }
   }
 }

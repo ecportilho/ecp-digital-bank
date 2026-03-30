@@ -2,6 +2,7 @@ import { getDb } from '../../database/connection.js'
 import { AppError, Errors } from '../../shared/errors/app-error.js'
 import { ErrorCode } from '../../shared/errors/error-codes.js'
 import { generateId } from '../../shared/utils/uuid.js'
+import { ecpPayClient } from '../../services/ecp-pay-client.js'
 import type { PayBoletoInput } from './payments.schema.js'
 
 interface AccountRow {
@@ -21,7 +22,7 @@ interface TransactionRow {
 }
 
 export class PaymentsService {
-  payBoleto(userId: string, accountId: string, input: PayBoletoInput) {
+  async payBoleto(userId: string, accountId: string, input: PayBoletoInput, userName?: string, userCpf?: string) {
     const db = getDb()
 
     const account = db
@@ -85,12 +86,37 @@ export class PaymentsService {
 
     doPayment()
 
+    // Register payment with ECP Pay for real barcode processing
+    let ecpPayTxId: string | undefined
+    if (userName && userCpf) {
+      try {
+        const dueDate = new Date().toISOString().split('T')[0] ?? now
+        const ecpPayResult = await ecpPayClient.createBoletoCharge(
+          input.amountCents,
+          userName,
+          userCpf,
+          dueDate,
+          input.description ?? 'Pagamento de boleto'
+        )
+        ecpPayTxId = ecpPayResult.transaction_id
+
+        // Store ECP Pay transaction ID in local record metadata
+        db.prepare(`
+          UPDATE transactions SET metadata = ? WHERE id = ?
+        `).run(JSON.stringify({ ecp_pay_tx_id: ecpPayTxId }), transactionId)
+      } catch (error) {
+        // ECP Pay unavailable — log but do not break existing flow
+        console.warn('[ECP Pay] Boleto registration failed, continuing with local transaction:', error instanceof Error ? error.message : error)
+      }
+    }
+
     return {
       transactionId,
       status: 'completed',
       balanceAfterCents: newBalance,
       amountCents: input.amountCents,
       createdAt: now,
+      ecpPayTxId,
     }
   }
 

@@ -3,6 +3,7 @@ import { Bell, ArrowLeftRight, Shield, Sparkles, CheckCheck } from 'lucide-react
 import { useAuth } from '../../hooks/useAuth'
 import { api } from '../../services/api'
 import { formatRelativeTime } from '../../lib/formatters'
+import { ProfileSwitcher } from './ProfileSwitcher'
 
 interface Notification {
   id: string
@@ -119,9 +120,10 @@ export function Header() {
 
   return (
     <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface">
-      <div>
+      <div className="flex items-center gap-4">
+        <ProfileSwitcher />
         {user && (
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm text-text-secondary hidden md:block">
             {greeting},{' '}
             <span className="font-semibold text-text-primary">
               {user.name.split(' ')[0]}
