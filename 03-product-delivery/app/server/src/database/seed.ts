@@ -23,6 +23,17 @@ async function seed() {
   const sql = readFileSync(sqlPath, 'utf-8')
   db.exec(sql)
 
+  // Apply additional migrations
+  const additionalMigrations = ['002-chat.sql', '003-ecp-pay-integration.sql', '004-user-roles.sql']
+  for (const migFile of additionalMigrations) {
+    try {
+      const migSql = readFileSync(path.join(__dirname, 'migrations', migFile), 'utf-8')
+      db.exec(migSql)
+    } catch {
+      // Migration may already be applied or column already exists
+    }
+  }
+
   console.log('[seed] Starting database seed...')
 
   // Clear existing data
@@ -687,9 +698,27 @@ async function seed() {
     }
   }
 
+  // ============================================================
+  // Service Account — ECP Pay Platform (role: system)
+  // ============================================================
+  const svcUserId = uuidv4()
+  const svcAccountId = uuidv4()
+  const svcPasswordHash = await bcrypt.hash('EcpPay@Platform#2026', 12)
+
+  db.prepare(`
+    INSERT INTO users (id, name, email, cpf, password_hash, phone, is_active, role)
+    VALUES (?, ?, ?, ?, ?, NULL, 1, 'system')
+  `).run(svcUserId, 'ECP Pay Platform', 'platform@ecpay.dev', '00000000000', svcPasswordHash)
+
+  db.prepare(`
+    INSERT INTO accounts (id, user_id, agency, number, balance_cents, daily_transfer_limit_cents, daily_transferred_cents)
+    VALUES (?, ?, '0001', ?, 0, 0, 0)
+  `).run(svcAccountId, svcUserId, '00099999')
+
   console.log('[seed] Database seeded successfully.')
-  console.log('[seed] 11 users created (Marina + 10 additional)')
-  console.log('[seed] All users login with password: Senha@123')
+  console.log('[seed] 12 users created (Marina + 10 additional + 1 service account)')
+  console.log('[seed] Consumer users login with password: Senha@123')
+  console.log('[seed] Service account login: platform@ecpay.dev / EcpPay@Platform#2026 (role: system)')
   console.log('[seed] Logins:')
   console.log('  marina@email.com')
   console.log('  carlos.mendes@email.com')
@@ -702,6 +731,7 @@ async function seed() {
   console.log('  camila.duarte@email.com')
   console.log('  mohammad.khalil@email.com')
   console.log('  yuki.prado@email.com')
+  console.log('  platform@ecpay.dev (system)')
   process.exit(0)
 }
 

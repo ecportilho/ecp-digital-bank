@@ -10,8 +10,8 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
     const payload = request.user as { id: string; email: string }
 
     const user = db
-      .prepare('SELECT id, name, email, cpf, phone, is_active FROM users WHERE id = ?')
-      .get(payload.id) as { id: string; name: string; email: string; cpf: string; phone: string | null; is_active: number } | undefined
+      .prepare('SELECT id, name, email, cpf, phone, role, is_active FROM users WHERE id = ?')
+      .get(payload.id) as { id: string; name: string; email: string; cpf: string; phone: string | null; role: string; is_active: number } | undefined
 
     if (!user || !user.is_active) {
       throw Errors.unauthorized('Usuário não encontrado ou inativo')
@@ -28,6 +28,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
       cpf: user.cpf,
       phone: user.phone ?? undefined,
       accountId: account?.id ?? '',
+      role: user.role ?? 'consumer',
     }
   } catch (err) {
     if (err instanceof Error && err.name === 'AppError') {

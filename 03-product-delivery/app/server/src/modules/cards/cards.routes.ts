@@ -1,5 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { authenticate } from '../../shared/middleware/auth.js'
+import { Errors } from '../../shared/errors/app-error.js'
 import { CardsService } from './cards.service.js'
 import { UpdateCardLimitSchema, BlockCardSchema, CardPurchaseInputSchema, CardPurchaseByNumberSchema } from './cards.schema.js'
 
@@ -50,8 +51,11 @@ export const cardsRoutes: FastifyPluginAsync = async (app) => {
     return reply.status(201).send(result)
   })
 
-  // POST /api/cards/purchase-by-number — process a purchase by card number (merchant/gateway)
+  // POST /api/cards/purchase-by-number — process a purchase by card number (system/service accounts only)
   app.post('/purchase-by-number', { preHandler: [authenticate] }, async (request, reply) => {
+    if (request.currentUser.role !== 'system') {
+      throw Errors.forbidden('Only system service accounts can use purchase-by-number. Regular users should use POST /api/cards/:id/purchase.')
+    }
     const input = CardPurchaseByNumberSchema.parse(request.body)
     const card = cardsService.findCardByNumber(input.cardNumber)
     const result = cardsService.cardPurchase(card.userId, card.id, {

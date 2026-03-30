@@ -13,6 +13,7 @@ interface UserRow {
   cpf: string
   phone: string | null
   password_hash: string
+  role: string
   is_active: number
 }
 
@@ -54,7 +55,7 @@ export class AuthService {
 
     createUserAndAccount()
 
-    const token = this.app.jwt.sign({ id: userId, email: input.email })
+    const token = this.app.jwt.sign({ id: userId, email: input.email, role: 'consumer' })
 
     return {
       token,
@@ -72,7 +73,7 @@ export class AuthService {
     const db = getDb()
 
     const user = db
-      .prepare('SELECT id, name, email, cpf, phone, password_hash, is_active FROM users WHERE email = ?')
+      .prepare('SELECT id, name, email, cpf, phone, password_hash, role, is_active FROM users WHERE email = ?')
       .get(input.email) as UserRow | undefined
 
     if (!user) {
@@ -88,7 +89,7 @@ export class AuthService {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 'Email ou senha inválidos', 401)
     }
 
-    const token = this.app.jwt.sign({ id: user.id, email: user.email })
+    const token = this.app.jwt.sign({ id: user.id, email: user.email, role: user.role ?? 'consumer' })
 
     return {
       token,

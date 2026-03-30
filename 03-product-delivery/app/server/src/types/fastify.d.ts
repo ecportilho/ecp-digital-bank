@@ -9,6 +9,7 @@ declare module 'fastify' {
       cpf: string
       phone?: string
       accountId: string
+      role: string
     }
   }
 }
@@ -18,10 +19,12 @@ declare module '@fastify/jwt' {
     payload: {
       id: string
       email: string
+      role: string
     }
     user: {
       id: string
       email: string
+      role: string
     }
   }
 }
