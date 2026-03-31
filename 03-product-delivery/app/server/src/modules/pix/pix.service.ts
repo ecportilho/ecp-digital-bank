@@ -335,4 +335,60 @@ export class PixService {
       createdAt: now,
     }
   }
+
+  /**
+   * Debit a user's account by CPF — used by ECP Pay service account
+   * to register a Pix payment on the payer's bank statement.
+   */
+  debitByCpf(input: { cpf: string; amountCents: number; description: string; merchantName: string }) {
+    const db = getDb()
+
+    // Find user by CPF or email (food sends email as customer_document)
+    const isEmail = input.cpf.includes('@')
+    const user = isEmail
+      ? db.prepare('SELECT id, name FROM users WHERE email = ?').get(input.cpf) as { id: string; name: string } | undefined
+      : db.prepare('SELECT id, name FROM users WHERE cpf = ?').get(input.cpf.replace(/\D/g, '')) as { id: string; name: string } | undefined
+
+    if (!user) {
+      throw new AppError(ErrorCode.USER_NOT_FOUND, 'Usuário não encontrado', 404)
+    }
+
+    // Find account
+    const account = db
+      .prepare('SELECT id, balance_cents FROM accounts WHERE user_id = ? AND is_active = 1')
+      .get(user.id) as { id: string; balance_cents: number } | undefined
+
+    if (!account) {
+      throw new AppError(ErrorCode.ACCOUNT_NOT_FOUND, 'Conta não encontrada', 404)
+    }
+
+    const newBalance = account.balance_cents - input.amountCents
+    const transactionId = generateId()
+    const now = new Date().toISOString()
+
+    db.transaction(() => {
+      // Debit account
+      db.prepare(
+        "UPDATE accounts SET balance_cents = ?, updated_at = datetime('now') WHERE id = ?"
+      ).run(newBalance, account.id)
+
+      // Record debit transaction
+      db.prepare(`
+        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, status, created_at)
+        VALUES (?, ?, 'debit', 'pix', ?, ?, ?, ?, 'completed', ?)
+      `).run(
+        transactionId, account.id, input.amountCents, newBalance,
+        input.description, input.merchantName, now
+      )
+    })()
+
+    return {
+      transactionId,
+      userId: user.id,
+      userName: user.name,
+      amountCents: input.amountCents,
+      newBalanceCents: newBalance,
+      status: 'completed',
+    }
+  }
 }

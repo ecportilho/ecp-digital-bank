@@ -62,4 +62,21 @@ export const pixRoutes: FastifyPluginAsync = async (app) => {
     const result = pixService.lookupKey(key)
     return reply.send(result)
   })
+
+  // POST /api/pix/debit-by-cpf — Service account debits user account (simulates Pix payment)
+  app.post('/debit-by-cpf', { preHandler: [authenticate] }, async (request, reply) => {
+    if (request.currentUser.role !== 'system') {
+      return reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Apenas contas de serviço podem usar este endpoint' } })
+    }
+
+    const input = z.object({
+      cpf: z.string().min(11).max(14),
+      amountCents: z.number().int().positive(),
+      description: z.string().min(1).max(200),
+      merchantName: z.string().min(1).max(100),
+    }).parse(request.body)
+
+    const result = pixService.debitByCpf(input)
+    return reply.status(201).send(result)
+  })
 }
