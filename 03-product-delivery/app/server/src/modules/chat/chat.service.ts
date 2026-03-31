@@ -24,6 +24,17 @@ function toConversationResponse(row: ChatConversationRow) {
   }
 }
 
+function safeJsonParse(str: string | null): unknown {
+  if (!str) return null
+  try {
+    // Remove control characters that break JSON.parse
+    const sanitized = str.replace(/[\x00-\x1F\x7F]/g, ' ')
+    return JSON.parse(sanitized)
+  } catch {
+    return null
+  }
+}
+
 function toMessageResponse(row: ChatMessageRow) {
   return {
     id: row.id,
@@ -32,8 +43,8 @@ function toMessageResponse(row: ChatMessageRow) {
     content: row.content,
     agent: row.agent,
     intent: row.intent,
-    toolCalls: row.tool_calls ? JSON.parse(row.tool_calls) : null,
-    metadata: row.metadata ? JSON.parse(row.metadata) : null,
+    toolCalls: safeJsonParse(row.tool_calls),
+    metadata: safeJsonParse(row.metadata),
     createdAt: row.created_at,
   }
 }
@@ -193,41 +204,52 @@ export class ChatService {
       .slice(-20) // Last 20 messages for context
 
     // 4. Classify intent via orchestrator
-    const classification = await classifyIntent(input.message, conversationHistory)
+    let classification: Awaited<ReturnType<typeof classifyIntent>>
+    try {
+      classification = await classifyIntent(input.message, conversationHistory)
+    } catch (err) {
+      console.error('[chat] Erro ao classificar intent:', (err as Error).message)
+      classification = { intent: 'GENERAL:OUT_OF_SCOPE', agent: 'orchestrator' }
+    }
 
     let aiResponse: string
     let toolCalls: Record<string, unknown>[] | undefined
     const agent = classification.agent
 
-    // 5. Route to the correct agent
-    switch (agent) {
-      case 'orchestrator': {
-        // Direct response for greetings / out of scope
-        aiResponse = classification.directResponse
-          ?? 'Olá! Sou o assistente virtual do ECP Bank. Como posso ajudar você hoje?'
-        break
+    // 5. Route to the correct agent (with error handling)
+    try {
+      switch (agent) {
+        case 'orchestrator': {
+          aiResponse = classification.directResponse
+            ?? 'Olá! Sou o assistente virtual do ECP Bank. Como posso ajudar você hoje?'
+          break
+        }
+        case 'knowledge': {
+          aiResponse = await handleKnowledge(input.message, conversationHistory)
+          break
+        }
+        case 'rules': {
+          aiResponse = await handleRules(input.message, conversationHistory)
+          break
+        }
+        case 'transaction': {
+          const result = await handleTransaction(input.message, conversationHistory, userId, accountId)
+          aiResponse = result.response
+          toolCalls = result.toolCalls
+          break
+        }
+        default: {
+          aiResponse = 'Desculpe, não consegui processar sua mensagem. Pode tentar novamente?'
+        }
       }
-      case 'knowledge': {
-        aiResponse = await handleKnowledge(input.message, conversationHistory)
-        break
-      }
-      case 'rules': {
-        aiResponse = await handleRules(input.message, conversationHistory)
-        break
-      }
-      case 'transaction': {
-        const result = await handleTransaction(input.message, conversationHistory, userId, accountId)
-        aiResponse = result.response
-        toolCalls = result.toolCalls
-        break
-      }
-      default: {
-        aiResponse = 'Desculpe, não consegui processar sua mensagem. Pode tentar novamente?'
-      }
+    } catch (err) {
+      console.error(`[chat] Erro no agente ${agent}:`, (err as Error).message)
+      aiResponse = 'Desculpe, tive um problema ao processar sua solicitação. Pode tentar novamente?'
     }
 
-    // 6. Save assistant message
+    // 6. Save assistant message (sanitize to avoid control characters in JSON)
     const assistantMsgId = generateId()
+    const safeToolCalls = toolCalls ? JSON.stringify(toolCalls).replace(/[\x00-\x1F\x7F]/g, ' ') : null
     db.prepare(`
       INSERT INTO chat_messages (id, conversation_id, role, content, agent, intent, tool_calls, metadata)
       VALUES (?, ?, 'assistant', ?, ?, ?, ?, ?)
@@ -237,7 +259,7 @@ export class ChatService {
       aiResponse,
       agent,
       classification.intent,
-      toolCalls ? JSON.stringify(toolCalls) : null,
+      safeToolCalls,
       JSON.stringify({ origin: 'chatbot' }),
     )
 
