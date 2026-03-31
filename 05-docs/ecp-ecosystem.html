@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECP Ecosystem — Documentacao Integrada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Ecosystem docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x1F3E6;</span> Banco Digital</a></li>
+      <li class="sidebar-section-title">Ecossistema</li>
+      <li><a href="ecp-ecosystem.html" class="active"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="index.html">&#x1F3E6; ecp-digital-bank</a>
+      <a href="https://github.com/ecportilho/ecp-digital-emps" target="_blank">&#x1F3E2; ecp-digital-emps</a>
+      <a href="https://github.com/ecportilho/ecp-digital-pay" target="_blank">&#x1F4B3; ecp-digital-pay</a>
+      <a href="https://github.com/ecportilho/ecp-digital-food" target="_blank">&#x1F354; ecp-digital-food</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">ECP Ecosystem &mdash; Documentacao Integrada</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> 4 aplicações</span>
+      <span>v1.0</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>ECP Ecosystem</h1>
+    <p class="subtitle">Documentacao integrada das 4 aplicações que compoem a plataforma financeira digital ECP.</p>
+
+    <!-- 1. Visão Geral do Ecossistema -->
+    <section class="section">
+      <h2>1. Visão Geral do Ecossistema</h2>
+      <p>O ecossistema ECP e uma plataforma financeira digital composta por 4 aplicações integradas que cobrem banco pessoal, banco empresarial, servico de pagamentos e delivery de comida.</p>
+
+      <h3>Arquitetura</h3>
+      <pre><code>
++-----------------------------------------------------------------+
+|                        ECP Ecosystem                            |
+|                                                                 |
+|  +----------------+  +----------------+  +----------------+     |
+|  |  ecp-bank      |  |  ecp-emps      |  |  ecp-food      |     |
+|  |  Banco PF      |  |  Banco PJ      |  |  Delivery      |     |
+|  |  :3333/5173    |  |  :3334/5175    |  |  :3000/5174    |     |
+|  +-------+--------+  +-------+--------+  +-------+--------+     |
+|          |                    |                   |              |
+|          |       +------------+-------------------+              |
+|          |       |                                               |
+|          v       v                                               |
+|  +------------------------+                                      |
+|  |    ecp-digital-pay     |                                      |
+|  |  Gateway Pagamentos    |                                      |
+|  |     :3335/5176         |                                      |
+|  |  Internal | Asaas      |                                      |
+|  +------------------------+                                      |
++-----------------------------------------------------------------+
+      </code></pre>
+
+      <div class="stat-grid" style="margin-top: 20px;">
+        <div class="stat-card">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Aplicações</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">29+</div>
+          <div class="stat-label">Endpoints</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Modos de Pagamento</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Restaurantes PJ</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Aplicações -->
+    <section class="section">
+      <h2>2. Aplicações</h2>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">ecp-digital-bank</div>
+        <div class="artifact-title">Banco PF &mdash; Conta Digital para Pessoa Fisica</div>
+        <div class="artifact-body">
+          <p><strong>Porta:</strong> API 3333 | Web 5173<br>
+          <strong>Dominio:</strong> bank.ecportilho.com<br>
+          <strong>Stack:</strong> Fastify 5 + SQLite + React 18 + Vite 5</p>
+          <p><strong>Funcionalidades:</strong></p>
+          <ul>
+            <li>Conta digital PF</li>
+            <li>Pix (enviar/receber)</li>
+            <li>Cartão virtual</li>
+            <li>Extrato inteligente</li>
+            <li>Pagamento de boletos</li>
+            <li>Chatbot IA (Claude)</li>
+          </ul>
+          <div class="artifact-meta">
+            <span>&#x1F464; Usuario teste: <code>marina@email.com</code> / <code>Senha@123</code></span>
+          </div>
+          <div class="artifact-meta">
+            <span>&#x2699;&#xFE0F; Conta de servico: <code>platform@ecpay.dev</code> / <code>EcpPay@Platform#2026</code></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">ecp-digital-emps</div>
+        <div class="artifact-title">Banco PJ &mdash; Conta Digital para Pessoa Juridica</div>
+        <div class="artifact-body">
+          <p><strong>Porta:</strong> API 3334 | Web 5175<br>
+          <strong>Dominio:</strong> emps.ecportilho.com<br>
+          <strong>Stack:</strong> Fastify 5 + SQLite + React 18 + Vite 5</p>
+          <p><strong>Funcionalidades:</strong></p>
+          <ul>
+            <li>Conta digital PJ</li>
+            <li>Pix empresarial</li>
+            <li>Emissão de boletos/cobranças</li>
+            <li>Cartoes corporativos</li>
+            <li>Gestao de time</li>
+            <li>Dashboard financeiro</li>
+          </ul>
+          <p><strong>7 empresas seedadas</strong> (AB Design Studio + 6 restaurantes FoodFlow).<br>
+          Compartilha JWT com o bank (<strong>SSO PF&#x2194;PJ</strong>).<br>
+          Recebe webhooks do ECP Pay (splits de pagamento).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">ecp-digital-pay</div>
+        <div class="artifact-title">Gateway de Pagamentos</div>
+        <div class="artifact-body">
+          <p><strong>Porta:</strong> API 3335 | Admin 5176<br>
+          <strong>Dominio:</strong> pay.ecportilho.com<br>
+          <strong>Stack:</strong> Fastify 5 + SQLite + React 18 + Vite 5 + Recharts</p>
+          <p><strong>Funcionalidades:</strong></p>
+          <ul>
+            <li>Provider Pattern (Internal/Asaas)</li>
+            <li>Pix (QR Code + copia e cola)</li>
+            <li>Cartão de crédito (com tokenização)</li>
+            <li>Boleto bancario</li>
+            <li>Split de pagamento</li>
+            <li>Cofre de tokens</li>
+            <li>Webhooks com retry</li>
+            <li>Dashboard admin</li>
+            <li>Feature flags em runtime</li>
+          </ul>
+          <div class="artifact-meta">
+            <span>&#x1F512; Admin: <code>admin@ecpay.dev</code> / <code>Admin@123</code></span>
+          </div>
+          <div class="artifact-meta">
+            <span>&#x1F511; API Keys: <code>ecp-bank-dev-key</code>, <code>ecp-emps-dev-key</code>, <code>ecp-food-dev-key</code></span>
+          </div>
+          <p style="margin-top: 8px;"><strong>Modo Internal:</strong> simulação local sem gateway externo.<br>
+          <strong>Modo External:</strong> Asaas sandbox (API real).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">ecp-digital-food</div>
+        <div class="artifact-title">Delivery &mdash; Plataforma de Pedidos</div>
+        <div class="artifact-body">
+          <p><strong>Porta:</strong> API 3000 | Web 5174<br>
+          <strong>Dominio:</strong> food.ecportilho.com<br>
+          <strong>Stack:</strong> Fastify + SQLite + React 18 + Vite 5</p>
+          <p><strong>Funcionalidades:</strong></p>
+          <ul>
+            <li>Catalogo de restaurantes</li>
+            <li>Carrinho</li>
+            <li>Pedidos</li>
+            <li>Pagamento via cartão crédito e Pix copia-e-cola</li>
+            <li>Split automatico (85% restaurante / 15% plataforma)</li>
+          </ul>
+          <p><strong>6 restaurantes:</strong> Pasta &amp; Fogo, Sushi Wave, Burger Lab, Green Bowl Co., Pizza Club 24h, Brasa &amp; Lenha</p>
+          <div class="artifact-meta">
+            <span>&#x1F464; Usuária teste: <code>marina@email.com</code> / <code>Senha@123</code></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Integrações -->
+    <section class="section">
+      <h2>3. Integrações</h2>
+      <p>Mapa completo de comunicacao entre as aplicações do ecossistema.</p>
+
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>De</th>
+              <th>Para</th>
+              <th>Metodo</th>
+              <th>Proposito</th>
+              <th>Autenticação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ecp-food</td>
+              <td>ecp-pay</td>
+              <td><code>POST /pay/card</code>, <code>/pay/pix</code></td>
+              <td>Processar pagamentos</td>
+              <td><code>X-API-Key: ecp-food-dev-key</code></td>
+            </tr>
+            <tr>
+              <td>ecp-food</td>
+              <td>ecp-bank</td>
+              <td><code>POST /api/auth/login</code>, <code>/api/pix/*</code></td>
+              <td>Saldo, auth, Pix transfer</td>
+              <td>JWT (plataforma)</td>
+            </tr>
+            <tr>
+              <td>ecp-bank</td>
+              <td>ecp-pay</td>
+              <td><code>POST /pay/pix</code>, <code>/pay/boleto</code></td>
+              <td>Cobranças, QR Code</td>
+              <td><code>X-API-Key: ecp-bank-dev-key</code></td>
+            </tr>
+            <tr>
+              <td>ecp-emps</td>
+              <td>ecp-pay</td>
+              <td><code>POST /pay/boleto</code>, <code>/pay/pix</code></td>
+              <td>Emissão de boletos PJ</td>
+              <td><code>X-API-Key: ecp-emps-dev-key</code></td>
+            </tr>
+            <tr>
+              <td>ecp-pay</td>
+              <td>ecp-bank</td>
+              <td><code>POST /api/cards/purchase-by-number</code></td>
+              <td>Registrar compra na fatura</td>
+              <td>JWT (service account)</td>
+            </tr>
+            <tr>
+              <td>ecp-pay</td>
+              <td>ecp-bank</td>
+              <td><code>POST /api/pix/debit-by-cpf</code></td>
+              <td>Debitar conta no Pix</td>
+              <td>JWT (service account)</td>
+            </tr>
+            <tr>
+              <td>ecp-pay</td>
+              <td>ecp-emps</td>
+              <td><code>POST /webhooks/payment-received</code></td>
+              <td>Creditar conta PJ (split)</td>
+              <td><code>X-Webhook-Secret</code></td>
+            </tr>
+            <tr>
+              <td>ecp-pay</td>
+              <td>ecp-food</td>
+              <td><code>POST /api/webhooks/ecp-pay/payment-confirmed</code></td>
+              <td>Confirmar pagamento Pix</td>
+              <td>Callback URL</td>
+            </tr>
+            <tr>
+              <td>ecp-emps</td>
+              <td>ecp-bank</td>
+              <td>Shared JWT</td>
+              <td>SSO PF&#x2194;PJ</td>
+              <td>JWT_SECRET compartilhado</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Fluxo de Pagamento - Cartão de Credito -->
+    <section class="section">
+      <h2>4. Fluxo de Pagamento &mdash; Cartão de Credito</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 1</div>
+          <div class="timeline-title">Marina faz pedido no ecp-food</div>
+          <div class="timeline-desc">Usuária seleciona itens do restaurante, adiciona ao carrinho e escolhe pagamento por cartão de crédito.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 2</div>
+          <div class="timeline-title">Food envia POST /pay/card ao ECP Pay</div>
+          <div class="timeline-desc">Requisicao com dados do cartão tokenizado, valor total e splits configurados.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 3</div>
+          <div class="timeline-title">ECP Pay processa o pagamento</div>
+          <div class="timeline-desc"><strong>Internal:</strong> aprovacao instantanea. <strong>Asaas:</strong> gateway real com processamento de cartão.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 4</div>
+          <div class="timeline-title">ECP Pay calcula splits</div>
+          <div class="timeline-desc">85% para o restaurante + 15% para a plataforma FoodFlow.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 5</div>
+          <div class="timeline-title">ECP Pay notifica bank: registra na fatura</div>
+          <div class="timeline-desc">POST /api/cards/purchase-by-number &mdash; compra registrada na fatura do cartão virtual da Marina.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 6</div>
+          <div class="timeline-title">ECP Pay notifica emps via webhook</div>
+          <div class="timeline-desc">POST /webhooks/payment-received &mdash; credita a conta PJ do restaurante com 85% do valor.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 7</div>
+          <div class="timeline-title">Food atualiza pedido para "confirmed"</div>
+          <div class="timeline-desc">Pedido confirmado e exibido na tela da usuária.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Fluxo de Pagamento - Pix Copia e Cola -->
+    <section class="section">
+      <h2>5. Fluxo de Pagamento &mdash; Pix Copia e Cola</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 1</div>
+          <div class="timeline-title">Marina faz pedido no ecp-food com Pix</div>
+          <div class="timeline-desc">Usuária escolhe pagamento via Pix copia e cola.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 2</div>
+          <div class="timeline-title">Food envia POST /pay/pix ao ECP Pay</div>
+          <div class="timeline-desc">Requisicao inclui valor, descricao e callback_url para confirmacao.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 3</div>
+          <div class="timeline-title">ECP Pay gera cobrança Pix</div>
+          <div class="timeline-desc"><strong>Internal:</strong> QR Code mock. <strong>Asaas:</strong> QR Code real EMV.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 4</div>
+          <div class="timeline-title">Food retorna código copia e cola para Marina</div>
+          <div class="timeline-desc">Código exibido na tela para a usuária copiar e pagar.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 5</div>
+          <div class="timeline-title">Marina paga o Pix</div>
+          <div class="timeline-desc"><strong>Internal:</strong> auto-confirmacao em 3 segundos. <strong>Real:</strong> pagamento externo via app bancario.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 6</div>
+          <div class="timeline-title">ECP Pay recebe confirmacao e envia callback ao food</div>
+          <div class="timeline-desc">POST /api/webhooks/ecp-pay/payment-confirmed com status do pagamento.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 7</div>
+          <div class="timeline-title">ECP Pay debita conta da Marina no bank</div>
+          <div class="timeline-desc">POST /api/pix/debit-by-cpf &mdash; debita o valor da conta PF da Marina.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 8</div>
+          <div class="timeline-title">ECP Pay processa splits</div>
+          <div class="timeline-desc">Credita 85% na conta PJ do restaurante via webhook para ecp-emps.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 9</div>
+          <div class="timeline-title">Food atualiza pedido para "confirmed"</div>
+          <div class="timeline-desc">Pedido confirmado e pronto para preparo.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Mapa de Portas -->
+    <section class="section">
+      <h2>6. Mapa de Portas</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>API</th>
+            <th>Frontend</th>
+            <th>Dominio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ecp-digital-bank</td>
+            <td><code>3333</code></td>
+            <td><code>5173</code></td>
+            <td>bank.ecportilho.com</td>
+          </tr>
+          <tr>
+            <td>ecp-digital-emps</td>
+            <td><code>3334</code></td>
+            <td><code>5175</code></td>
+            <td>emps.ecportilho.com</td>
+          </tr>
+          <tr>
+            <td>ecp-digital-food</td>
+            <td><code>3000</code></td>
+            <td><code>5174</code></td>
+            <td>food.ecportilho.com</td>
+          </tr>
+          <tr>
+            <td>ecp-digital-pay</td>
+            <td><code>3335</code></td>
+            <td><code>5176</code></td>
+            <td>pay.ecportilho.com</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 7. Contas e Credenciais -->
+    <section class="section">
+      <h2>7. Contas e Credenciais (Desenvolvimento)</h2>
+
+      <h3>Usuarios de Teste</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Papel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bank</td>
+            <td><code>marina@email.com</code></td>
+            <td><code>Senha@123</code></td>
+            <td>Consumidora PF</td>
+          </tr>
+          <tr>
+            <td>Bank</td>
+            <td><code>platform@ecpay.dev</code></td>
+            <td><code>EcpPay@Platform#2026</code></td>
+            <td>Service Account (system)</td>
+          </tr>
+          <tr>
+            <td>Emps</td>
+            <td><code>patricia.werneck@email.com</code></td>
+            <td><code>Senha@123</code></td>
+            <td>Admin PJ (Brasa &amp; Lenha)</td>
+          </tr>
+          <tr>
+            <td>Pay</td>
+            <td><code>admin@ecpay.dev</code></td>
+            <td><code>Admin@123</code></td>
+            <td>Admin do gateway</td>
+          </tr>
+          <tr>
+            <td>Food</td>
+            <td><code>marina@email.com</code></td>
+            <td><code>Senha@123</code></td>
+            <td>Consumidora</td>
+          </tr>
+          <tr>
+            <td>Food</td>
+            <td><code>pasta@foodflow.com</code></td>
+            <td><code>P@sta&amp;Fogo#2026</code></td>
+            <td>Gerente restaurante</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>API Keys</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>Key</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ecp-bank</td>
+            <td><code>ecp-bank-dev-key</code></td>
+          </tr>
+          <tr>
+            <td>ecp-emps</td>
+            <td><code>ecp-emps-dev-key</code></td>
+          </tr>
+          <tr>
+            <td>ecp-food</td>
+            <td><code>ecp-food-dev-key</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 8. Provider Pattern -->
+    <section class="section">
+      <h2>8. Provider Pattern (ECP Pay)</h2>
+      <p>O ECP Pay implementa um <strong>Provider Pattern</strong> com arquitetura dual-mode, permitindo alternar entre simulação local e gateway real sem alterar o código das aplicações consumidoras.</p>
+
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Modo Internal</div>
+          <div class="artifact-title" style="color: var(--lime);">Simulacao</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Sem gateway externo</li>
+              <li><strong>Pix:</strong> QR Code mock, auto-aprovacao configuravel (3s default)</li>
+              <li><strong>Cartão:</strong> aprovacao instantanea (rejeita *9999 ou &gt; R$100k)</li>
+              <li><strong>Boleto:</strong> barcode mock</li>
+            </ul>
+            <p style="margin-top: 12px;"><span class="badge lime">Ideal para</span> desenvolvimento, testes, demos</p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Modo External</div>
+          <div class="artifact-title" style="color: var(--info);">Asaas</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Gateway real via API Asaas v3</li>
+              <li><strong>Sandbox:</strong> api-sandbox.asaas.com</li>
+              <li><strong>Pix:</strong> QR Code real EMV</li>
+              <li><strong>Cartão:</strong> processamento real com tokenização</li>
+              <li><strong>Boleto:</strong> barcode FEBRABAN + PDF</li>
+              <li>Webhooks reais de confirmacao</li>
+            </ul>
+            <p style="margin-top: 12px;"><span class="badge info">Ideal para</span> staging, homologacao, produção</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Split de Pagamento -->
+    <section class="section">
+      <h2>9. Split de Pagamento</h2>
+      <p>O sistema de split distribui automaticamente o valor de cada pedido entre a plataforma e o restaurante.</p>
+
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Regra de Split</div>
+        <div class="artifact-title">85% Restaurante / 15% Plataforma</div>
+        <div class="artifact-body">
+          <ul>
+            <li><strong>Plataforma FoodFlow:</strong> 15% de cada pedido</li>
+            <li><strong>Restaurante:</strong> 85% creditado na conta PJ via ecp-emps</li>
+            <li>ECP Pay registra splits na tabela <code>splits</code> (status: <code>pending</code> &rarr; <code>settled</code>)</li>
+            <li>Settlement via webhook para ecp-emps (<code>POST /webhooks/payment-received</code>)</li>
+            <li>Restaurante ve no extrato PJ: &ldquo;Recebido - Pedido ecp-food&rdquo;</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">85%</div>
+          <div class="stat-label">Restaurante</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">15%</div>
+          <div class="stat-label">Plataforma</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Webhook</div>
+          <div class="stat-label">Settlement</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Auto</div>
+          <div class="stat-label">Processamento</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Instalação e Deploy -->
+    <section class="section">
+      <h2>10. Instalação e Deploy</h2>
+
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Ambiente Local</div>
+          <div class="artifact-title">Windows 11</div>
+          <div class="artifact-body">
+<pre><code>cd 03-product-delivery (ou /app para bank)
+npm install
+npm run dev</code></pre>
+            <p><strong>Ordem de inicializacao:</strong><br>
+            <code>pay</code> &rarr; <code>bank</code> &rarr; <code>emps</code> &rarr; <code>food</code></p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Ambiente VPS</div>
+          <div class="artifact-title">Ubuntu</div>
+          <div class="artifact-body">
+<pre><code>bash /root/vps-cleanup.sh
+bash /root/vps-clone-repos.sh
+bash /root/vps-install-all.sh
+bash /root/vps-verify.sh</code></pre>
+            <p>Scripts automatizam limpeza, clone, instalação e verificacao de todas as 4 aplicações.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Repositórios -->
+    <section class="section">
+      <h2>11. Repositórios</h2>
+
+      <div class="quick-links">
+        <a href="https://github.com/ecportilho/ecp-digital-bank" target="_blank" class="quick-link">
+          <span class="ql-icon">&#x1F3E6;</span> ecp-digital-bank
+        </a>
+        <a href="https://github.com/ecportilho/ecp-digital-emps" target="_blank" class="quick-link">
+          <span class="ql-icon">&#x1F3E2;</span> ecp-digital-emps
+        </a>
+        <a href="https://github.com/ecportilho/ecp-digital-pay" target="_blank" class="quick-link">
+          <span class="ql-icon">&#x1F4B3;</span> ecp-digital-pay
+        </a>
+        <a href="https://github.com/ecportilho/ecp-digital-food" target="_blank" class="quick-link">
+          <span class="ql-icon">&#x1F354;</span> ecp-digital-food
+        </a>
+        <a href="https://github.com/ecportilho/ecp-ai-multi-agent-squad" target="_blank" class="quick-link">
+          <span class="ql-icon">&#x1F916;</span> ecp-ai-multi-agent-squad
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>
