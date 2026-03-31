@@ -246,11 +246,11 @@ fi
 if [ -z "$SKIP_SEED" ]; then
     cd "$APP_CWD"
     info "Executando migrations..."
-    npm run db:migrate 2>&1 | tail -5
+    $TSX_PATH server/src/database/migrations/run.ts 2>&1 | tail -5
     ok "Migrations"
 
     info "Executando seed..."
-    npm run db:seed 2>&1 | tail -5
+    $TSX_PATH server/src/database/seed.ts 2>&1 | tail -5
     ok "Seed (Marina Silva: marina@email.com / Senha@123)"
     ok "Seed (Platform: platform@ecpay.dev / EcpPay@Platform#2026)"
 fi
