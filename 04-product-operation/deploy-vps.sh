@@ -72,11 +72,14 @@ step "1/12" "Coletar informacoes"
 CERTBOT_EMAIL=$(ask_input "Email SSL (Let's Encrypt)" "ecportilho@gmail.com")
 JWT_SECRET=$(ask_input "JWT Secret (sera compartilhado com ecp-digital-emps)" "")
 [ -z "$JWT_SECRET" ] && { JWT_SECRET=$(openssl rand -hex 32); info "JWT gerado: ${JWT_SECRET:0:16}..."; }
+ANTHROPIC_API_KEY=$(ask_input "Anthropic API Key (chatbot IA)" "")
+[ -z "$ANTHROPIC_API_KEY" ] && warn "Sem API key — chatbot nao funcionara"
 
 echo ""
 info "Repo:      ${REPO_URL}"
 info "Email SSL: ${CERTBOT_EMAIL}"
 info "JWT:       ${JWT_SECRET:0:10}..."
+info "Anthropic: ${ANTHROPIC_API_KEY:0:15}..."
 echo ""
 ask_yes_no "Prosseguir?" || { warn "Cancelado."; exit 0; }
 
@@ -222,7 +225,11 @@ JWT_SECRET=${JWT_SECRET}
 DATABASE_PATH=./database.sqlite
 CORS_ORIGIN=https://${DOMAIN}
 ECP_PAY_URL=http://127.0.0.1:3335
-ECP_PAY_API_KEY=ecp-bank-dev-key" > "$APP_CWD/server/.env"
+ECP_PAY_API_KEY=ecp-bank-dev-key
+ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+AI_MODEL=claude-sonnet-4-20250514
+AI_MAX_TOKENS=2048
+AI_TEMPERATURE=0.3" > "$APP_CWD/server/.env"
 
     chmod 600 "$APP_CWD/server/.env"
     ok ".env criado em server/.env"
