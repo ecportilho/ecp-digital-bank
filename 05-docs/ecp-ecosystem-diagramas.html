@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECP Ecosystem — Diagramas de Arquitetura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#131c28',
+        primaryTextColor: '#eaf2ff',
+        primaryBorderColor: '#1c2836',
+        lineColor: '#b7ff2a',
+        secondaryColor: '#0f1620',
+        tertiaryColor: '#0b0f14',
+        fontFamily: 'Inter, sans-serif'
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Ecosystem docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estratégico</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operação</a></li>
+      <li class="sidebar-section-title">Ecossistema</li>
+      <li><a href="ecp-ecosystem.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+      <li><a href="ecp-ecosystem-diagramas.html" class="active"><span class="nav-icon">&#x25A0;</span> Diagramas</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">ECP Ecosystem &mdash; Diagramas de Arquitetura</div>
+    <div class="topbar-meta">
+      <span>Mermaid.js</span>
+      <span>Dark Theme</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Diagramas de Arquitetura</h1>
+    <p class="subtitle">Visualização completa da arquitetura, fluxos de pagamento, modelos de dados e infraestrutura do ecossistema ECP.</p>
+
+    <!-- 1. Componentes -->
+    <section class="section">
+      <h2>1. Arquitetura de Componentes do Ecossistema</h2>
+      <p>Visão geral de todas as camadas do ecossistema: frontends, APIs, bancos de dados e integrações entre aplicações. O ECP Pay atua como gateway central conectando todos os produtos.</p>
+
+      <pre class="mermaid">
+graph TB
+    subgraph "Frontend Layer"
+        BW["🏦 Bank Web\n:5173"]
+        EW["🏢 Emps Web\n:5175"]
+        FW["🍕 Food Web\n:5174"]
+        PW["💳 Pay Admin\n:5176"]
+    end
+
+    subgraph "API Layer"
+        BA["Bank API\n:3333"]
+        EA["Emps API\n:3334"]
+        FA["Food API\n:3000"]
+        PA["Pay API\n:3335"]
+    end
+
+    subgraph "Data Layer"
+        BD[("database.sqlite")]
+        ED[("database-emps.sqlite")]
+        FD[("foodflow.db")]
+        PD[("database-pay.sqlite")]
+    end
+
+    subgraph "External"
+        AS["Asaas Gateway\nsandbox"]
+    end
+
+    BW --> BA
+    EW --> EA
+    FW --> FA
+    PW --> PA
+
+    BA --> BD
+    EA --> ED
+    FA --> FD
+    PA --> PD
+
+    FA -->|"X-API-Key"| PA
+    BA -->|"X-API-Key"| PA
+    EA -->|"X-API-Key"| PA
+
+    PA -->|"webhook"| EA
+    PA -->|"callback"| FA
+    PA -->|"service account"| BA
+    PA -.->|"external mode"| AS
+
+    EA <-->|"JWT compartilhado"| BA
+      </pre>
+    </section>
+
+    <!-- 2. Sequência: Cartão de Crédito -->
+    <section class="section">
+      <h2>2. Fluxo: Pagamento com Cartão de Crédito</h2>
+      <p>Sequência completa de um pagamento com cartão de crédito no FoodFlow, desde a seleção dos itens até a confirmação do pedido, incluindo split de valores e notificações entre sistemas.</p>
+
+      <pre class="mermaid">
+sequenceDiagram
+    actor M as Marina
+    participant FW as Food Web
+    participant FA as Food API
+    participant PA as ECP Pay
+    participant BA as Bank API
+    participant EA as Emps API
+
+    M->>FW: Seleciona itens + Pagar com cartão
+    FW->>FA: POST /api/payments/credit-card
+    FA->>PA: POST /pay/card (X-API-Key)
+
+    alt Modo Internal
+        PA->>PA: Aprovar instantaneamente
+    else Modo Asaas
+        PA->>PA: POST Asaas /payments (CREDIT_CARD)
+    end
+
+    PA-->>FA: transaction_id, status completed
+
+    par Notificar Bank
+        PA->>BA: POST /api/cards/purchase-by-number (Service Account JWT)
+        BA->>BA: Registrar na fatura *4832
+        BA-->>PA: purchaseId
+    and Processar Splits
+        PA->>PA: Calcular 85% restaurante + 15% plataforma
+        PA->>EA: POST /webhooks/payment-received (X-Webhook-Secret)
+        EA->>EA: Creditar conta PJ Brasa e Lenha
+        EA-->>PA: status credited
+    end
+
+    FA->>FA: Atualizar pedido para confirmed
+    FA-->>FW: status completed
+    FW-->>M: Pedido confirmado!
+      </pre>
+    </section>
+
+    <!-- 3. Sequência: Pix -->
+    <section class="section">
+      <h2>3. Fluxo: Pagamento com Pix Copia e Cola</h2>
+      <p>Fluxo assíncrono de pagamento via Pix, com geração de QR Code, aguardo de confirmação e settlement automático no modo interno ou via webhook no modo Asaas.</p>
+
+      <pre class="mermaid">
+sequenceDiagram
+    actor M as Marina
+    participant FW as Food Web
+    participant FA as Food API
+    participant PA as ECP Pay
+    participant BA as Bank API
+    participant EA as Emps API
+
+    M->>FW: Seleciona itens + Pagar com Pix
+    FW->>FA: POST /api/payments/pix
+    FA->>PA: POST /pay/pix (callback_url + X-API-Key)
+
+    alt Modo Internal
+        PA->>PA: Gerar QR Code mock
+        PA->>PA: Agendar auto-aprovação (3s)
+    else Modo Asaas
+        PA->>PA: POST Asaas /payments (PIX)
+        PA->>PA: GET Asaas /payments/id/pixQrCode
+    end
+
+    PA-->>FA: qr_code, qr_code_text, transaction_id
+    FA-->>FW: pix_copy_paste, expires_at
+    FW-->>M: Código Pix para copiar
+
+    Note over PA: Aguardando pagamento...
+
+    alt Modo Internal (3s)
+        PA->>PA: Settlement automático
+    else Modo Asaas
+        PA->>PA: Webhook PAYMENT_CONFIRMED
+    end
+
+    PA->>FA: POST callback_url (payment.completed)
+    FA->>FA: Atualizar pedido para confirmed
+
+    par Debitar conta PF
+        PA->>BA: POST /api/pix/debit-by-cpf (Service Account)
+        BA->>BA: Debitar conta Marina
+    and Processar Splits
+        PA->>EA: POST /webhooks/payment-received
+        EA->>EA: Creditar conta PJ
+    end
+
+    FW-->>M: Pedido confirmado!
+      </pre>
+    </section>
+
+    <!-- 4. Classes: Provider Pattern -->
+    <section class="section">
+      <h2>4. Provider Pattern — Abstração de Gateway</h2>
+      <p>Diagrama de classes mostrando o padrão Provider implementado no ECP Pay. A interface PaymentProvider permite trocar entre o modo interno (simulação) e o modo Asaas (gateway real) sem alterar o código consumidor.</p>
+
+      <pre class="mermaid">
+classDiagram
+    class PaymentProvider {
+        &lt;&lt;interface&gt;&gt;
+        +name: string
+        +createPixCharge(input) PixChargeResult
+        +createCardCharge(input) CardChargeResult
+        +createBoleto(input) BoletoResult
+        +refund(input) RefundResult
+        +getTransactionStatus(id) TransactionStatus
+        +parseWebhook(headers, body) WebhookEvent
+    }
+
+    class InternalAdapter {
+        +name = "internal"
+        -simulationDelay: number
+        +createPixCharge() QR mock + auto-settlement
+        +createCardCharge() Aprovação instantânea
+        +createBoleto() Barcode mock
+        +refund() Estorno imediato
+    }
+
+    class AsaasAdapter {
+        +name = "asaas"
+        -baseUrl: string
+        -apiKey: string
+        -ensureCustomer() customerId
+        +createPixCharge() QR real + payload EMV
+        +createCardCharge() Gateway real + token
+        +createBoleto() FEBRABAN + PDF
+        +refund() Estorno via API
+    }
+
+    class ProviderFactory {
+        -instance: PaymentProvider
+        -currentMode: string
+        +getProvider() PaymentProvider
+        +switchProvider(mode, userId) void
+        +getCurrentMode() string
+    }
+
+    PaymentProvider <|.. InternalAdapter
+    PaymentProvider <|.. AsaasAdapter
+    ProviderFactory --> PaymentProvider
+    ProviderFactory ..> InternalAdapter : creates
+    ProviderFactory ..> AsaasAdapter : creates
+      </pre>
+    </section>
+
+    <!-- 5. Estado: Ciclo de Vida -->
+    <section class="section">
+      <h2>5. Ciclo de Vida de uma Transação</h2>
+      <p>Diagrama de estados mostrando todas as transições possíveis de uma transação no ECP Pay, desde a criação até os estados finais (completada, expirada, cancelada, estornada).</p>
+
+      <pre class="mermaid">
+stateDiagram-v2
+    [*] --> pending: Cobrança criada
+
+    pending --> processing: Processando pagamento
+    pending --> completed: Pagamento confirmado
+    pending --> expired: Prazo expirado
+    pending --> cancelled: Cancelada pelo usuário
+
+    processing --> completed: Aprovado
+    processing --> failed: Rejeitado
+
+    completed --> refunded: Estorno total
+    completed --> partially_refunded: Estorno parcial
+
+    failed --> [*]
+    expired --> [*]
+    cancelled --> [*]
+    refunded --> [*]
+    partially_refunded --> [*]
+
+    note right of pending: Pix e Boleto começam aqui
+    note right of completed: Cartão vai direto para completed
+    note left of processing: Cartão via Asaas pode passar por processing
+      </pre>
+    </section>
+
+    <!-- 6. ER: Modelo de Dados -->
+    <section class="section">
+      <h2>6. Modelo de Dados — ECP Pay</h2>
+      <p>Diagrama entidade-relacionamento do banco de dados do ECP Pay, com as tabelas de transações, splits, estornos, tokens de cartão, registros de aplicações e eventos de webhook.</p>
+
+      <pre class="mermaid">
+erDiagram
+    transactions ||--o{ splits : "has"
+    transactions ||--o{ refunds : "has"
+    transactions }o--|| app_registrations : "from"
+    card_tokens }o--|| app_registrations : "source"
+    webhook_events }o--o| transactions : "references"
+
+    transactions {
+        text id PK
+        text source_app
+        text provider
+        text provider_id
+        text type
+        integer amount
+        text status
+        text customer_name
+        text customer_document
+        text idempotency_key UK
+        text callback_url
+    }
+
+    splits {
+        text id PK
+        text transaction_id FK
+        text account_id
+        text account_name
+        integer amount
+        text status
+    }
+
+    app_registrations {
+        text id PK
+        text app_name UK
+        text api_key UK
+        text callback_base_url
+    }
+
+    card_tokens {
+        text id PK
+        text customer_document
+        text token
+        text last4
+        text brand
+    }
+
+    webhook_events {
+        text id PK
+        text event_id UK
+        text event_type
+        text transaction_id FK
+        text payload
+        integer processed
+    }
+
+    refunds {
+        text id PK
+        text transaction_id FK
+        integer amount
+        text status
+    }
+      </pre>
+    </section>
+
+    <!-- 7. Flowchart: Split -->
+    <section class="section">
+      <h2>7. Fluxo de Split — Distribuição de Valores</h2>
+      <p>Visualização do fluxo de split de pagamento: como o valor pago pelo cliente é dividido entre o restaurante (85%) e a plataforma FoodFlow (15%), com crédito automático na conta PJ via webhook.</p>
+
+      <pre class="mermaid">
+flowchart LR
+    C["💳 Cliente paga\nR$ 78,89"] --> PAY["ECP Pay\nProcessa pagamento"]
+
+    PAY --> CALC["Calcular Split\n85% / 15%"]
+
+    CALC --> R["🍖 Restaurante\nBrasa e Lenha\nR$ 67,06 - 85%"]
+    CALC --> P["🏢 Plataforma\nFoodFlow\nR$ 11,83 - 15%"]
+
+    R --> WH["Webhook\necp-emps"]
+    WH --> PJ["Conta PJ\nCNPJ 89012345000167\nSaldo atualizado"]
+
+    P --> SET["Status: settled"]
+
+    style C fill:#131c28,stroke:#b7ff2a,color:#eaf2ff
+    style PAY fill:#131c28,stroke:#b7ff2a,color:#eaf2ff
+    style R fill:#131c28,stroke:#3dff8b,color:#eaf2ff
+    style P fill:#131c28,stroke:#ffcc00,color:#eaf2ff
+    style PJ fill:#131c28,stroke:#3dff8b,color:#eaf2ff
+      </pre>
+    </section>
+
+    <!-- 8. Implantação -->
+    <section class="section">
+      <h2>8. Diagrama de Implantação — VPS Hostinger</h2>
+      <p>Infraestrutura de produção na VPS Hostinger com Ubuntu 22.04, Nginx como reverse proxy com SSL/TLS, processos gerenciados pelo PM2 e arquivos estáticos servidos diretamente pelo Nginx.</p>
+
+      <pre class="mermaid">
+graph TB
+    subgraph "Internet"
+        U["👤 Usuários"]
+        DNS["DNS\n*.ecportilho.com\n191.101.78.38"]
+    end
+
+    subgraph "VPS Hostinger - Ubuntu 22.04"
+        subgraph "Nginx 443/80"
+            N["Reverse Proxy\nSSL/TLS Lets Encrypt"]
+        end
+
+        subgraph "PM2 Processes"
+            B["ecp-digital-bank\n:3333"]
+            E["ecp-digital-emps\n:3334"]
+            P["ecp-digital-pay\n:3335"]
+            F["ecp-digital-food\n:3000"]
+        end
+
+        subgraph "Static Files"
+            SB["bank web/dist"]
+            SE["emps web/dist"]
+            SP["pay web/dist"]
+            SF["food client/dist"]
+        end
+
+        subgraph "Data"
+            DB["SQLite databases\n4 arquivos .sqlite"]
+        end
+    end
+
+    U --> DNS
+    DNS --> N
+
+    N -->|"bank.ecportilho.com"| B
+    N -->|"bank.ecportilho.com/assets"| SB
+    N -->|"emps.ecportilho.com"| E
+    N -->|"emps.ecportilho.com/assets"| SE
+    N -->|"pay.ecportilho.com"| P
+    N -->|"pay.ecportilho.com/assets"| SP
+    N -->|"food.ecportilho.com"| F
+    N -->|"food.ecportilho.com/assets"| SF
+
+    B --> DB
+    E --> DB
+    P --> DB
+    F --> DB
+      </pre>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>
