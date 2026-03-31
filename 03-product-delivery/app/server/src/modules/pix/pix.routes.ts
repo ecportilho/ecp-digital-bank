@@ -70,7 +70,7 @@ export const pixRoutes: FastifyPluginAsync = async (app) => {
     }
 
     const input = z.object({
-      cpf: z.string().min(11).max(14),
+      cpf: z.string().min(1).max(100),
       amountCents: z.number().int().positive(),
       description: z.string().min(1).max(200),
       merchantName: z.string().min(1).max(100),
