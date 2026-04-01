@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import { useIdleTimeout } from './hooks/useIdleTimeout'
 import { Sidebar } from './components/layout/Sidebar'
 import { Header } from './components/layout/Header'
 import { MobileNav } from './components/layout/MobileNav'
@@ -17,7 +18,13 @@ import { ChatPage } from './routes/chat'
 import { ChatWidget } from './components/chat/ChatWidget'
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
+
+  useIdleTimeout(() => {
+    logout()
+    navigate('/login', { replace: true })
+  }, isAuthenticated)
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
