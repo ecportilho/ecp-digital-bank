@@ -101,9 +101,7 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col w-64 bg-surface border-r border-border h-screen">
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-border">
-        <div className="w-8 h-8 bg-lime rounded-lg flex items-center justify-center">
-          <span className="text-background font-bold text-sm">E</span>
-        </div>
+        <span className="text-lime font-bold text-2xl">&#x2B21;</span>
         <span className="font-bold text-text-primary text-lg">ECP Bank</span>
       </div>
 
