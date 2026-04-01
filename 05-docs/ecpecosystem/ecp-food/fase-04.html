@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 04 &mdash; Opera&ccedil;&atilde;o | ECP Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Food docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Vis&atilde;o Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estrat&eacute;gico</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html" class="active"><span class="nav-icon">04</span> Opera&ccedil;&atilde;o</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instala&ccedil;&atilde;o</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Fase 04 &mdash; Opera&ccedil;&atilde;o</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITL #11 Aprovado</span>
+      <span>Operations</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Fase 04 &mdash; Opera&ccedil;&atilde;o</h1>
+    <p class="subtitle">CI/CD, GMUD, SLOs, DORA metrics, infraestrutura e A/B testing.</p>
+
+    <!-- CI/CD Pipeline -->
+    <h2>CI/CD Pipeline</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Estrat&eacute;gia de Deploy</div>
+        <div class="artifact-title">Single VPS + PM2 + Nginx + Let&rsquo;s Encrypt SSL</div>
+        <div class="artifact-body">
+          <p><strong>Dom&iacute;nio:</strong> food.ecportilho.com</p>
+          <p><strong>Process Manager:</strong> PM2 (zero-downtime reload)</p>
+          <p><strong>Reverse Proxy:</strong> Nginx</p>
+          <p><strong>SSL:</strong> Let&rsquo;s Encrypt via Certbot</p>
+        </div>
+      </div>
+
+      <h3>Build Pipeline &mdash; 7 Steps</h3>
+      <table class="data-table">
+        <thead><tr><th>Step</th><th>Comando</th><th>Descri&ccedil;&atilde;o</th></tr></thead>
+        <tbody>
+          <tr><td>1. pull_latest</td><td><code>git pull origin main</code></td><td>Atualizar c&oacute;digo-fonte</td></tr>
+          <tr><td>2. install_dependencies</td><td><code>npm ci --production=false</code></td><td>Instalar depend&ecirc;ncias (incluindo devDeps para build)</td></tr>
+          <tr><td>3. build_frontend</td><td><code>npm run build</code></td><td>Build do React SPA via Vite &rarr; client/dist/</td></tr>
+          <tr><td>4. run_seed</td><td><code>npm run seed</code></td><td>Popular SQLite com dados iniciais (idempotente)</td></tr>
+          <tr><td>5. register_webhook</td><td><code>npm run register-webhook</code></td><td>Registrar webhook no ecp-digital-bank (idempotente)</td></tr>
+          <tr><td>6. restart</td><td><code>pm2 reload ecosystem.config.cjs</code></td><td>Reload graceful (zero-downtime)</td></tr>
+          <tr><td>7. verify_health</td><td><code>curl -sf http://127.0.0.1:3000/api/categories</code></td><td>Health check da aplica&ccedil;&atilde;o</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Rollback</h3>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <p><strong>Trigger:</strong> Health check falha ap&oacute;s deploy OU erro cr&iacute;tico em pagamentos nas primeiras 2 horas.</p>
+          <p><strong>Comando:</strong> <code>git checkout HEAD~1 && npm ci && npm run build && pm2 reload ecosystem.config.cjs</code></p>
+          <p><strong>Tempo estimado:</strong> 5 minutos</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GMUD -->
+    <h2>GMUD</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">GMUD-FOODFLOW-001</div>
+        <div class="artifact-title">Deploy Inicial &mdash; FoodFlow Marketplace MVP em Produ&ccedil;&atilde;o</div>
+        <div class="artifact-body">
+          <p><strong>Tipo:</strong> Normal | <strong>Prioridade:</strong> Alta | <strong>Risco:</strong> Baixo-M&eacute;dio (10/30)</p>
+          <p><strong>Escopo:</strong> Provisionamento de VPS, instala&ccedil;&atilde;o de Node.js 20 LTS + PM2 + Nginx + Certbot, deploy da aplica&ccedil;&atilde;o, seed data (6 restaurantes, 24 itens, 3 usu&aacute;rios), configura&ccedil;&atilde;o de SSL, registro de webhook no ecp-digital-bank, DNS food.ecportilho.com.</p>
+          <p><strong>Janela:</strong> S&aacute;bado 10:00-12:00 BRT | <strong>Dura&ccedil;&atilde;o estimada:</strong> 45 minutos | <strong>Monitoramento:</strong> 2h ap&oacute;s deploy</p>
+        </div>
+        <div class="artifact-meta">
+          <span><a href="gmud/GMUD-001.md">Ver GMUD completa</a></span>
+        </div>
+      </div>
+
+      <h3>Crit&eacute;rios de Sucesso</h3>
+      <table class="data-table">
+        <thead><tr><th>Crit&eacute;rio</th><th>Valida&ccedil;&atilde;o</th></tr></thead>
+        <tbody>
+          <tr><td>Aplica&ccedil;&atilde;o respondendo com SSL</td><td>curl -sf https://food.ecportilho.com/ retorna HTML</td></tr>
+          <tr><td>API funcional</td><td>GET /api/categories retorna 200</td></tr>
+          <tr><td>Autentica&ccedil;&atilde;o funcional</td><td>POST /api/auth/login retorna JWT v&aacute;lido</td></tr>
+          <tr><td>Integra&ccedil;&atilde;o banco acess&iacute;vel</td><td>POST /api/payments/bank-auth retorna token</td></tr>
+          <tr><td>Webhook registrado</td><td>ecp-digital-bank confirma registro</td></tr>
+          <tr><td>PM2 est&aacute;vel 30 min</td><td>pm2 status mostra 0 restarts</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SLOs -->
+    <h2>Service Level Objectives (SLOs)</h2>
+    <section class="section">
+      <p>Janela de medi&ccedil;&atilde;o: Rolling 30 dias.</p>
+      <div class="slo-grid">
+        <div class="slo-card">
+          <div class="slo-name">SLO-1: Disponibilidade da API</div>
+          <div class="slo-target">99.5%</div>
+          <div class="slo-desc">Requisi&ccedil;&otilde;es HTTP 2xx/4xx (excluindo 5xx). Error budget: 3.6h downtime/m&ecirc;s. Alerta: &lt; 99.0%</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">SLO-2: Lat&ecirc;ncia P95 &mdash; Cat&aacute;logo</div>
+          <div class="slo-target">200ms</div>
+          <div class="slo-desc">95% das requisi&ccedil;&otilde;es GET em /api/restaurants e /api/categories completam em &lt; 200ms. Alerta: &gt; 350ms</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">SLO-3: Lat&ecirc;ncia P95 &mdash; Pagamento</div>
+          <div class="slo-target">2000ms</div>
+          <div class="slo-desc">95% das requisi&ccedil;&otilde;es em /api/payments/* completam em &lt; 2s (inclui chamada ao banco). Alerta: &gt; 3000ms</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">SLO-4: Error Rate</div>
+          <div class="slo-target">&lt; 0.5%</div>
+          <div class="slo-desc">Taxa de erros 5xx no total de requisi&ccedil;&otilde;es por janela de 1 hora. Alerta: &gt; 1.0%</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">SLO-5: Tempo de Entrega SSE (PIX)</div>
+          <div class="slo-target">2000ms</div>
+          <div class="slo-desc">Evento SSE payment_update entregue ao frontend em &lt; 2s ap&oacute;s webhook recebido. Alerta: &gt; 5000ms</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DORA Metrics -->
+    <h2>DORA Metrics</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>M&eacute;trica</th><th>Target</th><th>Band Alvo</th><th>Como Medir</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Deployment Frequency</td>
+            <td>1-2x por semana</td>
+            <td><span class="badge info">Medium</span></td>
+            <td>Contagem de pm2 reload em produ&ccedil;&atilde;o por semana</td>
+          </tr>
+          <tr>
+            <td>Lead Time for Changes</td>
+            <td>&lt; 1 dia</td>
+            <td><span class="badge approved">High</span></td>
+            <td>Timestamp do merge no main vs timestamp do deploy</td>
+          </tr>
+          <tr>
+            <td>Change Failure Rate</td>
+            <td>&lt; 15%</td>
+            <td><span class="badge info">Medium</span></td>
+            <td>Deploys com rollback / total de deploys no per&iacute;odo</td>
+          </tr>
+          <tr>
+            <td>Mean Time to Recovery</td>
+            <td>&lt; 30 minutos</td>
+            <td><span class="badge approved">High</span></td>
+            <td>Tempo entre detec&ccedil;&atilde;o do incidente e restaura&ccedil;&atilde;o confirmada</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><em>Targets calibrados para MVP com equipe enxuta e VPS &uacute;nico. Futuro: CI/CD automatizado via GitHub Actions.</em></p>
+    </section>
+
+    <!-- Infra -->
+    <h2>Infraestrutura</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">PM2 &mdash; Process Manager</div>
+          <div class="artifact-body">
+            <ul>
+              <li>M&eacute;tricas: CPU, mem&oacute;ria, restarts, uptime</li>
+              <li>Log rotation: max 50MB, reten&ccedil;&atilde;o 10 arquivos, compress</li>
+              <li>Logs stdout: ~/.pm2/logs/foodflow-out.log</li>
+              <li>Logs stderr: ~/.pm2/logs/foodflow-error.log</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Nginx &mdash; Reverse Proxy</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Access log: /var/log/nginx/foodflow-access.log</li>
+              <li>Error log: /var/log/nginx/foodflow-error.log</li>
+              <li>SSL: Let&rsquo;s Encrypt (Certbot auto-renew)</li>
+              <li>Health check: GET /api/categories a cada 60s, timeout 5s</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h3>Vari&aacute;veis de Ambiente (15)</h3>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <p><code>NODE_ENV</code>, <code>PORT</code>, <code>HOST</code>, <code>JWT_SECRET</code>, <code>JWT_REFRESH_SECRET</code>, <code>DB_PATH</code>, <code>CORS_ORIGIN</code>, <code>ECP_BANK_API_URL</code>, <code>ECP_BANK_PLATFORM_EMAIL</code>, <code>ECP_BANK_PLATFORM_PASSWORD</code>, <code>ECP_BANK_PLATFORM_PIX_KEY</code>, <code>ECP_BANK_PLATFORM_PIX_KEY_TYPE</code>, <code>ECP_BANK_PIX_EXPIRATION_MINUTES</code>, <code>ECP_BANK_WEBHOOK_SECRET</code>, <code>FOODFLOW_PUBLIC_URL</code></p>
+          <p><em>Arquivo .env na raiz do projeto no VPS. NUNCA commitar no reposit&oacute;rio.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- A/B Testing -->
+    <h2>A/B Testing (Futuros)</h2>
+    <section class="section">
+      <div class="kr-grid">
+        <div class="kr-card">
+          <div class="kr-id">Experimento 1</div>
+          <div class="kr-description">Hero Banner: Promo do Dia vs Personalizado</div>
+          <div class="kr-meta">KR1 (Convers&atilde;o)</div>
+          <div class="kr-metric">Testar se hero banner com recomenda&ccedil;&atilde;o personalizada converte melhor que promo&ccedil;&atilde;o gen&eacute;rica do dia.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">Experimento 2</div>
+          <div class="kr-description">Checkout: 2 Passos vs 3 Passos</div>
+          <div class="kr-meta">KR1 (Convers&atilde;o)</div>
+          <div class="kr-metric">Testar se consolidar endere&ccedil;o+cupom em um passo reduz abandono de carrinho.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">Experimento 3</div>
+          <div class="kr-description">Cupom de Retorno: R$ 5 vs Frete Gr&aacute;tis</div>
+          <div class="kr-meta">KR2 (Recompra)</div>
+          <div class="kr-metric">Testar qual incentivo gera melhor taxa de recompra em 7 dias entre usu&aacute;rios do segundo pedido.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Files -->
+    <h2>Artefatos Gerados</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">04-product-operation/ops-output.json</span>
+        <span class="file-ref">docs/gmud/GMUD-001.md</span>
+        <span class="file-ref">docs/install/install-ecp-digital-food-win.md</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

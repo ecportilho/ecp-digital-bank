@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECP AI Multi-Agent Squad v3.3 — Documentação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       ECP AI Multi-Agent Squad — Documentação v3.3
+       Design System: Dark Theme + Lime Accent
+       ============================================ */
+
+    :root {
+      --bg: #0b0f14;
+      --surface: #131c28;
+      --surface-2: #0f1620;
+      --lime: #b7ff2a;
+      --lime-dim: rgba(183, 255, 42, 0.12);
+      --text: #eaf2ff;
+      --text-2: #a9b7cc;
+      --muted: #7b8aa3;
+      --border: #1c2836;
+      --success: #3dff8b;
+      --danger: #ff4d4d;
+      --info: #4da3ff;
+      --warning: #ffcc00;
+      --radius: 12px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --sidebar-w: 280px;
+      --topbar-h: 60px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: var(--topbar-h) 1fr;
+      grid-template-areas: "sidebar topbar" "sidebar content";
+    }
+
+    a { color: var(--lime); text-decoration: none; transition: opacity 0.2s; }
+    a:hover { opacity: 0.85; text-decoration: underline; }
+
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.875em;
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--lime);
+    }
+
+    pre {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 12px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-2);
+    }
+
+    pre code { background: none; padding: 0; }
+
+    /* --- Sidebar --- */
+    .sidebar {
+      grid-area: sidebar;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .logo-icon { font-size: 1.5rem; color: var(--lime); }
+
+    .sidebar-nav {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 0 12px; flex: 1;
+    }
+
+    .sidebar-nav li a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      color: var(--text-2); font-size: 0.85rem; font-weight: 500;
+      transition: all 0.15s; text-decoration: none;
+    }
+
+    .sidebar-nav li a:hover { background: var(--lime-dim); color: var(--text); text-decoration: none; opacity: 1; }
+    .sidebar-nav li a.active { background: var(--lime-dim); color: var(--lime); font-weight: 600; }
+
+    .sidebar-nav li a .nav-icon {
+      width: 20px; text-align: center; font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); padding: 14px 12px 4px; font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 12px; border-top: 1px solid var(--border); margin-top: auto;
+      font-size: 0.75rem; color: var(--muted); text-align: center;
+    }
+
+    /* --- Topbar --- */
+    .topbar {
+      grid-area: topbar;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      position: fixed; top: 0; left: var(--sidebar-w); right: 0;
+      height: var(--topbar-h); z-index: 90;
+    }
+
+    .topbar-title { font-size: 1rem; font-weight: 600; color: var(--text); }
+
+    .topbar-meta {
+      font-size: 0.8rem; color: var(--muted);
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .topbar-meta .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .topbar-meta .status-dot.green { background: var(--success); }
+
+    /* --- Main Content --- */
+    .content {
+      grid-area: content;
+      padding: 32px;
+      margin-top: var(--topbar-h);
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .content > h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.03em; }
+    .content > .subtitle { font-size: 1rem; color: var(--text-2); margin-bottom: 32px; }
+
+    .content h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      margin: 48px 0 16px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border); letter-spacing: -0.01em;
+    }
+
+    .content h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin: 28px 0 12px; }
+    .content h4 { font-size: 0.95rem; font-weight: 600; color: var(--text-2); margin: 20px 0 8px; }
+    .content p { color: var(--text-2); margin-bottom: 12px; line-height: 1.7; }
+    .content ul, .content ol { color: var(--text-2); padding-left: 24px; margin-bottom: 12px; }
+    .content li { margin-bottom: 6px; line-height: 1.6; }
+
+    .section { margin-bottom: 40px; }
+
+    /* --- Cards --- */
+    .artifact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px; margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .artifact-card:hover { border-color: rgba(183, 255, 42, 0.25); }
+    .artifact-card.highlighted { border-left: 3px solid var(--lime); }
+
+    .artifact-label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); font-weight: 600; margin-bottom: 6px;
+    }
+
+    .artifact-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+
+    .artifact-body { color: var(--text-2); font-size: 0.9rem; line-height: 1.7; }
+    .artifact-body strong { color: var(--text); font-weight: 600; }
+
+    .artifact-meta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-top: 12px; font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* --- Badges --- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+
+    .badge.approved { background: rgba(61, 255, 139, 0.12); color: var(--success); }
+    .badge.pending { background: rgba(255, 204, 0, 0.12); color: var(--warning); }
+    .badge.info { background: rgba(77, 163, 255, 0.12); color: var(--info); }
+    .badge.lime { background: var(--lime-dim); color: var(--lime); }
+    .badge.neutral { background: rgba(123, 138, 163, 0.12); color: var(--muted); }
+    .badge.danger { background: rgba(255, 77, 77, 0.12); color: var(--danger); }
+
+    /* --- Tables --- */
+    .data-table {
+      width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem;
+    }
+
+    .data-table th {
+      text-align: left; padding: 10px 14px;
+      background: var(--surface-2); color: var(--muted);
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+      font-weight: 600; border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      color: var(--text-2); vertical-align: top;
+    }
+
+    .data-table tr:hover td { background: rgba(183, 255, 42, 0.03); }
+    .data-table td:first-child { color: var(--text); font-weight: 500; }
+
+    /* --- Stat Cards --- */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px; margin: 16px 0;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px; text-align: center;
+    }
+
+    .stat-card .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--lime); margin-bottom: 4px; }
+    .stat-card .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* --- Timeline --- */
+    .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+
+    .timeline::before {
+      content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+
+    .timeline-item { position: relative; margin-bottom: 24px; }
+
+    .timeline-item::before {
+      content: ''; position: absolute; left: -26px; top: 6px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--lime); border: 2px solid var(--surface);
+    }
+
+    .timeline-item .timeline-phase {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--lime); font-weight: 700;
+    }
+
+    .timeline-item .timeline-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 2px 0; }
+    .timeline-item .timeline-desc { font-size: 0.82rem; color: var(--text-2); }
+
+    /* --- Grids --- */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* --- Agent Card --- */
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .agent-card:hover { border-color: rgba(183, 255, 42, 0.25); }
+
+    .agent-card .agent-emoji { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+
+    .agent-card .agent-name {
+      font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 4px;
+    }
+
+    .agent-card .agent-role {
+      font-size: 0.78rem; color: var(--muted); margin-bottom: 10px;
+    }
+
+    .agent-card .agent-phase {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* --- Subagent/Skill List --- */
+    .sub-list {
+      display: flex; flex-direction: column; gap: 6px; margin-top: 10px;
+    }
+
+    .sub-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; background: var(--surface-2);
+      border-radius: 6px; font-size: 0.78rem; color: var(--text-2);
+    }
+
+    .sub-item .sub-icon { color: var(--info); font-weight: 700; font-size: 0.7rem; }
+
+    /* --- Flow Diagram --- */
+    .flow-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .flow-row {
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap; justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .flow-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text); text-align: center;
+      min-width: 120px;
+    }
+
+    .flow-box.lime-border { border-color: var(--lime); }
+    .flow-box.info-border { border-color: var(--info); }
+    .flow-box.warning-border { border-color: var(--warning); }
+    .flow-box.success-border { border-color: var(--success); }
+    .flow-box.hitl { background: var(--lime-dim); color: var(--lime); border-color: var(--lime); }
+
+    .flow-arrow { color: var(--muted); font-size: 1.2rem; }
+    .flow-arrow-down { color: var(--muted); font-size: 1.2rem; text-align: center; margin: 8px 0; }
+
+    /* --- File Ref --- */
+    .file-ref {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 2px 8px;
+      font-size: 0.75rem; color: var(--text-2);
+      font-family: 'JetBrains Mono', monospace; margin: 2px;
+    }
+
+    /* --- Phase Card (special) --- */
+    .phase-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--lime);
+    }
+
+    .phase-card .phase-id {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--lime); font-weight: 700; margin-bottom: 4px;
+    }
+
+    .phase-card .phase-title {
+      font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px;
+    }
+
+    .phase-card .phase-desc {
+      font-size: 0.88rem; color: var(--text-2); line-height: 1.7; margin-bottom: 12px;
+    }
+
+    .phase-hitls { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* --- Scrollbar --- */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* --- Responsive --- */
+    @media (max-width: 1024px) {
+      body { grid-template-columns: 1fr; grid-template-areas: "topbar" "content"; }
+      .sidebar { display: none; }
+      .topbar { left: 0; }
+      .content { margin-left: 0; padding: 24px 16px; }
+      .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .content > h1 { font-size: 1.4rem; }
+      .content h2 { font-size: 1.15rem; }
+      .data-table { font-size: 0.78rem; }
+      .data-table th, .data-table td { padding: 8px 10px; }
+    }
+
+    /* --- Hero --- */
+    .hero-section {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .hero-section h1 {
+      font-size: 2rem; font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .hero-section h1 span { color: var(--lime); }
+
+    .hero-section .hero-sub {
+      font-size: 1.05rem; color: var(--text-2); max-width: 700px; margin: 0 auto 24px;
+    }
+
+    .hero-badges {
+      display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* --- Anchor smooth --- */
+    [id] { scroll-margin-top: calc(var(--topbar-h) + 16px); }
+  </style>
+</head>
+<body>
+
+  <!-- ====== Sidebar ====== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP AI Squad
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="#visao-geral" class="active"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
+
+      <li class="sidebar-section-title">Conceito</li>
+      <li><a href="#ai-first"><span class="nav-icon">&#x2726;</span> Squad Multiagentes de IA</a></li>
+      <li><a href="#como-funciona"><span class="nav-icon">&#x21BB;</span> Como Funciona</a></li>
+      <li><a href="#inputs"><span class="nav-icon">&#x1F4C4;</span> Inputs Obrigatórios</a></li>
+
+      <li class="sidebar-section-title">Fases</li>
+      <li><a href="#fase-01"><span class="nav-icon">01</span> Contexto Estratégico</a></li>
+      <li><a href="#fase-02"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="#fase-03"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="#fase-04"><span class="nav-icon">04</span> Operação</a></li>
+
+      <li class="sidebar-section-title">Arquitetura</li>
+      <li><a href="#orquestrador"><span class="nav-icon">&#x1F3AF;</span> Orquestrador</a></li>
+      <li><a href="#agentes"><span class="nav-icon">&#x1F916;</span> Agentes</a></li>
+      <li><a href="#subagentes"><span class="nav-icon">&#x1F9E9;</span> Subagentes e Skills</a></li>
+      <li><a href="#hitl"><span class="nav-icon">&#x1F9D1;</span> HITL Gates</a></li>
+      <li><a href="#contratos"><span class="nav-icon">&#x1F4E6;</span> Contratos</a></li>
+
+      <li class="sidebar-section-title">Execução</li>
+      <li><a href="#como-executar"><span class="nav-icon">&#x25B6;</span> Como Executar</a></li>
+      <li><a href="#estrutura"><span class="nav-icon">&#x1F4C1;</span> Estrutura de Pastas</a></li>
+      <li><a href="#outputs"><span class="nav-icon">&#x1F4E4;</span> Outputs Gerados</a></li>
+
+      <li class="sidebar-section-title">Vers&atilde;o</li>
+      <li><a href="#changelog"><span class="nav-icon">&#x1F4DD;</span> Changelog v3.3</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      ECP AI Multi-Agent Squad v3.3
+    </div>
+  </aside>
+
+  <!-- ====== Topbar ====== -->
+  <header class="topbar">
+    <div class="topbar-title">ECP AI Multi-Agent Squad &mdash; Documentação</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> v3.3</span>
+      <span>10 Agentes &bull; 38 Subagentes &bull; 138 Skills &bull; 4 Fases &bull; 12 HITLs</span>
+    </div>
+  </header>
+
+  <!-- ====== Content ====== -->
+  <main class="content">
+
+    <!-- Hero -->
+    <section class="hero-section" id="visao-geral">
+      <h1>ECP AI <span>Multi-Agent Squad</span></h1>
+      <p class="hero-sub">
+        Squad de agentes de IA para desenvolvimento de produto completo &mdash; do contexto estratégico ao deploy em produção &mdash; operado com Human in the Loop (HITL).
+      </p>
+      <div class="hero-badges">
+        <span class="badge lime">Multiagentes de IA</span>
+        <span class="badge info">10 Agentes</span>
+        <span class="badge approved">12 HITL Gates</span>
+        <span class="badge pending">4 Fases</span>
+        <span class="badge neutral">38 Subagentes</span>
+        <span class="badge neutral">138 Skills</span>
+        <span class="badge neutral">Claude Code</span>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">10</div>
+        <div class="stat-label">Agentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">38</div>
+        <div class="stat-label">Subagentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">138</div>
+        <div class="stat-label">Skills</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Fases</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">HITL Gates</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Inputs Obrigatórios</div>
+      </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- SQUAD MULTIAGENTES -->
+    <!-- ================================================================== -->
+    <h2 id="ai-first">Squad Multiagentes de IA &mdash; O Conceito</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Filosofia</div>
+        <div class="artifact-title">Squad Multiagentes de IA com Human in the Loop</div>
+        <div class="artifact-body">
+          <p>O ECP AI Multi-Agent Squad é um <strong>squad de produto completo operado por agentes de IA</strong>, onde cada papel tradicional de um time de produto (PM, Designer, PO, Architect, Devs, QA, Ops) é executado por um agente especializado.</p>
+          <p>O humano atua como <strong>decisor estratégico</strong> em 12 checkpoints (HITL gates) ao longo do ciclo, aprovando, rejeitando ou redirecionando o trabalho dos agentes. Nenhum agente avança sem aprovação humana.</p>
+          <p>O squad recebe <strong>3 arquivos markdown + 1 repositório destino</strong> e gera todos os artefatos de produto: OKRs, backlog, protótipos, código, testes, CI/CD, dashboard e documentação.</p>
+        </div>
+      </div>
+
+      <h3>Princípios</h3>
+      <div class="three-col">
+        <div class="artifact-card">
+          <div class="artifact-title" style="font-size: 0.95rem;">Delegação, não substituição</div>
+          <div class="artifact-body">
+            <p>O orquestrador coordena e delega. Cada agente executa sua especialidade. O humano decide.</p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-title" style="font-size: 0.95rem;">Rastreabilidade total</div>
+          <div class="artifact-body">
+            <p>Todo output é registrado em JSON. Toda decisão humana é documentada. Todo feedback é transportado.</p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-title" style="font-size: 0.95rem;">Skills atômicas e idempotentes</div>
+          <div class="artifact-body">
+            <p>Cada skill executa uma tarefa única e pode ser re-executada sem efeitos colaterais.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- COMO FUNCIONA -->
+    <!-- ================================================================== -->
+    <h2 id="como-funciona">Como Funciona</h2>
+    <section class="section">
+      <div class="flow-container">
+        <div class="flow-row">
+          <div class="flow-box lime-border">3 Specs<br><small style="color:var(--muted);">briefing + tech + design</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box info-border">Pre-Flight Check<br><small style="color:var(--muted);">validate-inputs.mjs</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box warning-border">Orquestrador<br><small style="color:var(--muted);">coordena fases</small></div>
+        </div>
+        <div class="flow-arrow-down">&darr;</div>
+        <div class="flow-row">
+          <div class="flow-box" style="border-color: var(--info);">Fase 01<br><small style="color:var(--muted);">Estratégia</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box hitl">HITL #1</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box" style="border-color: var(--warning);">Fase 02<br><small style="color:var(--muted);">Discovery</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box hitl">HITL #2-6</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box" style="border-color: var(--success);">Fase 03<br><small style="color:var(--muted);">Delivery</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box hitl">HITL #7-10</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box" style="border-color: var(--danger);">Fase 04<br><small style="color:var(--muted);">Operação</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box hitl">HITL #11-12</div>
+        </div>
+        <div class="flow-arrow-down">&darr;</div>
+        <div class="flow-row">
+          <div class="flow-box lime-border" style="min-width: 300px;">
+            Produto completo + docs/ + dashboard
+          </div>
+        </div>
+      </div>
+
+      <h3>Fluxo do Orquestrador</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 0</div>
+          <div class="timeline-title">Pre-Flight Check</div>
+          <div class="timeline-desc">Validação programática (<code>validate-inputs.mjs</code>) + validação comportamental dos 3 specs. Se falhar, para e informa.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 1</div>
+          <div class="timeline-title">Ler context.json</div>
+          <div class="timeline-desc">Identificar fase e agente atual, carregar outputs anteriores.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 2</div>
+          <div class="timeline-title">Acionar Agente</div>
+          <div class="timeline-desc">Preparar input com contexto completo + path do repositório destino. Chamar agente via Task.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 3</div>
+          <div class="timeline-title">Salvar Output</div>
+          <div class="timeline-desc">Gravar output do agente em <code>{REPO_DESTINO}/{fase}/</code>.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 4</div>
+          <div class="timeline-title">Apresentar HITL</div>
+          <div class="timeline-desc">Apresentar output ao humano no checkpoint. Aguardar decisão.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 5</div>
+          <div class="timeline-title">Avançar ou Retornar</div>
+          <div class="timeline-desc">Se aprovado, avançar para próximo agente. Se rejeitado, transportar feedback e retornar ao agente.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- INPUTS OBRIGATÓRIOS -->
+    <!-- ================================================================== -->
+    <h2 id="inputs">Inputs Obrigatórios</h2>
+    <section class="section">
+      <p>O squad <strong>não inicia</strong> sem os 4 inputs abaixo validados. Os 3 arquivos markdown devem existir na raiz do repositório destino.</p>
+
+      <div class="three-col" style="margin-top: 16px;">
+        <div class="artifact-card highlighted" style="border-left-color: var(--info);">
+          <div class="artifact-label">Input 1</div>
+          <div class="artifact-title">product_briefing_spec.md</div>
+          <div class="artifact-body">
+            <p><strong>O QUE construir</strong> &mdash; escopo funcional, regras de negócio, público-alvo e restrições.</p>
+            <p style="margin-top:8px;"><strong>Seções obrigatórias:</strong></p>
+            <ul>
+              <li>Produto</li>
+              <li>Problema</li>
+              <li>Público-alvo</li>
+              <li>Contexto de negócio</li>
+              <li>Funcionalidades principais</li>
+              <li>Regras de negócio</li>
+              <li>Restrições</li>
+            </ul>
+          </div>
+          <div class="artifact-meta">
+            <span class="badge info">Fases 01 e 02</span>
+          </div>
+        </div>
+
+        <div class="artifact-card highlighted" style="border-left-color: var(--success);">
+          <div class="artifact-label">Input 2</div>
+          <div class="artifact-title">tech_spec.md</div>
+          <div class="artifact-body">
+            <p><strong>COMO construir</strong> &mdash; stack tecnológica, arquitetura, padrões e regras invioláveis.</p>
+            <p style="margin-top:8px;"><strong>Seções obrigatórias:</strong></p>
+            <ul>
+              <li>Stack tecnológica</li>
+              <li>Arquitetura</li>
+              <li>Regras invioláveis de código</li>
+              <li>Padrões de projeto</li>
+              <li>Deploy e infraestrutura</li>
+              <li>Testes</li>
+            </ul>
+          </div>
+          <div class="artifact-meta">
+            <span class="badge approved">Fases 03 e 04</span>
+          </div>
+        </div>
+
+        <div class="artifact-card highlighted" style="border-left-color: var(--warning);">
+          <div class="artifact-label">Input 3</div>
+          <div class="artifact-title">design_spec.md</div>
+          <div class="artifact-body">
+            <p><strong>COM QUE CARA</strong> &mdash; paleta, tipografia, tokens, componentes e diretrizes de design.</p>
+            <p style="margin-top:8px;"><strong>Seções obrigatórias:</strong></p>
+            <ul>
+              <li>Paleta de cores</li>
+              <li>Tipografia</li>
+              <li>Espaçamento e grid</li>
+              <li>Componentes</li>
+              <li>Tema / Modo</li>
+              <li>Regra de ouro</li>
+            </ul>
+          </div>
+          <div class="artifact-meta">
+            <span class="badge pending">Fases 02 e 03</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="margin-top: 16px;">
+        <div class="artifact-label">Input 4</div>
+        <div class="artifact-title">Repositório Destino</div>
+        <div class="artifact-body">
+          <p><strong>ONDE gravar</strong> &mdash; caminho absoluto ou relativo da pasta onde todos os outputs do squad serão gravados.</p>
+          <pre><code>{REPO_DESTINO}/
+├── product_briefing_spec.md
+├── tech_spec.md
+└── design_spec.md</code></pre>
+        </div>
+      </div>
+
+      <h3>Validação de Dupla Camada</h3>
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Camada 1 &mdash; Programática</div>
+          <div class="artifact-title">validate-inputs.mjs</div>
+          <div class="artifact-body">
+            <p>Script Node.js cross-platform que verifica existência dos arquivos e presença de seções obrigatórias.</p>
+            <pre><code>node validate-inputs.mjs {REPO_DESTINO}</code></pre>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Camada 2 &mdash; Comportamental</div>
+          <div class="artifact-title">Validação pelo Orquestrador</div>
+          <div class="artifact-body">
+            <p>O orquestrador lê os 3 arquivos e verifica se possuem as seções obrigatórias definidas em <code>shared/schemas/input-contracts.md</code>.</p>
+            <p>Gera relatório JSON de validação.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- FASES -->
+    <!-- ================================================================== -->
+    <h2 id="fase-01">Fase 01 &mdash; Contexto Estratégico</h2>
+    <section class="section">
+      <div class="phase-card">
+        <div class="phase-id">Fase 01</div>
+        <div class="phase-title">Contexto Estratégico</div>
+        <div class="phase-desc">
+          Definir o Objetivo, os Key Results e as Oportunidades Macro (Dores, Necessidades e Desejos) que compõem o topo da Opportunity Solution Tree (OST) de Teresa Torres.
+        </div>
+        <div class="phase-hitls">
+          <span class="badge lime">HITL #1</span>
+          <span class="badge info">Product Manager</span>
+        </div>
+      </div>
+
+      <h4>O que esta fase produz</h4>
+      <ul>
+        <li>Objetivo claro e inspirador para o produto</li>
+        <li>Key Results mensuráveis e alcançáveis ligados ao objetivo</li>
+        <li>Oportunidades Macro por KR (Dores, Necessidades e Desejos dos clientes)</li>
+        <li>Leading indicators para cada KR</li>
+        <li>Princípios de produto</li>
+        <li>North Star Metric</li>
+      </ul>
+
+      <h4>O que NÃO deve aparecer</h4>
+      <ul>
+        <li style="color: var(--danger);">Features ou funcionalidades</li>
+        <li style="color: var(--danger);">Soluções técnicas</li>
+        <li style="color: var(--danger);">Wireframes ou referências visuais</li>
+        <li style="color: var(--danger);">Histórias de usuário</li>
+      </ul>
+
+      <h4>HITL #1 &mdash; Perguntas ao Humano</h4>
+      <div class="artifact-card">
+        <div class="artifact-body">
+          <ol>
+            <li>O Objetivo é inspirador e orienta decisões de produto?</li>
+            <li>Os KRs são mensuráveis e alcançáveis no prazo definido?</li>
+            <li>As Oportunidades Macro estão ligadas aos KRs corretos?</li>
+            <li>São oportunidades reais (dores/necessidades/desejos) ou soluções disfarçadas?</li>
+            <li>O escopo está adequado para um ciclo de discovery?</li>
+          </ol>
+        </div>
+      </div>
+
+      <p><strong>Input:</strong> <code>product_briefing_spec.md</code> &nbsp;&bull;&nbsp; <strong>Output:</strong> <code>{REPO}/01-strategic-context/</code></p>
+    </section>
+
+    <h2 id="fase-02">Fase 02 &mdash; Product Discovery</h2>
+    <section class="section">
+      <div class="phase-card" style="border-left-color: var(--warning);">
+        <div class="phase-id" style="color: var(--warning);">Fase 02</div>
+        <div class="phase-title">Product Discovery</div>
+        <div class="phase-desc">
+          Priorizar oportunidades, gerar hipóteses de solução, validar com protótipos navegáveis, estruturar o backlog em SAFe e avaliar os 4 riscos de Cagan antes de comprometer engenharia.
+        </div>
+        <div class="phase-hitls">
+          <span class="badge lime">HITL #2</span>
+          <span class="badge lime">HITL #3</span>
+          <span class="badge lime">HITL #4</span>
+          <span class="badge lime">HITL #5</span>
+          <span class="badge lime">HITL #6</span>
+          <span class="badge info">PO + Designer</span>
+        </div>
+      </div>
+
+      <h4>Sequência de 6 Etapas</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Etapa</th><th>Agente</th><th>Ação</th><th>HITL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Priorização</strong></td>
+            <td>Product Owner</td>
+            <td>Recebe a OST da Fase 01 e prioriza oportunidades por impacto nos KRs</td>
+            <td><span class="badge lime">#2</span></td>
+          </tr>
+          <tr>
+            <td><strong>2. Ideação</strong></td>
+            <td>Product Designer</td>
+            <td>Gera hipóteses de solução para as oportunidades priorizadas</td>
+            <td><span class="badge lime">#3</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. Protótipo Low-Fi</strong></td>
+            <td>Product Designer</td>
+            <td>Wireframe HTML único &mdash; mitiga Risco de Valor para o Cliente</td>
+            <td><span class="badge lime">#4</span></td>
+          </tr>
+          <tr>
+            <td><strong>4. Protótipo High-Fi</strong></td>
+            <td>Product Designer</td>
+            <td>Protótipo completo com identidade visual &mdash; mitiga Risco de Usabilidade + Valor</td>
+            <td><span class="badge lime">#5</span></td>
+          </tr>
+          <tr>
+            <td><strong>5. Estruturação</strong></td>
+            <td>Product Owner</td>
+            <td>Transforma hipóteses aprovadas em Épicos, Features e Histórias (SAFe)</td>
+            <td rowspan="2"><span class="badge lime">#6</span></td>
+          </tr>
+          <tr>
+            <td><strong>6. Avaliação 4 Riscos</strong></td>
+            <td>PM + Designer + PO</td>
+            <td>Avaliação coletiva: Valor (cliente), Valor (negócio), Usabilidade, Viabilidade</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>4 Riscos de Cagan</h4>
+      <div class="four-col">
+        <div class="artifact-card" style="border-top: 3px solid var(--danger); text-align: center;">
+          <div class="artifact-title" style="font-size: 0.9rem; color: var(--danger);">Valor para o Cliente</div>
+          <div class="artifact-body"><p>Os usuários querem isso?</p></div>
+          <div class="artifact-meta" style="justify-content: center;"><span class="badge danger">PM</span></div>
+        </div>
+        <div class="artifact-card" style="border-top: 3px solid var(--warning); text-align: center;">
+          <div class="artifact-title" style="font-size: 0.9rem; color: var(--warning);">Valor para o Negócio</div>
+          <div class="artifact-body"><p>Move os KRs?</p></div>
+          <div class="artifact-meta" style="justify-content: center;"><span class="badge pending">PM</span></div>
+        </div>
+        <div class="artifact-card" style="border-top: 3px solid var(--info); text-align: center;">
+          <div class="artifact-title" style="font-size: 0.9rem; color: var(--info);">Usabilidade</div>
+          <div class="artifact-body"><p>Os usuários conseguem usar?</p></div>
+          <div class="artifact-meta" style="justify-content: center;"><span class="badge info">Designer</span></div>
+        </div>
+        <div class="artifact-card" style="border-top: 3px solid var(--success); text-align: center;">
+          <div class="artifact-title" style="font-size: 0.9rem; color: var(--success);">Viabilidade Técnica</div>
+          <div class="artifact-body"><p>Conseguimos construir?</p></div>
+          <div class="artifact-meta" style="justify-content: center;"><span class="badge approved">Architect</span></div>
+        </div>
+      </div>
+
+      <p><strong>Inputs:</strong> <code>product_briefing_spec.md</code> + <code>design_spec.md</code> &nbsp;&bull;&nbsp; <strong>Output:</strong> <code>{REPO}/02-product-discovery/</code></p>
+    </section>
+
+    <h2 id="fase-03">Fase 03 &mdash; Product Delivery</h2>
+    <section class="section">
+      <div class="phase-card" style="border-left-color: var(--success);">
+        <div class="phase-id" style="color: var(--success);">Fase 03</div>
+        <div class="phase-title">Product Delivery</div>
+        <div class="phase-desc">
+          Arquitetar, construir e testar a solução definida no Discovery, garantindo que a implementação reflete fielmente o que foi aprovado nos protótipos e no backlog.
+        </div>
+        <div class="phase-hitls">
+          <span class="badge lime">HITL #7</span>
+          <span class="badge lime">HITL #8</span>
+          <span class="badge lime">HITL #9</span>
+          <span class="badge lime">HITL #10</span>
+          <span class="badge info">Architect + Back + AI Engineer + Front + QA</span>
+        </div>
+      </div>
+
+      <h4>Sequência de 5 Etapas</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Etapa</th><th>Agente</th><th>Ação</th><th>HITL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Arquitetura</strong></td>
+            <td>Software Architect</td>
+            <td>Bounded contexts, contratos de API, DB schema, ADRs, repo scaffolding</td>
+            <td><span class="badge lime">#7</span></td>
+          </tr>
+          <tr>
+            <td><strong>2. Back End</strong></td>
+            <td>Back End Developer</td>
+            <td>Endpoints, persistência, services, autenticação, testes</td>
+            <td><span class="badge lime">#8</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. AI Engineer</strong></td>
+            <td>AI Engineer <span class="badge info" style="font-size:0.6rem; vertical-align:middle;">&parallel; Front End</span></td>
+            <td>Chatbots, agentes autônomos, RAG pipelines, guardrails de IA (Claude API)</td>
+            <td><span class="badge lime">#8.5</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. Front End</strong></td>
+            <td>Front End Developer <span class="badge info" style="font-size:0.6rem; vertical-align:middle;">&parallel; AI Engineer</span></td>
+            <td>Componentes, páginas, integração com API e IA, fidelidade ao design_spec</td>
+            <td><span class="badge lime">#9</span></td>
+          </tr>
+          <tr>
+            <td><strong>4. QA</strong></td>
+            <td>QA</td>
+            <td>Shift-left, exploratório, automação, cenários adversariais de IA, quality gates</td>
+            <td><span class="badge lime">#10</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Inputs:</strong> <code>tech_spec.md</code> + <code>design_spec.md</code> + backlog aprovado &nbsp;&bull;&nbsp; <strong>Output:</strong> <code>{REPO}/03-product-delivery/</code></p>
+    </section>
+
+    <h2 id="fase-04">Fase 04 &mdash; Operação de Produto</h2>
+    <section class="section">
+      <div class="phase-card" style="border-left-color: var(--danger);">
+        <div class="phase-id" style="color: var(--danger);">Fase 04</div>
+        <div class="phase-title">Operação de Produto</div>
+        <div class="phase-desc">
+          Operar a aplicação com CI/CD, GMUD, deploy, observabilidade, SLOs, DORA metrics, dashboard operacional, A/B testing e retroalimentação do ciclo com aprendizados reais.
+        </div>
+        <div class="phase-hitls">
+          <span class="badge lime">HITL #11</span>
+          <span class="badge lime">HITL #12</span>
+          <span class="badge info">Operations + PM</span>
+        </div>
+      </div>
+
+      <h4>Sequência</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Etapa</th><th>Agente</th><th>Ação</th><th>HITL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Infraestrutura</strong></td>
+            <td>Operations</td>
+            <td>CI/CD pipeline, GMUD, guia de instalação, SLOs, DORA targets</td>
+            <td><span class="badge lime">#11</span></td>
+          </tr>
+          <tr>
+            <td><strong>2. Dashboard + Docs</strong></td>
+            <td>Operations</td>
+            <td>Dashboard operacional (4 seções) + site de documentação (todas as fases)</td>
+            <td><span class="badge lime">#12</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Retroalimentação &mdash; Decisões do HITL #12</h4>
+      <table class="data-table">
+        <thead><tr><th>Resultado</th><th>Ação</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge approved">Variação vence e move KRs</span></td>
+            <td>Rollout completo. PM atualiza baseline. Próximo ciclo.</td>
+          </tr>
+          <tr>
+            <td><span class="badge pending">Nenhuma variação move KRs</span></td>
+            <td>Retornar à Fase 02 &mdash; revisitar oportunidades e hipóteses.</td>
+          </tr>
+          <tr>
+            <td><span class="badge danger">KRs pioram</span></td>
+            <td>Retornar à Fase 01 &mdash; revisar OKRs e OST.</td>
+          </tr>
+          <tr>
+            <td><span class="badge info">Bug técnico</span></td>
+            <td>Retornar à Fase 03 &mdash; corrigir e nova rodada de A/B.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Input:</strong> <code>tech_spec.md</code> &nbsp;&bull;&nbsp; <strong>Output:</strong> <code>{REPO}/04-product-operation/</code> + <code>{REPO}/docs/</code></p>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- ORQUESTRADOR -->
+    <!-- ================================================================== -->
+    <h2 id="orquestrador">Orquestrador</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Agente Central</div>
+        <div class="artifact-title">Orquestrador do Squad</div>
+        <div class="artifact-body">
+          <p>O orquestrador <strong>nunca executa tarefas diretamente</strong>. Sua função é coordenar, delegar, gerenciar HITLs e garantir o fluxo entre as 4 fases.</p>
+        </div>
+      </div>
+
+      <h4>Responsabilidades</h4>
+      <ol>
+        <li>Receber a demanda e identificar em qual fase o trabalho está</li>
+        <li>Acionar o agente correto com contexto completo</li>
+        <li>Apresentar outputs ao humano nos checkpoints HITL</li>
+        <li>Transportar feedback humano para o agente correto</li>
+        <li>Gerenciar retroalimentação quando A/B indica necessidade</li>
+        <li>Manter <code>/shared/memory/context.json</code> atualizado</li>
+      </ol>
+
+      <h4>Regras do Orquestrador</h4>
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-title" style="color: var(--danger); font-size: 0.9rem;">Proibido</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Executar uma skill diretamente</li>
+              <li>Avançar sem aprovação HITL</li>
+              <li>Assumir &mdash; sempre transportar contexto completo</li>
+              <li>Iniciar sem os 4 inputs validados</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-title" style="color: var(--success); font-size: 0.9rem;">Obrigatório</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Incluir outputs anteriores aprovados no contexto do próximo agente</li>
+              <li>Documentar o feedback do humano antes de retornar ao agente</li>
+              <li>Em caso de erro, tentar 1x com contexto adicional antes de escalar</li>
+              <li>Informar ao agente o caminho do <code>{REPO_DESTINO}</code></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-meta" style="margin-top: 12px;">
+        <span class="file-ref">agents/orchestrator/CLAUDE.md</span>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- AGENTES -->
+    <!-- ================================================================== -->
+    <h2 id="agentes">Agentes do Squad</h2>
+    <section class="section">
+      <p>10 agentes especializados (1 orquestrador + 9 operacionais), cada um com subagentes e skills atômicas. Total: 38 grupos de subagentes e 138 skills.</p>
+
+      <div class="four-col" style="margin-top: 16px;">
+        <div class="agent-card" style="border: 1px solid var(--lime); grid-column: 1 / -1;">
+          <span class="agent-emoji">&#x1F3AF;</span>
+          <div class="agent-name">Orchestrator</div>
+          <div class="agent-role">Coordenação, HITL gates, transporte de contexto e gerenciamento de fases</div>
+          <div class="agent-phase" style="color: var(--lime);">Todas as Fases</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Sem subagentes &mdash; coordena os 9 agentes operacionais</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+          <div class="agent-name">Product Manager</div>
+          <div class="agent-role">Estratégia, OKRs, OST, métricas e A/B</div>
+          <div class="agent-phase" style="color: var(--info);">Fase 01 + Fase 04</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Market Research</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Product Vision</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Product Strategy</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Metrics</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F3A8;</span>
+          <div class="agent-name">Product Designer</div>
+          <div class="agent-role">Research, ideação, low-fi e high-fi</div>
+          <div class="agent-phase" style="color: var(--warning);">Fase 02</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Customer Research</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> UX</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> UI</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F4CB;</span>
+          <div class="agent-name">Product Owner</div>
+          <div class="agent-role">Priorização, épicos, features e histórias</div>
+          <div class="agent-phase" style="color: var(--warning);">Fase 02</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Epic</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Feature</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Story</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F3DB;</span>
+          <div class="agent-name">Software Architect</div>
+          <div class="agent-role">DDD, contratos, ADRs e repo scaffolding</div>
+          <div class="agent-phase" style="color: var(--success);">Fase 03</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Domain Design</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> System Design</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Evaluation</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Enablement</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F527;</span>
+          <div class="agent-name">Back End Developer</div>
+          <div class="agent-role">API, services, persistência e testes</div>
+          <div class="agent-phase" style="color: var(--success);">Fase 03</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> API</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Persistence</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Quality</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Living Docs</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F916;</span>
+          <div class="agent-name">AI Engineer</div>
+          <div class="agent-role">Chatbots, agentes autônomos, RAG e guardrails de IA</div>
+          <div class="agent-phase" style="color: var(--success);">Fase 03 (paralelo com Front End)</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Chatbot Builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Agent Builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> RAG Pipeline</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> AI Guardrails</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F4BB;</span>
+          <div class="agent-name">Front End Developer</div>
+          <div class="agent-role">Componentes, páginas, integração e performance</div>
+          <div class="agent-phase" style="color: var(--success);">Fase 03</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Implementation</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Quality</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Performance</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Living Docs</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x1F9EA;</span>
+          <div class="agent-name">QA</div>
+          <div class="agent-role">Shift-left, exploratório, automação e métricas</div>
+          <div class="agent-phase" style="color: var(--success);">Fase 03</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Shift-Left</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Exploratory</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Automation</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Quality Intelligence</div>
+          </div>
+        </div>
+
+        <div class="agent-card">
+          <span class="agent-emoji">&#x2699;</span>
+          <div class="agent-name">Operations</div>
+          <div class="agent-role">CI/CD, GMUD, infra, SRE, dashboard e A/B</div>
+          <div class="agent-phase" style="color: var(--danger);">Fase 04</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Flow</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Infrastructure</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Reliability</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> DevSecOps</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Dashboard</div>
+            <div class="sub-item"><span class="sub-icon">&#x25B8;</span> Change Manager</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SUBAGENTES E SKILLS -->
+    <!-- ================================================================== -->
+    <h2 id="subagentes">Subagentes e Skills</h2>
+    <section class="section">
+      <p>Cada agente possui subagentes especializados que executam skills atômicas. Abaixo o catálogo completo.</p>
+
+      <h3>Product Manager &mdash; Subagentes e Skills</h3>
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Market Research</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> competitor-analysis</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> customer-segmentation</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> market-sizing</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> trend-scanning</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Product Vision</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> north-star-definer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> opportunity-brief-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> product-principles</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> vision-writer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Product Strategy</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> assumption-mapper</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> four-risks-assessor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> okr-facilitator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> outcome-roadmap</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Metrics</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> ab-test-analyzer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> experiment-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> leading-lagging-indicators</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> report-generator</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Product Designer &mdash; Subagentes e Skills</h3>
+      <div class="three-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Customer Research</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> assumption-tester</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> continuous-interview-partner</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> ethnographic-researcher</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> insight-synthesizer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">UX</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> ideation-facilitator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> low-fi-prototyper</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> high-fi-prototyper</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> solution-sketcher</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> information-architecture</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> interaction-design</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> usability-evaluator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> accessibility-checker</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">UI</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> component-spec</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> design-tokens</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> responsive-guidelines</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> visual-consistency-checker</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Product Owner &mdash; Subagentes e Skills</h3>
+      <div class="three-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Epic</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> opportunity-prioritizer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> epic-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> enabler-epic-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> opportunity-brief-writer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Feature</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> feature-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> enabler-feature-writer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Story</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> user-story-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> acceptance-criteria-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> story-splitter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> functional-documentation-writer</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Software Architect &mdash; Subagentes e Skills</h3>
+      <div class="four-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Domain Design</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> bounded-context-mapper</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> context-map-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> aggregate-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> class-model-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> ubiquitous-language-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> class-diagram-generator</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">System Design</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> adr-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> api-contract-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> data-modeling</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> evolutionary-architecture</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> repo-scaffolder</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Evaluation</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> build-vs-buy</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> risk-assessment</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> technical-debt-tracker</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> tech-radar</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Enablement</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> architecture-pairing</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> dependency-audit</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> pattern-advisor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> scalability-analysis</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Back End Developer &mdash; Subagentes e Skills</h3>
+      <div class="four-col">
+        <div class="artifact-card">
+          <div class="artifact-label">API</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> api-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> auth-implementer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> contract-enforcer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> error-handler</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Persistence</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> schema-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> migration-manager</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> repository-implementer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> query-optimizer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Quality</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> unit-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> integration-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> api-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> mock-builder</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Living Docs</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> adr-logger</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> api-documenter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> code-commenter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> schema-documenter</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>AI Engineer &mdash; Subagentes e Skills</h3>
+      <div class="four-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Chatbot Builder</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> conversation-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> claude-api-integrator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> context-manager</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> prompt-engineer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Agent Builder</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> mcp-server-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> tool-use-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> agent-orchestrator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> autonomous-workflow</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">RAG Pipeline</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> document-processor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> embedding-pipeline</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> retrieval-optimizer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> grounded-response</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">AI Guardrails</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> prompt-injection-shield</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> data-leakage-preventer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> scope-enforcer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> safety-tester</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Front End Developer &mdash; Subagentes e Skills</h3>
+      <div class="four-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Implementation</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> component-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> design-to-code</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> responsive-implementer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> state-management</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> mobile-identity</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Quality</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> unit-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> integration-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> e2e-script-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> accessibility-implementer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Performance</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> bundle-optimizer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> caching-strategist</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> core-web-vitals-monitor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> rendering-strategist</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Living Docs</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> adr-logger</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> code-commenter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> component-documenter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> readme-writer</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>QA &mdash; Subagentes e Skills</h3>
+      <div class="four-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Shift-Left</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> story-quality-reviewer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> testability-advisor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> three-amigos-facilitator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> risk-identifier</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Exploratory</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> charter-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> session-based-tester</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> heuristic-tester</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> edge-case-finder</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Automation</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> api-test-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> e2e-script-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> performance-tester</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> test-data-builder</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Quality Intelligence</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> quality-metrics</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> bug-reporter</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> postmortem-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> blameless-retrospective</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Operations &mdash; Subagentes e Skills</h3>
+      <div class="three-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Flow</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> pipeline-builder</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> deployment-strategist</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> dora-metrics-tracker</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> feature-flags-manager</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> toil-reducer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> docs-generator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> installation-guide-writer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Infrastructure</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> iac-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> environment-manager</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> capacity-planner</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> finops-optimizer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Reliability</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> slo-sla-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> monitoring-setup</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> incident-commander</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> blameless-postmortem-writer</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">DevSecOps</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> vulnerability-scanner</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> secrets-manager</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> security-pipeline-integrator</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> compliance-as-code</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Dashboard</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> product-metrics-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> sre-metrics-designer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> dashboard-builder</div>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Change Manager</div>
+          <div class="sub-list">
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> gmud-writer</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> risk-assessor</div>
+            <div class="sub-item"><span class="sub-icon">&#x2726;</span> change-approver</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- HITL GATES -->
+    <!-- ================================================================== -->
+    <h2 id="hitl">HITL Gates &mdash; Human in the Loop</h2>
+    <section class="section">
+      <p>12 checkpoints onde o humano avalia, aprova, rejeita ou redireciona o trabalho dos agentes. Nenhum agente avança sem aprovação explícita.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>HITL</th><th>Fase</th><th>Pós-Agente</th><th>Pergunta Central</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge lime">#1</span></td>
+            <td>01</td>
+            <td>Product Manager</td>
+            <td>OKRs corretos? OST sem soluções?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#2</span></td>
+            <td>02</td>
+            <td>PO Priorização</td>
+            <td>Oportunidades certas priorizadas?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#3</span></td>
+            <td>02</td>
+            <td>Designer Ideação</td>
+            <td>Hipóteses aprovadas para prototipar?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#4</span></td>
+            <td>02</td>
+            <td>Designer Low-Fi</td>
+            <td>Conceito validado? Risco de valor mitigado?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#5</span></td>
+            <td>02</td>
+            <td>Designer High-Fi</td>
+            <td>Usabilidade validada? Identidade visual correta?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#6</span></td>
+            <td>02</td>
+            <td>PO + PM + Designer</td>
+            <td>4 riscos aprovados? Pronto para Delivery?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#7</span></td>
+            <td>03</td>
+            <td>Software Architect</td>
+            <td>Arquitetura sólida? Contratos prontos?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#8</span></td>
+            <td>03</td>
+            <td>Back End Developer</td>
+            <td>APIs corretas? Persistência validada?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#8.5</span></td>
+            <td>03</td>
+            <td>AI Engineer</td>
+            <td>Soluções de IA integradas? Guardrails ativos contra prompt injection e vazamento?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#9</span></td>
+            <td>03</td>
+            <td>Front End Developer</td>
+            <td>Front integrado com back e IA? Design fiel ao design_spec?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#10</span></td>
+            <td>03</td>
+            <td>QA</td>
+            <td>Qualidade aprovada? Pronto para operar?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#11</span></td>
+            <td>04</td>
+            <td>Operations</td>
+            <td>Ambiente pronto? Deploy autorizado?</td>
+          </tr>
+          <tr>
+            <td><span class="badge lime">#12</span></td>
+            <td>04</td>
+            <td>A/B Testing</td>
+            <td>Variação vencedora? O que aprendemos?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Decisões possíveis em cada HITL</h4>
+      <div class="three-col">
+        <div class="artifact-card" style="border-top: 3px solid var(--success); text-align: center;">
+          <div class="artifact-title" style="color: var(--success);">Aprovado</div>
+          <div class="artifact-body"><p>Avança para o próximo agente ou fase.</p></div>
+        </div>
+        <div class="artifact-card" style="border-top: 3px solid var(--warning); text-align: center;">
+          <div class="artifact-title" style="color: var(--warning);">Aprovado com ressalvas</div>
+          <div class="artifact-body"><p>Avança com restrições documentadas.</p></div>
+        </div>
+        <div class="artifact-card" style="border-top: 3px solid var(--danger); text-align: center;">
+          <div class="artifact-title" style="color: var(--danger);">Rejeitado</div>
+          <div class="artifact-body"><p>Retorna ao agente com feedback detalhado.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- CONTRATOS -->
+    <!-- ================================================================== -->
+    <h2 id="contratos">Contratos de Comunicação</h2>
+    <section class="section">
+      <p>Todos os agentes se comunicam via JSON padronizado. O orquestrador transporta contexto entre agentes.</p>
+
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Orquestrador &rarr; Agente</div>
+          <div class="artifact-body">
+<pre><code>{
+  "phase": "01-strategic-context",
+  "agent": "product-manager",
+  "mission": "descrição da missão",
+  "context": {},
+  "inputs_from_previous": {},
+  "hitl_feedback": "feedback (se retorno)"
+}</code></pre>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Agente &rarr; Orquestrador</div>
+          <div class="artifact-body">
+<pre><code>{
+  "status": "success | error | partial",
+  "phase": "fase atual",
+  "agent": "nome-do-agente",
+  "subagents_used": [],
+  "skills_used": [],
+  "deliverables": {},
+  "open_questions": [],
+  "next_hitl": 1
+}</code></pre>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Aprovação HITL</div>
+          <div class="artifact-body">
+<pre><code>{
+  "hitl": 1,
+  "decision": "approved | rejected",
+  "feedback": "comentários do humano",
+  "next_agent": "próximo agente"
+}</code></pre>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Erro Padrão</div>
+          <div class="artifact-body">
+<pre><code>{
+  "status": "error",
+  "agent": "nome-do-agente",
+  "error_code": "INVALID_INPUT",
+  "message": "descrição",
+  "retry_suggested": true
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-meta" style="margin-top: 12px;">
+        <span class="file-ref">shared/schemas/agent-contract.md</span>
+        <span class="file-ref">shared/schemas/input-contracts.md</span>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- COMO EXECUTAR -->
+    <!-- ================================================================== -->
+    <h2 id="como-executar">Como Executar</h2>
+    <section class="section">
+
+      <h3>Pré-Requisitos</h3>
+      <ul>
+        <li><strong>Claude Code</strong> instalado e configurado</li>
+        <li><strong>Node.js 20+</strong> (para o script de validação)</li>
+        <li>Os 3 arquivos markdown criados no repositório destino</li>
+      </ul>
+
+      <h3>Passo a Passo</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 1</div>
+          <div class="timeline-title">Preparar os 3 specs no repositório destino</div>
+          <div class="timeline-desc">
+            Criar <code>product_briefing_spec.md</code>, <code>tech_spec.md</code> e <code>design_spec.md</code> na raiz do repositório destino seguindo o template em <code>shared/schemas/input-contracts.md</code>.
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 2</div>
+          <div class="timeline-title">Validar inputs</div>
+          <div class="timeline-desc">
+<pre><code>node validate-inputs.mjs /caminho/do/repo-destino</code></pre>
+            Se retornar exit code 1, corrigir os erros antes de prosseguir.
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 3</div>
+          <div class="timeline-title">Abrir o Claude Code no diretório do squad</div>
+          <div class="timeline-desc">
+<pre><code>cd ecp-ai-multi-agent-squad
+claude</code></pre>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 4</div>
+          <div class="timeline-title">Iniciar a Fase 01</div>
+          <div class="timeline-desc">
+            Digitar no Claude Code:
+<pre><code>Inicie a Fase 01 — Contexto Estratégico.
+Repositório destino: /caminho/do/repo-destino</code></pre>
+            O orquestrador vai rodar o pre-flight check, apresentar o relatório de validação e, se aprovado, acionar o Product Manager Agent.
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 5</div>
+          <div class="timeline-title">Avaliar cada HITL</div>
+          <div class="timeline-desc">
+            Em cada checkpoint, o orquestrador apresenta o output do agente. Você avalia e responde:
+            <ul style="margin-top: 8px;">
+              <li><code>aprovado</code> &mdash; avançar para o próximo agente</li>
+              <li><code>aprovado com ressalvas</code> &mdash; avançar com restrições</li>
+              <li><code>rejeitado</code> + feedback &mdash; retornar ao agente com instruções</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Passo 6</div>
+          <div class="timeline-title">Ciclo completo</div>
+          <div class="timeline-desc">
+            Após o HITL #12, o ciclo está completo. O repositório destino conterá todos os artefatos das 4 fases, o site de documentação em <code>docs/</code> e o dashboard operacional.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- ESTRUTURA -->
+    <!-- ================================================================== -->
+    <h2 id="estrutura">Estrutura de Pastas do Squad</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-body">
+<pre><code>ecp-ai-multi-agent-squad/
+├── CLAUDE.md                       # Contrato de entrada + regras globais
+├── validate-inputs.mjs             # Pre-flight check cross-platform (Node.js)
+├── README.md
+├── agents/
+│   ├── orchestrator/               # Coordenação e HITL
+│   │   └── CLAUDE.md
+│   ├── product-manager/            # Estratégia e métricas
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── market-research/    (4 skills)  competitor-analysis, customer-segmentation, market-sizing, trend-scanning
+│   │       ├── product-vision/     (4 skills)  vision-writer, north-star-definer, product-principles, opportunity-brief-writer
+│   │       ├── product-strategy/   (4 skills)  okr-facilitator, four-risks-assessor, assumption-mapper, outcome-roadmap
+│   │       └── metrics/            (4 skills)  experiment-designer, leading-lagging-indicators, ab-test-analyzer, report-generator
+│   ├── product-designer/           # Research, ideação e protótipos
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── customer-research/  (4 skills)  continuous-interview-partner, ethnographic-researcher, assumption-tester, insight-synthesizer
+│   │       ├── ux/                 (8 skills)  low-fi-prototyper, high-fi-prototyper, ideation-facilitator, solution-sketcher, information-architecture, interaction-design, accessibility-checker, usability-evaluator
+│   │       └── ui/                 (4 skills)  component-spec, design-tokens, responsive-guidelines, visual-consistency-checker
+│   ├── product-owner/              # Priorização e estruturação
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── epic/               (4 skills)  epic-writer, enabler-epic-writer, opportunity-brief-writer, opportunity-prioritizer
+│   │       ├── feature/            (2 skills)  feature-writer, enabler-feature-writer
+│   │       └── story/              (4 skills)  user-story-writer, acceptance-criteria-writer, story-splitter, functional-documentation-writer
+│   ├── software-architect/         # Domínio e arquitetura
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── domain-design/      (6 skills)  bounded-context-mapper, aggregate-designer, class-model-designer, ubiquitous-language-builder, context-map-writer, class-diagram-generator
+│   │       ├── system-design/      (5 skills)  adr-writer, api-contract-designer, data-modeling, evolutionary-architecture, repo-scaffolder
+│   │       ├── evaluation/         (4 skills)  build-vs-buy, risk-assessment, technical-debt-tracker, tech-radar
+│   │       └── enablement/         (4 skills)  architecture-pairing, dependency-audit, pattern-advisor, scalability-analysis
+│   ├── backend-developer/          # API e persistência
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── api/                (4 skills)  api-builder, auth-implementer, contract-enforcer, error-handler
+│   │       ├── persistence/        (4 skills)  schema-builder, repository-implementer, migration-manager, query-optimizer
+│   │       ├── quality/            (4 skills)  unit-test-writer, api-test-writer, integration-test-writer, mock-builder
+│   │       └── living-docs/        (4 skills)  code-commenter, api-documenter, schema-documenter, adr-logger
+│   ├── ai-engineer/                # Chatbots, agentes IA, RAG e guardrails
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── chatbot-builder/    (4 skills)  conversation-designer, claude-api-integrator, context-manager, prompt-engineer
+│   │       ├── agent-builder/      (4 skills)  mcp-server-builder, tool-use-designer, agent-orchestrator, autonomous-workflow
+│   │       ├── rag-pipeline/       (4 skills)  document-processor, embedding-pipeline, retrieval-optimizer, grounded-response
+│   │       └── ai-guardrails/      (4 skills)  prompt-injection-shield, data-leakage-preventer, scope-enforcer, safety-tester
+│   ├── frontend-developer/         # Interface e integração
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── implementation/     (5 skills)  component-builder, design-to-code, responsive-implementer, state-management, mobile-identity
+│   │       ├── quality/            (4 skills)  unit-test-writer, integration-test-writer, e2e-script-writer, accessibility-implementer
+│   │       ├── performance/        (4 skills)  core-web-vitals-monitor, rendering-strategist, bundle-optimizer, caching-strategist
+│   │       └── living-docs/        (4 skills)  code-commenter, component-documenter, adr-logger, readme-writer
+│   ├── qa/                         # Qualidade e testes
+│   │   ├── CLAUDE.md
+│   │   └── subagents/
+│   │       ├── shift-left/         (4 skills)  story-quality-reviewer, testability-advisor, risk-identifier, three-amigos-facilitator
+│   │       ├── exploratory/        (4 skills)  charter-designer, session-based-tester, heuristic-tester, edge-case-finder
+│   │       ├── automation/         (4 skills)  api-test-writer, e2e-script-writer, test-data-builder, performance-tester
+│   │       └── quality-intelligence/ (4 skills)  bug-reporter, postmortem-writer, blameless-retrospective, quality-metrics
+│   └── operations/                 # CI/CD, infra e A/B
+│       ├── CLAUDE.md
+│       └── subagents/
+│           ├── flow/               (7 skills)  pipeline-builder, deployment-strategist, feature-flags-manager, dora-metrics-tracker, toil-reducer, docs-generator, installation-guide-writer
+│           ├── infrastructure/     (4 skills)  iac-writer, capacity-planner, environment-manager, finops-optimizer
+│           ├── reliability/        (4 skills)  monitoring-setup, slo-sla-designer, incident-commander, blameless-postmortem-writer
+│           ├── devsecops/          (4 skills)  vulnerability-scanner, compliance-as-code, secrets-manager, security-pipeline-integrator
+│           ├── dashboard/          (3 skills)  sre-metrics-designer, product-metrics-designer, dashboard-builder
+│           └── change-manager/     (3 skills)  gmud-writer, risk-assessor, change-approver
+├── phases/
+│   ├── 01-strategic-context/       PHASE.md + README.md
+│   ├── 02-product-discovery/       PHASE.md + README.md
+│   ├── 03-product-delivery/        PHASE.md + README.md
+│   └── 04-product-operation/       PHASE.md + README.md
+└── shared/
+    ├── identity/                   Template de design_spec.md
+    ├── memory/                     context.json (estado da sessão)
+    └── schemas/                    Contratos de comunicação e input</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- OUTPUTS -->
+    <!-- ================================================================== -->
+    <h2 id="outputs">Outputs Gerados no Repositório Destino</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-body">
+<pre><code>{REPO_DESTINO}/
+├── product_briefing_spec.md          [INPUT]
+├── tech_spec.md                      [INPUT]
+├── design_spec.md                    [INPUT]
+│
+├── 01-strategic-context/             OKRs, OST, visão, princípios
+│   ├── phase-01-output.json
+│   └── hitl-1.json
+│
+├── 02-product-discovery/             Oportunidades, backlog, protótipos
+│   ├── prototype/
+│   │   ├── low-fi.html               Wireframe navegável
+│   │   └── high-fi.html              Protótipo completo com identidade
+│   ├── epics/
+│   ├── features/
+│   ├── stories/
+│   └── hitl-2..6.json
+│
+├── 03-product-delivery/              Arquitetura, ADRs, código, testes
+│   └── hitl-7..10.json
+│
+├── 04-product-operation/             SLOs, A/B, DORA, CI/CD, GMUD
+│   ├── ops-output.json
+│   ├── dashboard-output.json
+│   └── hitl-11..12.json
+│
+└── docs/                             Site de documentação navegável
+    ├── index.html
+    ├── fase-01..04.html
+    ├── assets/
+    ├── gmud/
+    ├── dashboard/
+    └── INSTALACAO.md</code></pre>
+        </div>
+      </div>
+
+      <h3>Referências Bibliográficas dos Agentes</h3>
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Produto e Estratégia</div>
+          <div class="artifact-body">
+            <ul>
+              <li><strong>Teresa Torres</strong> &mdash; Opportunity Solution Tree, Continuous Discovery</li>
+              <li><strong>Marty Cagan</strong> &mdash; 4 Riscos de Produto, Empowered Teams</li>
+              <li><strong>Bernard Marr</strong> &mdash; OKRs e KPIs</li>
+              <li><strong>SAFe 6.0</strong> &mdash; Hierarquia Épico &gt; Feature &gt; História</li>
+              <li><strong>IDEO</strong> &mdash; Design Thinking</li>
+              <li><strong>Don Norman</strong> &mdash; Usabilidade</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Engenharia e Operações</div>
+          <div class="artifact-body">
+            <ul>
+              <li><strong>Eric Evans</strong> &mdash; Domain-Driven Design</li>
+              <li><strong>Martin Fowler</strong> &mdash; Evolutionary Architecture</li>
+              <li><strong>Sam Newman</strong> &mdash; Building APIs</li>
+              <li><strong>Kent Beck</strong> &mdash; TDD / BDD</li>
+              <li><strong>Gene Kim</strong> &mdash; DevOps Handbook</li>
+              <li><strong>Google</strong> &mdash; SRE Book</li>
+              <li><strong>Nicole Forsgren</strong> &mdash; Accelerate / DORA</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">IA e LLMs</div>
+          <div class="artifact-body">
+            <ul>
+              <li><strong>Anthropic</strong> &mdash; Claude API, Messages API, Tool Use, MCP</li>
+              <li><strong>OWASP</strong> &mdash; LLM Top 10 (prompt injection, data leakage)</li>
+              <li><strong>Lewis et al.</strong> &mdash; Retrieval-Augmented Generation (RAG)</li>
+              <li><strong>Yao et al.</strong> &mdash; ReAct (Reasoning + Acting agents)</li>
+              <li><strong>OpenAI / Anthropic</strong> &mdash; Best Practices for System Prompts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- CHANGELOG -->
+    <!-- ================================================================== -->
+    <h2 id="changelog">Changelog v3.3</h2>
+    <section class="section">
+      <p>Atualização de 25 de março de 2026 &mdash; novo agente AI Engineer com 4 subagentes e 16 skills para soluções de IA integradas ao produto.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Item</th><th>v3.2</th><th>v3.3</th><th>O que mudou</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Agentes</strong></td>
+            <td>9</td>
+            <td>10</td>
+            <td>+AI Engineer (Fase 03, paralelo com Front End)</td>
+          </tr>
+          <tr>
+            <td><strong>Grupos de subagentes</strong></td>
+            <td>34</td>
+            <td>38</td>
+            <td>+chatbot-builder, +agent-builder, +rag-pipeline, +ai-guardrails</td>
+          </tr>
+          <tr>
+            <td><strong>Skills</strong></td>
+            <td>122</td>
+            <td>138</td>
+            <td>+16 skills de IA (4 por subagente)</td>
+          </tr>
+          <tr>
+            <td><strong>HITL Gates</strong></td>
+            <td>#1&ndash;#12</td>
+            <td>#1&ndash;#12 + #8.5</td>
+            <td>+HITL #8.5 p&oacute;s-AI Engineer (guardrails e integração de IA)</td>
+          </tr>
+          <tr>
+            <td><strong>Fase 03</strong></td>
+            <td>4 etapas sequenciais</td>
+            <td>5 etapas (AI Eng &parallel; Front)</td>
+            <td>AI Engineer e Front End executam em paralelo ap&oacute;s Back End</td>
+          </tr>
+          <tr>
+            <td><strong>QA</strong></td>
+            <td>Testes funcionais</td>
+            <td>+Cen&aacute;rios adversariais IA</td>
+            <td>QA agora inclui testes de prompt injection, vazamento e escopo</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>AI Engineer &mdash; Detalhes</h3>
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Novo Agente v3.3</div>
+        <div class="artifact-title">AI Engineer</div>
+        <div class="artifact-body">
+          <p>Projeta, implementa e protege soluções de IA integradas ao produto usando a <strong>Anthropic Claude API</strong> como backend principal.</p>
+          <p style="margin-top: 8px;"><strong>Princípios de Segurança Obrigatórios:</strong></p>
+          <ul>
+            <li>Input Sanitization &mdash; sanitizar toda entrada antes de enviar ao LLM</li>
+            <li>System Prompt Protection &mdash; system prompts nunca expostos ao usuário final</li>
+            <li>Output Validation &mdash; validar respostas do LLM antes de retornar</li>
+            <li>Scope Enforcement &mdash; rejeitar perguntas fora do domínio</li>
+            <li>PII Detection &mdash; bloquear vazamento de dados pessoais</li>
+            <li>Rate Limiting &mdash; limitar requisições por usuário/IP</li>
+            <li>Logging &amp; Audit &mdash; registrar interações para auditoria (sem PII)</li>
+            <li>Fallback Graceful &mdash; respostas seguras quando o LLM falha</li>
+          </ul>
+          <p style="margin-top: 8px;"><strong>Integração com outros agentes:</strong></p>
+          <ul>
+            <li><strong>Software Architect</strong> &rarr; contratos de API para endpoints de IA e ADRs</li>
+            <li><strong>Backend Developer</strong> &rarr; rotas HTTP que o AI Engineer consome/expõe</li>
+            <li><strong>Frontend Developer</strong> &rarr; componentes de chat/conversação com a API de IA</li>
+            <li><strong>QA</strong> &rarr; cenários adversariais de IA além dos testes funcionais</li>
+            <li><strong>Operations</strong> &rarr; custos de API, latência de LLM e SLOs específicos de IA</li>
+          </ul>
+        </div>
+        <div class="artifact-meta">
+          <span class="file-ref">agents/ai-engineer/CLAUDE.md</span>
+        </div>
+      </div>
+
+      <h3>Changelog v3.2 (17/mar/2026)</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Item</th><th>v1.1</th><th>v3.2</th><th>O que mudou</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Agentes</strong></td>
+            <td>8</td>
+            <td>9</td>
+            <td>Orchestrator incluído como agente oficial</td>
+          </tr>
+          <tr>
+            <td><strong>Grupos de subagentes</strong></td>
+            <td>30+</td>
+            <td>34</td>
+            <td>Contagem exata de todos os grupos</td>
+          </tr>
+          <tr>
+            <td><strong>Skills</strong></td>
+            <td>70+</td>
+            <td>122</td>
+            <td>Inventário completo de todas as skills</td>
+          </tr>
+          <tr>
+            <td><strong>PO / Story</strong></td>
+            <td>3 skills</td>
+            <td>4 skills</td>
+            <td>+functional-documentation-writer</td>
+          </tr>
+          <tr>
+            <td><strong>Architect / Domain Design</strong></td>
+            <td>4 skills</td>
+            <td>6 skills</td>
+            <td>+class-model-designer, +class-diagram-generator</td>
+          </tr>
+          <tr>
+            <td><strong>Frontend / Implementation</strong></td>
+            <td>4 skills</td>
+            <td>5 skills</td>
+            <td>+mobile-identity</td>
+          </tr>
+          <tr>
+            <td><strong>&Aacute;rvore de pastas</strong></td>
+            <td>Contagens de skills</td>
+            <td>Contagens + nomes</td>
+            <td>Cada grupo agora lista os nomes de todas as skills</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- ====== Sidebar Active Nav ====== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const links = document.querySelectorAll('.sidebar-nav a');
+      const sections = [];
+
+      links.forEach(function (link) {
+        var href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          var target = document.getElementById(href.substring(1));
+          if (target) sections.push({ link: link, target: target });
+        }
+      });
+
+      function setActive() {
+        var scrollY = window.scrollY + 100;
+        var current = null;
+
+        for (var i = 0; i < sections.length; i++) {
+          if (sections[i].target.offsetTop <= scrollY) {
+            current = sections[i];
+          }
+        }
+
+        links.forEach(function (l) { l.classList.remove('active'); });
+        if (current) current.link.classList.add('active');
+      }
+
+      window.addEventListener('scroll', setActive);
+      setActive();
+    });
+  </script>
+</body>
+</html>

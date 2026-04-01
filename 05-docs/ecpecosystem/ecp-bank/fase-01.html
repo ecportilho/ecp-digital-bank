@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 01 — Contexto Estratégico | ECP Banco Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Banco Digital docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html" class="active"><span class="nav-icon">01</span> Contexto Estratégico</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operação</a></li>
+      <li class="sidebar-section-title">Ecossistema</li>
+      <li><a href="ecp-ecosystem.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instalação</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Fase 01 &mdash; Contexto Estratégico</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITL #1 Aprovado</span>
+      <span>Product Manager</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Fase 01 &mdash; Contexto Estratégico</h1>
+    <p class="subtitle">OKRs, North Star Metric, visão de produto, princípios, OST e mapa de suposições.</p>
+
+    <!-- OKR -->
+    <h2>OKR Principal</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Objetivo</div>
+        <div class="artifact-title">Conquistar os primeiros usuários que adotam o ECP como seu banco digital principal no computador, provando que gestão financeira inteligente na web gera engajamento recorrente e confiança</div>
+        <div class="artifact-body">
+          <p>Prazo: Q2 2026 | 5 Key Results mensuráveis</p>
+        </div>
+      </div>
+
+      <div class="kr-grid">
+        <div class="kr-card">
+          <div class="kr-id">KR-01</div>
+          <div class="kr-description">Atingir 15.000 WAU-EFI até o final do Q2 2026</div>
+          <div class="kr-meta">Baseline: 0 (produto novo) &rarr; Meta: 15.000</div>
+          <div class="kr-metric">Usuários semanais que interagem com extrato inteligente, insights ou planejamento financeiro</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0</span><span>15.000</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-02</div>
+          <div class="kr-description">Alcançar taxa de ativação de 40%</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Meta: 40%</div>
+          <div class="kr-metric">% de cadastros que completam 3+ operações em 7 dias</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0%</span><span>40%</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-03</div>
+          <div class="kr-description">Atingir retenção D30 de 55%</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Meta: 55%</div>
+          <div class="kr-metric">% de usuários do cohort que fazem login no dia 30 após cadastro</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0%</span><span>55%</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-04</div>
+          <div class="kr-description">Alcançar NPS de 60+ entre usuários ativos</div>
+          <div class="kr-meta">Baseline: Sem baseline &rarr; Meta: 60+</div>
+          <div class="kr-metric">NPS via survey in-app para usuários com 4+ semanas de uso</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0</span><span>60+</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-05</div>
+          <div class="kr-description">60% dos usuários ativos com 1+ transação real por semana</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Meta: 60%</div>
+          <div class="kr-metric">% de WAU que realizam Pix, pagamento ou transferência semanal</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0%</span><span>60%</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- North Star -->
+    <h2>North Star Metric</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Métrica Estrela-Guia</div>
+        <div class="artifact-title" style="color: var(--lime); font-size: 1.3rem;">WAU-EFI &mdash; Usuários Ativos Semanais com Engajamento Financeiro Inteligente</div>
+        <div class="artifact-body">
+          <p><strong>Descrição:</strong> Número de usuários únicos por semana que realizam pelo menos uma interação com funcionalidades de inteligência financeira &mdash; consulta de extrato inteligente com categorização, visualização de insights proativos ou uso do planejamento financeiro integrado.</p>
+          <p><strong>Como medir:</strong> Contabilizar usuários únicos por semana que executaram: (1) abrir extrato inteligente e visualizar categorização, (2) interagir com insight proativo, (3) consultar/configurar planejamento financeiro. Excluir sessões &lt;5 segundos.</p>
+          <h4>Input Metrics</h4>
+          <ul>
+            <li><strong>Taxa de Adoção do Extrato Inteligente:</strong> % de MAU que consultam extrato categorizado 1x/semana. Meta: 60%</li>
+            <li><strong>Pix com Contexto:</strong> % de Pix enviados com categorização. Meta: 40%</li>
+            <li><strong>Taxa de Interação com Insights Proativos:</strong> % de insights exibidos que recebem interação. Meta: 35%</li>
+            <li><strong>Frequência de Sessões Web Semanais:</strong> Sessões web por usuário ativo por semana. Meta: 4+</li>
+            <li><strong>NPS de Controle Financeiro Percebido:</strong> Score trimestral. Meta: NPS 50+</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision -->
+    <h2>Visão do Produto</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">Visão</div>
+        <div class="artifact-title">Ser o banco digital que transforma a relação dos brasileiros com seu dinheiro</div>
+        <div class="artifact-body">
+          <p>Oferecendo no computador &mdash; onde trabalham, decidem e constroem seu futuro &mdash; a experiência financeira mais inteligente, clara e integrada do país.</p>
+          <p style="margin-top: 12px; font-style: italic; color: var(--muted);">Milhões de jovens profissionais brasileiros passam oito horas por dia diante de um computador, mas são forçados a gerenciar suas finanças pelo celular, em telas pequenas, com dados fragmentados e sem contexto. O ECP Banco Digital existe para eliminar essa contradição. Ao entregar uma experiência web-first com extratos que entendem o comportamento financeiro do cliente, categorização automática e insights proativos, nós devolvemos ao profissional brasileiro o poder de enxergar, planejar e agir sobre seu dinheiro no mesmo ambiente em que ele já produz e toma decisões.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 Principles -->
+    <h2>7 Princípios do Produto</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #1</div>
+        <div class="artifact-title">Transparência radical sobre lucro oculto</div>
+        <div class="artifact-body">Toda cobrança, rendimento e movimentação deve ser compreensível em até 5 segundos de leitura. <em>Exemplo: Breakdown visual automático de IOF, spread e imposto antes de confirmação de compra internacional.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #2</div>
+        <div class="artifact-title">Web-first não é mobile-less</div>
+        <div class="artifact-body">Priorizamos produtividade no desktop antes de otimizar para mobile, nunca o contrário. <em>Exemplo: Dashboard financeiro desenhado primeiro para 1280px+ com atalhos de teclado.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #3</div>
+        <div class="artifact-title">Inteligência que educa, não que decide por você</div>
+        <div class="artifact-body">Contexto e recomendação clara, mas decisão final com a pessoa. Aumentar literacia, não dependência. <em>Exemplo: "Você tem R$ 1.200 parados há 15 dias. Se aplicar no CDB, renderia R$ 8,40/mês a mais. Quer aplicar?" com botão de ação E "prefiro manter".</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #4</div>
+        <div class="artifact-title">Simplicidade é cortar funcionalidade, não esconder complexidade</div>
+        <div class="artifact-body">Preferimos fazer 20 coisas excepcionalmente bem do que 60 de forma mediana. <em>Exemplo: Oferecer apenas seguro de vida e residencial com 3 cliques.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #5</div>
+        <div class="artifact-title">Segurança perceptível, não apenas técnica</div>
+        <div class="artifact-body">Calibrar fricção de segurança pelo risco real: baixo risco = zero fricção, alto risco = confirmação explícita. <em>Exemplo: Pix &gt;R$1.000 para contato novo: biometria + selo "transação protegida".</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #6</div>
+        <div class="artifact-title">Dados do ciclo salarial como eixo central</div>
+        <div class="artifact-body">Todo o modelo mental se organiza entre um pagamento e o próximo, não em meses-calendário. <em>Exemplo: Resumo financeiro mostra "Ciclo 05/fev - 04/mar", não "março 2026". Alertas: "Faltam 12 dias e você usou 78% do orçamento de alimentação".</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princípio #7</div>
+        <div class="artifact-title">Acessibilidade é pré-requisito, não backlog</div>
+        <div class="artifact-body">Nenhuma funcionalidade vai para produção sem WCAG 2.1 AA. O prazo se move, não a acessibilidade. <em>Exemplo: Gráfico de gastos entregue com tabela acessível por leitor de tela, navegação por teclado e contraste mínimo 4.5:1.</em></div>
+      </div>
+    </section>
+
+    <!-- OST -->
+    <h2>Opportunity Solution Tree (OST)</h2>
+    <section class="section">
+      <p>15 oportunidades mapeadas na árvore de oportunidades, organizadas por Key Result. 9 do tipo pain, 4 do tipo need, 2 do tipo desire.</p>
+
+      <h3>KR-01: 15.000 WAU-EFI</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>opp-01</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Profissionais que trabalham no computador o dia inteiro são forçados a pegar o celular para verificar saldo, extrato e fazer operações bancárias, quebrando o fluxo de trabalho</td></tr>
+          <tr><td>opp-02</td><td><span class="badge info">need</span></td><td>Usuários precisam entender para onde seu dinheiro está indo sem ter que categorizar manualmente cada transação ou exportar dados para planilhas</td></tr>
+          <tr><td>opp-03</td><td><span class="badge lime">desire</span></td><td>Jovens profissionais assalariados desejam sentir que estão no controle da vida financeira, não apenas reagindo a contas e boletos</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-02: Taxa de ativação 40%</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>opp-04</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Processos de abertura de conta digital são longos, burocráticos e frequentemente falham na validação de documentos</td></tr>
+          <tr><td>opp-05</td><td><span class="badge info">need</span></td><td>Novos usuários precisam perceber valor imediato ao abrir uma conta &mdash; sem depósito inicial, sem espera de cartão físico</td></tr>
+          <tr><td>opp-06</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Usuários não entendem quais funcionalidades o banco oferece nem como começar a usar, especialmente com proposta web-first diferenciada</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-03: Retenção D30 55%</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>opp-07</td><td><span class="badge info">need</span></td><td>Usuários precisam de motivos recorrentes para voltar ao banco &mdash; não apenas quando precisam pagar algo</td></tr>
+          <tr><td>opp-08</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Informações financeiras pessoais ficam espalhadas entre banco, apps de controle, planilhas e boletos em e-mail</td></tr>
+          <tr><td>opp-09</td><td><span class="badge lime">desire</span></td><td>Profissionais assalariados desejam antecipar como vai ficar a situação financeira até o próximo salário</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-04: NPS 60+</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>opp-10</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Usuários sentem insegurança com proteção do dinheiro e dados em operações online no computador</td></tr>
+          <tr><td>opp-11</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Bancos digitais cobram taxas escondidas, usam linguagem confusa e dificultam entendimento real de custos</td></tr>
+          <tr><td>opp-12</td><td><span class="badge info">need</span></td><td>Usuários com deficiências precisam de banco digital que funcione plenamente com tecnologias assistivas</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-05: 60% com transação semanal</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>opp-13</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Fazer Pix no computador é impossível ou extremamente burocrático na maioria dos bancos</td></tr>
+          <tr><td>opp-14</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>Gerenciar boletos e contas recorrentes é processo manual e fragmentado</td></tr>
+          <tr><td>opp-15</td><td><span class="badge info">need</span></td><td>Usuários precisam de segurança granular em compras online &mdash; cartões temporários, limites por transação</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Market Research -->
+    <h2>Pesquisa de Mercado</h2>
+    <section class="section">
+      <h3>Dimensionamento do Mercado</h3>
+      <div class="kr-grid">
+        <div class="kr-card">
+          <div class="kr-id">TAM</div>
+          <div class="kr-description">R$ 180 bilh&otilde;es</div>
+          <div class="kr-metric">Receita total de bancos digitais no Brasil (2025). ~100 milh&otilde;es de contas digitais ativas.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">SAM</div>
+          <div class="kr-description">R$ 72 bilh&otilde;es</div>
+          <div class="kr-metric">Adultos 20-45 anos, bancarizados, digitalmente ativos. ~55 milh&otilde;es de pessoas (40% do TAM).</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">SOM</div>
+          <div class="kr-description">R$ 360&ndash;720 milh&otilde;es</div>
+          <div class="kr-metric">0,5% a 1,0% do SAM em 3 anos. 500K a 1M clientes ativos, ARPAC R$720/ano.</div>
+        </div>
+      </div>
+      <p style="margin-top: 16px; font-size: 0.85rem; color: var(--muted);">Fontes: Banco Central do Brasil (2024), IBGE PNAD 2023, Mordor Intelligence 2024-2029, Statista Neobanking Brazil 2024-2028, McKinsey LatAm Fintech 2024</p>
+
+      <h3>Dados-Chave do Mercado</h3>
+      <table class="data-table">
+        <thead><tr><th>Indicador</th><th>Valor</th><th>Fonte</th></tr></thead>
+        <tbody>
+          <tr><td>Contas digitais ativas no Brasil</td><td>100 milh&otilde;es+</td><td>Banco Central 2024</td></tr>
+          <tr><td>Adultos 22-35 usando canais digitais</td><td>79%</td><td>FEBRABAN 2024</td></tr>
+          <tr><td>Transa&ccedil;&otilde;es Pix em 2024</td><td>42 bilh&otilde;es (+75% vs 2023)</td><td>Banco Central 2024</td></tr>
+          <tr><td>Trabalhadores CLT no Brasil</td><td>87 milh&otilde;es</td><td>IBGE PNAD 2023</td></tr>
+          <tr><td>CLT com computador em casa</td><td>73%</td><td>IBGE PNAD 2023</td></tr>
+          <tr><td>Uso de internet banking (desktop)</td><td>Apenas 18%</td><td>FEBRABAN 2024</td></tr>
+          <tr><td>ARPAC Nubank</td><td>R$40/m&ecirc;s</td><td>Nubank Q3 2024</td></tr>
+          <tr><td>Crescimento anual do setor</td><td>14&ndash;18% CAGR</td><td>Mordor Intelligence</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Competitive Analysis -->
+    <h2>An&aacute;lise Competitiva</h2>
+    <section class="section">
+      <h3>6 Concorrentes Analisados</h3>
+      <table class="data-table">
+        <thead><tr><th>Banco</th><th>Clientes</th><th>NPS</th><th>Web Desktop</th><th>Pix Web</th><th>Extrato Inteligente</th><th>Ciclo Salarial</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Nubank</strong></td><td>100M+</td><td>~80</td><td><span class="badge neutral">Parcial</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span class="badge neutral">Parcial</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr><td><strong>Banco Inter</strong></td><td>32M+</td><td>~55</td><td><span class="badge neutral">Parcial</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr><td><strong>C6 Bank</strong></td><td>30M+</td><td>~50</td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr><td><strong>PicPay</strong></td><td>35M+</td><td>~40</td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr><td><strong>Mercado Pago</strong></td><td>Massiva</td><td>~35</td><td><span class="badge neutral">Parcial</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr><td><strong>Neon</strong></td><td>Menor</td><td>~30</td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td><td><span style="color:var(--danger);">&times;</span></td></tr>
+          <tr style="background: rgba(183,255,42,0.06);"><td><strong style="color:var(--lime);">ECP Bank</strong></td><td>MVP</td><td>Meta 60+</td><td><span style="color:var(--lime);">&check;</span></td><td><span style="color:var(--lime);">&check;</span></td><td><span style="color:var(--lime);">&check;</span></td><td><span style="color:var(--lime);">&check;</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Benchmarking UX &mdash; Fluxos-Chave</h3>
+      <table class="data-table">
+        <thead><tr><th>Fluxo</th><th>ECP Bank (web)</th><th>Nubank (mobile)</th><th>Inter (mobile)</th></tr></thead>
+        <tbody>
+          <tr><td>Enviar Pix (contato salvo)</td><td><strong style="color:var(--lime);">3 passos / 15s</strong></td><td>5 passos / 25s</td><td>6 passos / 35s</td></tr>
+          <tr><td>Consultar extrato do m&ecirc;s</td><td><strong style="color:var(--lime);">1 passo / 2s</strong></td><td>3 passos / 8s</td><td>4 passos / 12s</td></tr>
+          <tr><td>Bloquear cart&atilde;o</td><td><strong style="color:var(--lime);">2 passos / 5s</strong></td><td>4 passos / 15s</td><td>5 passos / 20s</td></tr>
+          <tr><td>Onboarding at&eacute; 1&ordf; opera&ccedil;&atilde;o</td><td><strong style="color:var(--lime);">5 passos / 2 min</strong></td><td>12 passos / 10 min</td><td>15 passos / 15 min</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Gaps Universais Identificados</h3>
+      <div class="artifact-card highlighted">
+        <div class="artifact-body">
+          <ul>
+            <li><strong>Web-First:</strong> Nenhum concorrente oferece banking completo no desktop</li>
+            <li><strong>Extrato Inteligente:</strong> Categoriza&ccedil;&atilde;o e insights ausentes ou rudimentares em todos</li>
+            <li><strong>Ciclo Salarial:</strong> Todos organizam por m&ecirc;s-calend&aacute;rio, ignorando o ciclo real do assalariado</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Segmentation -->
+    <h2>Segmenta&ccedil;&atilde;o de Clientes</h2>
+    <section class="section">
+      <div class="kr-grid">
+        <div class="kr-card" style="border-left: 3px solid var(--lime);">
+          <div class="kr-id" style="color: var(--lime);">40-45%</div>
+          <div class="kr-description">Jovens Profissionais Assalariados</div>
+          <div class="kr-metric">22-35 anos, CLT, R$2.500-8.000/m&ecirc;s. Heavy users de Pix, insatisfeitos com bancos tradicionais. <strong>Segmento priorit&aacute;rio do MVP.</strong></div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">25-30%</div>
+          <div class="kr-description">Freelancers e Gig Economy</div>
+          <div class="kr-metric">20-40 anos, MEIs e aut&ocirc;nomos. Renda vari&aacute;vel, m&uacute;ltiplos recebimentos Pix.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">15-20%</div>
+          <div class="kr-description">Nativos Digitais Universit&aacute;rios</div>
+          <div class="kr-metric">20-26 anos, estudantes/rec&eacute;m-formados. Ultra-digitais, design-driven.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">10-15%</div>
+          <div class="kr-description">Adultos Pragm&aacute;ticos em Transi&ccedil;&atilde;o</div>
+          <div class="kr-metric">35-45 anos, renda R$4.000-15.000. Cautelosos, seguran&ccedil;a-first.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assumption Map -->
+    <h2>Mapa de Suposições</h2>
+    <section class="section">
+      <p>12 suposições mapeadas: 5 de risco alto, 6 de risco médio, 1 de risco baixo. As 3 críticas:</p>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">Crítica #1 &mdash; Risco Alto &mdash; Tipo: Valor</div>
+        <div class="artifact-title">Profissionais CLT 22-35 sentem frustração real ao gerenciar finanças pelo celular, preferindo web/desktop</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Pesquisa quantitativa (n=300+) + entrevistas em profundidade (15-20)</div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">Crítica #2 &mdash; Risco Alto &mdash; Tipo: Valor</div>
+        <div class="artifact-title">Usuários confiarão suas finanças a um banco digital novo e desconhecido</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Fake door test com landing page + pergunta pós-cadastro sobre migração de salário</div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">Crítica #3 &mdash; Risco Alto &mdash; Tipo: Viabilidade</div>
+        <div class="artifact-title">Categorização automática será precisa o suficiente (&gt;90%) para gerar valor, não frustração</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Protótipo técnico com dataset de 5.000+ transações reais brasileiras</div>
+      </div>
+
+      <h3>Sequência de Validação</h3>
+      <table class="data-table">
+        <thead><tr><th>Sprint</th><th>Valida</th></tr></thead>
+        <tbody>
+          <tr><td>Sprint 1 (Sem 1-2)</td><td>Demanda web-first + confiança em banco novo</td></tr>
+          <tr><td>Sprint 2 (Sem 3-4)</td><td>Contexto de uso no trabalho + acurácia categorização</td></tr>
+          <tr><td>Sprint 3 (Sem 5-6)</td><td>Engajamento diário + sustentabilidade da diferenciação</td></tr>
+          <tr><td>Sprint 4 (Sem 7-8)</td><td>Pricing + modelagem financeira de aquisição</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Leading / Lagging -->
+    <h2>Indicadores Leading / Lagging por KR</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">KR-01: 15.000 WAU-EFI</div>
+        <div class="artifact-body">
+          <p><strong>Lagging:</strong> WAU-EFI (medição semanal)</p>
+          <p><strong>Leading:</strong></p>
+          <ul>
+            <li>Taxa de abertura de notificações de insights financeiros (3x mais chance de interagir)</li>
+            <li>Visualizações do extrato inteligente por usuário por semana (2+ = 4x maior retenção)</li>
+            <li>% de usuários que configuraram meta/alerta de planejamento financeiro</li>
+          </ul>
+        </div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">KR-02: Taxa de ativação 40%</div>
+        <div class="artifact-body">
+          <p><strong>Lagging:</strong> Taxa de ativação &mdash; % novos cadastros com 3+ operações em 7 dias (semanal)</p>
+          <p><strong>Leading:</strong></p>
+          <ul>
+            <li>Taxa de conclusão do onboarding completo em até 24h (2,5x mais ativação)</li>
+            <li>Time-to-first-action após cadastro (primeira ação em &lt;2h = 3x taxa superior)</li>
+            <li>% de novos usuários que vinculam conta bancária/cartão em 48h</li>
+          </ul>
+        </div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">KR-03: Retenção D30 de 55%</div>
+        <div class="artifact-body">
+          <p><strong>Lagging:</strong> Retenção D30 (mensal por coorte)</p>
+          <p><strong>Leading:</strong></p>
+          <ul>
+            <li>Retenção D7 (D7 &gt;65% prediz D30 &gt;55%)</li>
+            <li>Frequência de sessões na primeira semana (4+ sessões = D30 de 70%+)</li>
+            <li>% de usuários com notificações push ativas em 14 dias (2x mais retorno)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">KR-04: NPS 60+</div>
+        <div class="artifact-body">
+          <p><strong>Lagging:</strong> NPS entre usuários ativos com 4+ semanas (mensal)</p>
+          <p><strong>Leading:</strong></p>
+          <ul>
+            <li>CSAT médio em micro-surveys in-app (quedas precedem NPS em 2-4 semanas)</li>
+            <li>FCR (First Contact Resolution) no suporte (FCR &lt;70% = sinal de queda)</li>
+            <li>% de usuários com 3+ funcionalidades distintas por semana (NPS 20+ pontos acima)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">KR-05: 60% com transação semanal</div>
+        <div class="artifact-body">
+          <p><strong>Lagging:</strong> % de WAU com 1+ transação real na semana (semanal)</p>
+          <p><strong>Leading:</strong></p>
+          <ul>
+            <li>% de usuários com saldo disponível ou cartão ativo (sem saldo = tx próxima de zero)</li>
+            <li>Visualizações de telas transacionais por usuário (2+ visitas = 75% convertem)</li>
+            <li>Taxa de conclusão de transações iniciadas (queda indica fricção)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Files -->
+    <h2>Artefatos Gerados</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">01-strategic-context/market-research.json</span>
+        <span class="file-ref">01-strategic-context/competitive-benchmarking.json</span>
+        <span class="file-ref">01-strategic-context/product-vision.json</span>
+        <span class="file-ref">01-strategic-context/product-strategy.json</span>
+        <span class="file-ref">01-strategic-context/metrics.json</span>
+        <span class="file-ref">01-strategic-context/phase-01-output.json</span>
+        <span class="file-ref">01-strategic-context/hitl-01.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

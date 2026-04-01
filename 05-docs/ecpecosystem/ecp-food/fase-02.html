@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 02 &mdash; Product Discovery | ECP Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Food docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Vis&atilde;o Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estrat&eacute;gico</a></li>
+      <li><a href="fase-02.html" class="active"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Opera&ccedil;&atilde;o</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instala&ccedil;&atilde;o</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Fase 02 &mdash; Product Discovery</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITLs #2-#6 Aprovados</span>
+      <span>PO + Designer + PM</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Fase 02 &mdash; Product Discovery</h1>
+    <p class="subtitle">Oportunidades priorizadas, insights, hip&oacute;teses, prot&oacute;tipos, backlog estruturado e avalia&ccedil;&atilde;o dos 4 riscos de Cagan.</p>
+
+    <!-- ============================================================ -->
+    <!-- OPPORTUNITIES                                                 -->
+    <!-- ============================================================ -->
+    <h2>Oportunidades Priorizadas para o MVP</h2>
+    <section class="section">
+      <p>13 oportunidades selecionadas (de 19 mapeadas na OST), organizadas em 5 temas estrat&eacute;gicos:</p>
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Narrativa do MVP</div>
+        <div class="artifact-body">
+          <strong>5 pilares:</strong>
+          (1) <span style="color:var(--lime)">DESCOBERTA CURADA</span> &mdash; curadoria visual, categorias, filtros e evid&ecirc;ncias de qualidade;
+          (2) <span style="color:var(--info)">CHECKOUT TRANSPARENTE</span> &mdash; zero surpresas de pre&ccedil;o, pagamento fluido via ecp-digital-bank;
+          (3) <span style="color:var(--warning)">RETEN&Ccedil;&Atilde;O E H&Aacute;BITO</span> &mdash; repetir pedido, incentivos de retorno, favoritos;
+          (4) <span style="color:var(--danger)">EMPODERAMENTO DO RESTAURANTE</span> &mdash; visibilidade por qualidade, autonomia de gest&atilde;o, onboarding r&aacute;pido;
+          (5) <span style="color:var(--success)">TICKET PREMIUM</span> &mdash; card&aacute;pio visual premium, frete gr&aacute;tis como alavanca.
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Oportunidade</th><th>KR</th><th>Tipo</th><th>RICE</th></tr></thead>
+        <tbody>
+          <tr><td><strong>OPP-12</strong></td><td>Frete como alavanca de ticket &mdash; comunicar frete gr&aacute;tis &gt; R$120</td><td>KR3</td><td><span class="badge lime">desejo</span></td><td>80.0</td></tr>
+          <tr><td><strong>OPP-02</strong></td><td>Checkout sem surpresas de pre&ccedil;o &mdash; abandonam quando pre&ccedil;o final surpreende</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>41.7</td></tr>
+          <tr><td><strong>OPP-07</strong></td><td>Incentivos de retorno &mdash; aus&ecirc;ncia faz voltar ao iFood</td><td>KR2</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>40.0</td></tr>
+          <tr><td><strong>OPP-06</strong></td><td>Repetir pedido ultra-r&aacute;pido sem refazer toda a jornada</td><td>KR2</td><td><span class="badge info">necessidade</span></td><td>37.5</td></tr>
+          <tr><td><strong>OPP-03</strong></td><td>Filtros e categorias conectados &agrave; inten&ccedil;&atilde;o do consumidor</td><td>KR1</td><td><span class="badge info">necessidade</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-04</strong></td><td>Evid&ecirc;ncias visuais de qualidade (fotos, badges, ratings)</td><td>KR1</td><td><span class="badge lime">desejo</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-10</strong></td><td>Card&aacute;pios visuais que justifiquem pre&ccedil;os premium</td><td>KR3</td><td><span class="badge info">necessidade</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-01</strong></td><td>Curadoria visual que reduza fadiga de decis&atilde;o</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>26.7</td></tr>
+          <tr><td><strong>OPP-05</strong></td><td>Fluxo de pagamento sem fric&ccedil;&atilde;o via ecp-digital-bank</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>25.0</td></tr>
+          <tr><td><strong>OPP-13</strong></td><td>Card&aacute;pios premium para restaurantes artesanais comunicarem valor</td><td>KR3</td><td><span class="badge info">necessidade</span></td><td>24.0</td></tr>
+          <tr><td><strong>OPP-14</strong></td><td>Visibilidade real para restaurantes artesanais &mdash; ranking por qualidade</td><td>KR4</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>20.0</td></tr>
+          <tr><td><strong>OPP-18</strong></td><td>Onboarding simples e r&aacute;pido para restaurantes</td><td>KR4</td><td><span class="badge info">necessidade</span></td><td>13.3</td></tr>
+          <tr><td><strong>OPP-15</strong></td><td>Autonomia para gerenciar card&aacute;pio e promo&ccedil;&otilde;es</td><td>KR4</td><td><span class="badge info">necessidade</span></td><td>10.7</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-19</td><td>Descoberta de novidades curadas</td><td>KR2</td><td><span class="badge neutral">Diferida</span></td><td>9.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-09</td><td>Consist&ecirc;ncia na experi&ecirc;ncia de entrega</td><td>KR2</td><td><span class="badge neutral">Diferida</span></td><td>8.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-11</td><td>Combos e sugest&otilde;es de complemento</td><td>KR3</td><td><span class="badge neutral">Diferida</span></td><td>6.8</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-16</td><td>Analytics de comportamento para restaurantes</td><td>KR4</td><td><span class="badge neutral">Diferida</span></td><td>6.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-08</td><td>Personaliza&ccedil;&atilde;o baseada em hist&oacute;rico</td><td>KR2</td><td><span class="badge neutral">Diferida</span></td><td>4.5</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-17</td><td>Comiss&otilde;es competitivas para restaurantes</td><td>KR4</td><td><span class="badge neutral">Diferida</span></td><td>&mdash;</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- INSIGHTS                                                      -->
+    <!-- ============================================================ -->
+    <h2>Insights Principais</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">INS-01 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">Gap de UX premium no delivery &eacute; o maior diferencial competitivo dispon&iacute;vel</div>
+        <div class="artifact-body">Todos os concorrentes (iFood, Rappi, 99food, Keeta) priorizam volume sobre curadoria. Reviews de app stores mencionam &ldquo;UI polu&iacute;da&rdquo; e &ldquo;fadiga de decis&atilde;o&rdquo; como dores recorrentes. O FoodFlow nasce para resolver isso com curadoria visual premium (Midnight Express).</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-02 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">PIX como infraestrutura de pagamento validada &mdash; mas integra&ccedil;&atilde;o inline &eacute; risco de usabilidade</div>
+        <div class="artifact-body">150M+ usu&aacute;rios de PIX no Brasil validam a infraestrutura. Por&eacute;m, exigir autentica&ccedil;&atilde;o no ecp-digital-bank adiciona passo extra. Suposi&ccedil;&atilde;o A3 da Fase 01 flaggou como risco m&eacute;dio. Fluxo inline (sem redirect) &eacute; cr&iacute;tico para manter convers&atilde;o.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-03 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">Curadoria &gt; volume para segmentos C1 e C2</div>
+        <div class="artifact-body">C1 (Explorador Gastron&ocirc;mico, ticket R$50-80) e C2 (Pr&aacute;tico Recorrente, ticket R$40-60) juntos representam o core target. Ambos t&ecirc;m dores expl&iacute;citas com cat&aacute;logos infinitos. O FoodFlow deve oferecer 50 restaurantes curados em vez de 500 gen&eacute;ricos.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-04 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">Checkout &eacute; sagrado &mdash; maior RICE score do portf&oacute;lio</div>
+        <div class="artifact-body">OPP-02 (checkout sem surpresas) tem RICE 41.7 e OPP-12 (frete gr&aacute;tis como alavanca) tem RICE 80.0. Abandonar o checkout &eacute; a forma mais cara de perder um cliente. Transpar&ecirc;ncia de pre&ccedil;os desde o card do restaurante &eacute; pr&eacute;-requisito.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-05 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">Repetir Pedido &eacute; o mecanismo central de reten&ccedil;&atilde;o</div>
+        <div class="artifact-body">C2 explicita que &ldquo;usa repetir pedido frequentemente&rdquo; e reclama de &ldquo;falta de atalho real para recompra&rdquo;. RICE 37.5 com esfor&ccedil;o baixo &mdash; melhor ratio do portf&oacute;lio. Leading indicator do KR2 (&gt; 15% dos pedidos via repeti&ccedil;&atilde;o).</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-06 &mdash; Confian&ccedil;a alta</div>
+        <div class="artifact-title">Restaurante parceiro, n&atilde;o ref&eacute;m &mdash; ranking por qualidade &eacute; proposta de valor do supply-side</div>
+        <div class="artifact-body">Restaurantes artesanais pagam 12-27% de comiss&atilde;o no iFood com visibilidade limitada sem m&iacute;dia paga. O posicionamento &ldquo;ranking por qualidade, n&atilde;o por pagamento&rdquo; &eacute; a raz&atilde;o pela qual restaurantes artesanais escolheriam o FoodFlow.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-07 &mdash; Confian&ccedil;a m&eacute;dia</div>
+        <div class="artifact-title">Cold start &eacute; o risco existencial &mdash; supply-side primeiro</div>
+        <div class="artifact-body">Marketplace cl&aacute;ssico chicken-and-egg. Estrat&eacute;gia: 0% comiss&atilde;o nos primeiros 3 meses, onboarding assistido em bairros-alvo de SP (Pinheiros, Vila Madalena, Itaim). Sem 50 restaurantes, n&atilde;o h&aacute; variedade percebida.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-08 &mdash; Confian&ccedil;a m&eacute;dia</div>
+        <div class="artifact-title">Design emocional Midnight Express eleva percep&ccedil;&atilde;o de valor sem elevar pre&ccedil;o</div>
+        <div class="artifact-body">O tema dark premium com gradientes, tipografia Inter e fotos com ilumina&ccedil;&atilde;o dram&aacute;tica gera rea&ccedil;&atilde;o visceral (Norman). Consumidores atribuem WTP 15% maior para pratos com descri&ccedil;&atilde;o narrativa vs lista de ingredientes. Sustenta ticket &gt; R$45 sem desconto.</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PERSONAS SINTETICAS                                           -->
+    <!-- ============================================================ -->
+    <h2>Personas Sint&eacute;ticas</h2>
+    <section class="section">
+      <p>5 personas sint&eacute;ticas derivadas dos segmentos de mercado (Fase 01): 3 consumidores (C1-C3) e 2 restaurantes (R1-R2). Cada persona captura JTBD, comportamentos, dores e disposi&ccedil;&atilde;o a pagar.</p>
+
+      <h3>Consumidores</h3>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #7b61ff, #ff5fa2);">&#x1F9D1;&#x200D;&#x1F373;</div>
+          <div>
+            <div class="persona-name">C1 &mdash; Explorador Gastron&ocirc;mico</div>
+            <div class="persona-demo">22-35 anos | Classes A/B | Urbano SP | Renda R$ 5-15k/m&ecirc;s | Solteiro ou casal sem filhos</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;Quando estou entediado com as mesmas op&ccedil;&otilde;es de sempre, quero descobrir restaurantes novos e interessantes perto de mim para viver experi&ecirc;ncias gastron&ocirc;micas variadas.&rdquo;</div>
+        <div class="persona-section-title">Comportamentos</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Pede delivery 3-5x/semana de restaurantes diferentes</span>
+          <span class="persona-tag behavior">Navega categorias e promo&ccedil;&otilde;es antes de decidir</span>
+          <span class="persona-tag behavior">Influenciado por fotos, reviews e badges</span>
+          <span class="persona-tag behavior">Compartilha descobertas em redes sociais</span>
+        </div>
+        <div class="persona-section-title">Dores</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Fadiga de decis&atilde;o com listas longas sem curadoria</span>
+          <span class="persona-tag pain">N&atilde;o confia em restaurantes com poucas avalia&ccedil;&otilde;es</span>
+          <span class="persona-tag pain">Promo&ccedil;&otilde;es confusas &mdash; n&atilde;o sabe se est&aacute; economizando</span>
+        </div>
+        <div class="persona-section-title">Disposi&ccedil;&atilde;o a Pagar</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Alta: ticket m&eacute;dio R$ 50-80 | Sens&iacute;vel a promos mas n&atilde;o dependente</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #59d8ff, #2fd387);">&#x1F4BC;</div>
+          <div>
+            <div class="persona-name">C2 &mdash; Pr&aacute;tico Recorrente</div>
+            <div class="persona-demo">28-40 anos | CLT/PJ | Urbano SP | Renda R$ 6-20k/m&ecirc;s | Rotina intensa</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;Quando preciso de jantar r&aacute;pido ap&oacute;s o trabalho, quero repetir um pedido que j&aacute; sei que &eacute; bom gastando o m&iacute;nimo de tempo e energia decidindo.&rdquo;</div>
+        <div class="persona-section-title">Comportamentos</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">3-5 restaurantes favoritos fixos</span>
+          <span class="persona-tag behavior">Usa &ldquo;repetir pedido&rdquo; frequentemente</span>
+          <span class="persona-tag behavior">Pede 2-4x/semana, quase sempre jantar</span>
+          <span class="persona-tag behavior">Valoriza velocidade no checkout acima de tudo</span>
+        </div>
+        <div class="persona-section-title">Dores</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Checkout lento com m&uacute;ltiplos passos</span>
+          <span class="persona-tag pain">Falta de atalho real para recompra</span>
+          <span class="persona-tag pain">Endere&ccedil;o e pagamento n&atilde;o salvos entre sess&otilde;es</span>
+        </div>
+        <div class="persona-section-title">Disposi&ccedil;&atilde;o a Pagar</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">M&eacute;dia-alta: ticket R$ 40-60 | Leal quando experi&ecirc;ncia &eacute; sem fric&ccedil;&atilde;o</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #ffcc00, #ff6b81);">&#x1F3AF;</div>
+          <div>
+            <div class="persona-name">C3 &mdash; Ca&ccedil;ador de Ofertas</div>
+            <div class="persona-demo">22-32 anos | Estudantes e jovens profissionais | Renda R$ 2-6k/m&ecirc;s | Sens&iacute;vel a pre&ccedil;o</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;Quando quero pedir delivery sem estourar meu or&ccedil;amento, quero encontrar promo&ccedil;&otilde;es e cupons reais para sentir que estou fazendo um bom neg&oacute;cio.&rdquo;</div>
+        <div class="persona-section-title">Comportamentos</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Compara pre&ccedil;os entre apps antes de decidir</span>
+          <span class="persona-tag behavior">Busca ativamente cupons e promo&ccedil;&otilde;es</span>
+          <span class="persona-tag behavior">Pede 1-3x/semana, geralmente em promo&ccedil;&otilde;es</span>
+          <span class="persona-tag behavior">Instala m&uacute;ltiplos apps de delivery</span>
+        </div>
+        <div class="persona-section-title">Dores</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Regras de cupom confusas ou c&oacute;digos que n&atilde;o funcionam</span>
+          <span class="persona-tag pain">Taxa de entrega que anula o desconto</span>
+          <span class="persona-tag pain">Promos falsas &mdash; pre&ccedil;o inflado antes do desconto</span>
+        </div>
+        <div class="persona-section-title">Disposi&ccedil;&atilde;o a Pagar</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">M&eacute;dia: ticket R$ 30-45 | Alta elasticidade de pre&ccedil;o | Ret&eacute;m se percebe economia</span>
+        </div>
+      </div>
+
+      <h3>Restaurantes</h3>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #2fd387, #59d8ff);">&#x1F37D;&#xFE0F;</div>
+          <div>
+            <div class="persona-name">R1 &mdash; Restaurante Artesanal em Crescimento</div>
+            <div class="persona-demo">1-3 unidades | Faturamento R$ 50-300k/m&ecirc;s | Chef/propriet&aacute;rio envolvido | Card&aacute;pio curado 15-40 itens</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;Quando meu restaurante n&atilde;o aparece no topo do iFood sem pagar por m&iacute;dia, quero uma plataforma que valorize a qualidade do meu produto para atrair clientes que realmente apreciam comida bem feita.&rdquo;</div>
+        <div class="persona-section-title">Comportamentos</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Investe em apresenta&ccedil;&atilde;o visual dos pratos</span>
+          <span class="persona-tag behavior">Quer controle sobre pre&ccedil;o, promo&ccedil;&otilde;es e marca</span>
+          <span class="persona-tag behavior">Busca dados de performance para otimizar</span>
+        </div>
+        <div class="persona-section-title">Dores</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Invisibilidade em plataformas dominadas por grandes redes</span>
+          <span class="persona-tag pain">Comiss&otilde;es altas comprimindo margens</span>
+          <span class="persona-tag pain">Sem acesso a dados de comportamento do consumidor</span>
+        </div>
+        <div class="persona-section-title">Disposi&ccedil;&atilde;o a Pagar</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Aceita 10-18% de comiss&atilde;o se houver visibilidade real e controle sobre a experi&ecirc;ncia</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #ff5fa2, #ffcc00);">&#x1F3ED;</div>
+          <div>
+            <div class="persona-name">R2 &mdash; Dark Kitchen / Delivery-First</div>
+            <div class="persona-demo">Delivery-only | 1-5 marcas virtuais | Equipe enxuta | Faturamento R$ 30-150k/m&ecirc;s</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;Quando opero exclusivamente via delivery, quero uma plataforma com analytics detalhados e boa exposi&ccedil;&atilde;o para otimizar meu card&aacute;pio e opera&ccedil;&atilde;o com base em dados reais.&rdquo;</div>
+        <div class="persona-section-title">Comportamentos</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Opera em m&uacute;ltiplas plataformas simultaneamente</span>
+          <span class="persona-tag behavior">Testa card&aacute;pio e pre&ccedil;os frequentemente</span>
+          <span class="persona-tag behavior">100% data-driven</span>
+          <span class="persona-tag behavior">Alta adaptabilidade operacional</span>
+        </div>
+        <div class="persona-section-title">Dores</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Dados fragmentados entre plataformas</span>
+          <span class="persona-tag pain">Custo de manter presen&ccedil;a em v&aacute;rios apps</span>
+          <span class="persona-tag pain">Dificuldade de construir marca pr&oacute;pria em marketplaces gen&eacute;ricos</span>
+        </div>
+        <div class="persona-section-title">Disposi&ccedil;&atilde;o a Pagar</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Aceita 15-22% de comiss&atilde;o se volume e dados justificarem</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- HYPOTHESES                                                    -->
+    <!-- ============================================================ -->
+    <h2>Hip&oacute;teses</h2>
+    <section class="section">
+      <p>14 hip&oacute;teses organizadas em 5 temas estrat&eacute;gicos. 6 selecionadas para prototipa&ccedil;&atilde;o (H01, H04, H05, H07, H10, H13).</p>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Hip&oacute;tese</th><th>Opps</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>H01</strong></td><td>Home Curada por Contexto de Momento &mdash; categorias visuais, hero banner, m&eacute;tricas ao vivo</td><td>OPP-01, OPP-03</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H02</td><td>Cards de Confian&ccedil;a Visual com Prova Social</td><td>OPP-04, OPP-01</td><td><span class="badge neutral">Embutida em H01</span></td></tr>
+          <tr><td>H03</td><td>Busca Preditiva Multi-Crit&eacute;rio</td><td>OPP-03, OPP-01</td><td><span class="badge neutral">Embutida em H01</span></td></tr>
+          <tr><td><strong>H04</strong></td><td>Pre&ccedil;o Transparente desde o Primeiro Card &mdash; zero surpresas no checkout</td><td>OPP-02, OPP-12</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td><strong>H05</strong></td><td>Pagamento em 2 Toques com Cart&atilde;o Virtual ECP &mdash; auth inline sem redirect</td><td>OPP-05, OPP-02</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H06</td><td>PIX com QR Code Contextual e Feedback em Tempo Real via SSE</td><td>OPP-05, OPP-02</td><td><span class="badge neutral">Embutida em H05</span></td></tr>
+          <tr><td><strong>H07</strong></td><td>Repetir Pedido em 1 Toque &mdash; atalho de h&aacute;bito no hist&oacute;rico</td><td>OPP-06</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H08</td><td>Incentivos de Retorno Vis&iacute;veis e Contextuais &mdash; cupom MVP10, promos</td><td>OPP-07</td><td><span class="badge neutral">Ciclo 2</span></td></tr>
+          <tr><td>H09</td><td>Favoritos como Atalho Emocional de Fidelidade</td><td>OPP-06, OPP-07</td><td><span class="badge neutral">Ciclo 2</span></td></tr>
+          <tr><td><strong>H10</strong></td><td>Onboarding Guiado em 4 Passos &mdash; do cadastro ao primeiro item em 30 min</td><td>OPP-18, OPP-15</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H11</td><td>Painel do Restaurante &mdash; controle total sem complexidade</td><td>OPP-15, OPP-13, OPP-14</td><td><span class="badge neutral">Embutida em H10</span></td></tr>
+          <tr><td>H12</td><td>Visibilidade por Qualidade &mdash; ranking justo sem pay-to-play</td><td>OPP-14, OPP-13</td><td><span class="badge neutral">Embutida em H10</span></td></tr>
+          <tr><td><strong>H13</strong></td><td>Card&aacute;pio Visual que Gera Desejo &mdash; fotos que d&atilde;o fome, Midnight Express</td><td>OPP-10, OPP-13</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H14</td><td>Alavanca de Frete Gr&aacute;tis como Gamifica&ccedil;&atilde;o de Ticket</td><td>OPP-10</td><td><span class="badge neutral">Embutida em H04</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PROTOTYPES                                                    -->
+    <!-- ============================================================ -->
+    <h2>Prot&oacute;tipos</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Low-fi Prototype &mdash; HITL #4 Aprovado</div>
+          <div class="artifact-title">17 Telas Wireframe</div>
+          <div class="artifact-body">
+            <p>Wireframes de todas as telas do fluxo prim&aacute;rio, cobrindo jornadas de consumidor, restaurante e admin:</p>
+            <ul>
+              <li>Login / Cadastro</li>
+              <li>Home com Hero Banner, Categorias e Cat&aacute;logo</li>
+              <li>P&aacute;gina do Restaurante com Card&aacute;pio</li>
+              <li>Carrinho com Resumo Financeiro e Barra de Frete Gr&aacute;tis</li>
+              <li>Checkout com Endere&ccedil;o e Cupom</li>
+              <li>Pagamento Cart&atilde;o ECP (auth inline + sele&ccedil;&atilde;o)</li>
+              <li>Pagamento PIX QR Code com Timer e SSE</li>
+              <li>Confirma&ccedil;&atilde;o de Pedido</li>
+              <li>Tracking de Status em Tempo Real</li>
+              <li>Hist&oacute;rico de Pedidos com Repetir</li>
+              <li>Favoritos com Status Din&acirc;mico</li>
+              <li>Perfil e Endere&ccedil;os</li>
+              <li>Painel Restaurante &mdash; Card&aacute;pio</li>
+              <li>Painel Restaurante &mdash; Pedidos</li>
+              <li>Painel Restaurante &mdash; Perfil</li>
+              <li>Admin &mdash; Dashboard e Restaurantes</li>
+              <li>Admin &mdash; Categorias e Promo&ccedil;&otilde;es</li>
+            </ul>
+            <p><a href="../02-product-discovery/prototype/low-fi.html">Ver prot&oacute;tipo low-fi &rarr;</a></p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">High-fi Prototype &mdash; HITL #5 Aprovado</div>
+          <div class="artifact-title">17 Telas Full Design &mdash; Midnight Express</div>
+          <div class="artifact-body">
+            <p>Design completo em dark mode premium com identidade visual aplicada:</p>
+            <ul>
+              <li>Tema Midnight Express (#181A20 bg, gradientes por restaurante)</li>
+              <li>Tipografia Inter + emojis como &iacute;cones visuais</li>
+              <li>Cards com cover_gradient, rating, ETA, badge de promo</li>
+              <li>Card&aacute;pio visual com fotos premium e descri&ccedil;&otilde;es narrativas</li>
+              <li>Checkout com breakdown transparente de pre&ccedil;os</li>
+              <li>PIX QR Code com timer, instru&ccedil;&otilde;es e SSE status</li>
+              <li>Barra de progresso de frete gr&aacute;tis gamificada</li>
+              <li>Contraste WCAG AA validado em todos os componentes</li>
+            </ul>
+            <p><a href="../02-product-discovery/prototype/high-fi.html">Ver prot&oacute;tipo high-fi &rarr;</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- BACKLOG                                                       -->
+    <!-- ============================================================ -->
+    <h2>Backlog Estruturado</h2>
+    <section class="section">
+      <p>7 &eacute;picos, 19 features, 51 user stories com crit&eacute;rios de aceite em BDD/Gherkin. Distribui&ccedil;&atilde;o: S=15, M=24, L=8, XL=1.</p>
+
+      <!-- EP E01 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">E01</div>
+          <div class="epic-title">Descoberta e Navega&ccedil;&atilde;o</div>
+        </div>
+        <div class="epic-description">Permitir que consumidores descubram restaurantes e pratos de forma r&aacute;pida, visual e curada, reduzindo fadiga de decis&atilde;o e conectando inten&ccedil;&atilde;o a escolha em menos de 2 minutos. Meta: convers&atilde;o &gt; 8% (KR1).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F01.1</div>
+            <div class="feature-title">Home Curada com Hero Banner e M&eacute;tricas ao Vivo</div>
+            <div class="feature-description">Hero banner promocional, barra de busca integrada, m&eacute;tricas ao vivo e grid de categorias visuais.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-001</span> Visualizar hero banner com promo&ccedil;&atilde;o do dia</div>
+              <div class="story-item"><span class="story-id">US-002</span> Visualizar m&eacute;tricas ao vivo na home (restaurantes online, cupons, frete)</div>
+              <div class="story-item"><span class="story-id">US-003</span> Filtrar restaurantes por categoria via chips visuais</div>
+              <div class="story-item"><span class="story-id">US-004</span> Visualizar cat&aacute;logo em cards visuais (foto, rating, ETA, frete, badge)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F01.2</div>
+            <div class="feature-title">Busca Multi-Crit&eacute;rio por Restaurante, Prato e Categoria</div>
+            <div class="feature-description">Barra de busca com sugest&otilde;es instant&acirc;neas agrupadas por tipo e debounce de 300ms.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-005</span> Buscar restaurante por nome</div>
+              <div class="story-item"><span class="story-id">US-006</span> Buscar por nome de prato ou categoria</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F01.3</div>
+            <div class="feature-title">Detalhe do Restaurante e Card&aacute;pio Visual</div>
+            <div class="feature-description">Tela com banner, informa&ccedil;&otilde;es completas e grid de itens premium que gera desejo.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-007</span> Visualizar detalhe do restaurante (rating, ETA, frete, promo)</div>
+              <div class="story-item"><span class="story-id">US-008</span> Navegar card&aacute;pio com fotos, descri&ccedil;&otilde;es e badges</div>
+              <div class="story-item"><span class="story-id">US-009</span> Adicionar item ao carrinho a partir do card&aacute;pio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E02 -->
+      <div class="epic-block" style="border-left-color: var(--info);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--info);">E02</div>
+          <div class="epic-title">Carrinho e Checkout</div>
+        </div>
+        <div class="epic-description">Garantir que a jornada do carrinho at&eacute; o pedido confirmado seja fluida, transparente e sem surpresas de pre&ccedil;o. Barra de progresso de frete gr&aacute;tis como alavanca de ticket. Meta: abandono &lt; 15% (KR1, KR3).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F02.1</div>
+            <div class="feature-title">Carrinho Persistente com Resumo Financeiro em Tempo Real</div>
+            <div class="feature-description">Sidebar (desktop) / bottom sheet (mobile) com itens, +/-, resumo e barra de frete gr&aacute;tis.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-010</span> Visualizar carrinho com itens adicionados</div>
+              <div class="story-item"><span class="story-id">US-011</span> Alterar quantidade de item no carrinho (+/-)</div>
+              <div class="story-item"><span class="story-id">US-012</span> Visualizar resumo financeiro detalhado (subtotal, entrega, desconto, total)</div>
+              <div class="story-item"><span class="story-id">US-013</span> Visualizar progresso para frete gr&aacute;tis (&ldquo;Faltam R$X&rdquo;)</div>
+              <div class="story-item"><span class="story-id">US-014</span> Badge de contagem de itens no carrinho (global)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F02.2</div>
+            <div class="feature-title">Checkout com Resumo e Aplica&ccedil;&atilde;o de Cupom</div>
+            <div class="feature-description">Resumo do pedido, endere&ccedil;o de entrega, campo de cupom com valida&ccedil;&atilde;o em tempo real.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-015</span> Visualizar resumo do pedido no checkout</div>
+              <div class="story-item"><span class="story-id">US-016</span> Aplicar cupom de desconto (MVP10)</div>
+              <div class="story-item"><span class="story-id">US-017</span> Confirmar endere&ccedil;o de entrega no checkout</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F02.3</div>
+            <div class="feature-title">Acompanhamento do Status do Pedido</div>
+            <div class="feature-description">Protocolo do pedido e linha do tempo (Confirmado &rarr; Preparando &rarr; Saiu &rarr; Entregue).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-018</span> Visualizar confirma&ccedil;&atilde;o do pedido com protocolo</div>
+              <div class="story-item"><span class="story-id">US-019</span> Acompanhar status do pedido em tempo real</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E03 -->
+      <div class="epic-block" style="border-left-color: var(--warning);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--warning);">E03</div>
+          <div class="epic-title">Pagamento Integrado ECP Digital Bank</div>
+        </div>
+        <div class="epic-description">Integrar pagamento com ecp-digital-bank via cart&atilde;o virtual (auth inline) e PIX QR Code com webhook + SSE. Meta: 85% completam pagamento sem ajuda (KR1).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F03.1</div>
+            <div class="feature-title">Pagamento com Cart&atilde;o Virtual ECP Digital Bank</div>
+            <div class="feature-description">Auth inline, listagem de cart&otilde;es com saldo, sele&ccedil;&atilde;o e confirma&ccedil;&atilde;o de d&eacute;bito.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-020</span> Autenticar no ECP Digital Bank para pagamento (inline)</div>
+              <div class="story-item"><span class="story-id">US-021</span> Selecionar cart&atilde;o virtual e confirmar pagamento</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F03.2</div>
+            <div class="feature-title">Pagamento via PIX com QR Code e Feedback em Tempo Real</div>
+            <div class="feature-description">QR Code com valor, instru&ccedil;&otilde;es passo a passo, timer e confirma&ccedil;&atilde;o autom&aacute;tica via SSE.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-022</span> Gerar QR Code PIX para pagamento</div>
+              <div class="story-item"><span class="story-id">US-023</span> Receber confirma&ccedil;&atilde;o de pagamento PIX em tempo real (SSE) <span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger); font-size: 0.7em;">XL</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E04 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">E04</div>
+          <div class="epic-title">Reten&ccedil;&atilde;o e Recorr&ecirc;ncia</div>
+        </div>
+        <div class="epic-description">Criar mecanismos que transformam o primeiro pedido em h&aacute;bito: recompra r&aacute;pida, favoritos como curadoria pessoal e incentivos de retorno. Meta: recompra &gt; 25% em 30 dias (KR2).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F04.1</div>
+            <div class="feature-title">Hist&oacute;rico de Pedidos com Repeti&ccedil;&atilde;o R&aacute;pida</div>
+            <div class="feature-description">Lista de pedidos anteriores com bot&atilde;o &ldquo;Repetir&rdquo; que pr&eacute;-popula carrinho em 1 toque.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-024</span> Visualizar hist&oacute;rico de pedidos (data, restaurante, itens, valor)</div>
+              <div class="story-item"><span class="story-id">US-025</span> Repetir pedido anterior em 1 toque (pr&eacute;-popula carrinho)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F04.2</div>
+            <div class="feature-title">Sistema de Favoritos com Status em Tempo Real</div>
+            <div class="feature-description">Cora&ccedil;&atilde;o para favoritar, tela de favoritos com status din&acirc;mico (online/offline, promo, ETA).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-026</span> Favoritar e desfavoritar restaurante</div>
+              <div class="story-item"><span class="story-id">US-027</span> Visualizar tela de favoritos com status din&acirc;mico</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F04.3</div>
+            <div class="feature-title">Incentivos de Retorno e Cupom de Boas-Vindas</div>
+            <div class="feature-description">Cupom MVP10 celebrat&oacute;rio no primeiro acesso, incentivo de pr&oacute;ximo pedido na confirma&ccedil;&atilde;o.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-028</span> Receber cupom de boas-vindas no primeiro acesso (MVP10)</div>
+              <div class="story-item"><span class="story-id">US-029</span> Ver incentivo de pr&oacute;ximo pedido na confirma&ccedil;&atilde;o</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E05 -->
+      <div class="epic-block" style="border-left-color: var(--info);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--info);">E05</div>
+          <div class="epic-title">Onboarding e Autentica&ccedil;&atilde;o</div>
+        </div>
+        <div class="epic-description">Cadastro simples (email/senha), login r&aacute;pido com sess&atilde;o persistente via JWT e defini&ccedil;&atilde;o de endere&ccedil;o. Meta: tempo at&eacute; primeiro pedido &lt; 5 min (KR1, KR2).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F05.1</div>
+            <div class="feature-title">Cadastro e Login do Consumidor</div>
+            <div class="feature-description">Fluxo de cadastro com email/senha, login com sess&atilde;o persistente via JWT.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-030</span> Cadastrar conta de consumidor (nome, email, senha)</div>
+              <div class="story-item"><span class="story-id">US-031</span> Fazer login com email e senha (JWT persistente)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F05.2</div>
+            <div class="feature-title">Gest&atilde;o de Endere&ccedil;o de Entrega</div>
+            <div class="feature-description">Cadastro e gerenciamento de endere&ccedil;os com texto livre e CEP.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-032</span> Definir endere&ccedil;o de entrega (rua, n&uacute;mero, CEP)</div>
+              <div class="story-item"><span class="story-id">US-033</span> Gerenciar endere&ccedil;os salvos (editar, excluir)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F05.3</div>
+            <div class="feature-title">Perfil do Consumidor</div>
+            <div class="feature-description">Dados pessoais, cupons dispon&iacute;veis e logout.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-034</span> Visualizar e editar dados pessoais</div>
+              <div class="story-item"><span class="story-id">US-035</span> Visualizar cupons dispon&iacute;veis</div>
+              <div class="story-item"><span class="story-id">US-036</span> Fazer logout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E06 -->
+      <div class="epic-block" style="border-left-color: var(--warning);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--warning);">E06</div>
+          <div class="epic-title">Gest&atilde;o do Restaurante</div>
+        </div>
+        <div class="epic-description">Empoderar restaurantes artesanais com ferramentas para gerenciar card&aacute;pio, pedidos e perfil de forma aut&ocirc;noma. Onboarding guiado em 4 passos (&lt; 30 min). Meta: 50+ restaurantes ativos (KR4).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F06.1</div>
+            <div class="feature-title">Gest&atilde;o de Card&aacute;pio (CRUD de Itens)</div>
+            <div class="feature-description">Adicionar, editar, ativar/desativar e ordenar itens com preview visual.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-037</span> Adicionar item ao card&aacute;pio (nome, descri&ccedil;&atilde;o, pre&ccedil;o, badge, emoji)</div>
+              <div class="story-item"><span class="story-id">US-038</span> Editar item do card&aacute;pio</div>
+              <div class="story-item"><span class="story-id">US-039</span> Ativar e desativar item do card&aacute;pio (toggle)</div>
+              <div class="story-item"><span class="story-id">US-040</span> Ordenar itens no card&aacute;pio</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F06.2</div>
+            <div class="feature-title">Gest&atilde;o de Pedidos em Tempo Real</div>
+            <div class="feature-description">Lista com badge &ldquo;Novo&rdquo; pulsante, detalhes e bot&otilde;es de a&ccedil;&atilde;o sequenciais.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-041</span> Receber e visualizar pedidos em tempo real</div>
+              <div class="story-item"><span class="story-id">US-042</span> Atualizar status do pedido (Confirmar &rarr; Preparando &rarr; Pronto)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F06.3</div>
+            <div class="feature-title">Dados e Perfil do Restaurante</div>
+            <div class="feature-description">Edi&ccedil;&atilde;o de informa&ccedil;&otilde;es p&uacute;blicas, taxa de entrega, pedido m&iacute;nimo e promo&ccedil;&otilde;es.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-043</span> Editar informa&ccedil;&otilde;es do restaurante (nome, foto, culin&aacute;ria)</div>
+              <div class="story-item"><span class="story-id">US-044</span> Configurar taxa de entrega e pedido m&iacute;nimo</div>
+              <div class="story-item"><span class="story-id">US-045</span> Gerenciar promo&ccedil;&otilde;es ativas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E07 -->
+      <div class="epic-block" style="border-left-color: var(--lime);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--lime);">E07</div>
+          <div class="epic-title">Administra&ccedil;&atilde;o da Plataforma</div>
+        </div>
+        <div class="epic-description">Ferramentas de administra&ccedil;&atilde;o global: aprova&ccedil;&atilde;o de restaurantes, gest&atilde;o de categorias, promo&ccedil;&otilde;es globais e m&eacute;tricas de sa&uacute;de do marketplace (KR4).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F07.1</div>
+            <div class="feature-title">Gest&atilde;o de Restaurantes pela Plataforma</div>
+            <div class="feature-description">Aprovar/rejeitar cadastros, suspender/reativar, dashboard de m&eacute;tricas gerais.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-046</span> Aprovar ou rejeitar cadastro de restaurante</div>
+              <div class="story-item"><span class="story-id">US-047</span> Suspender e reativar restaurante</div>
+              <div class="story-item"><span class="story-id">US-048</span> Visualizar m&eacute;tricas gerais da plataforma</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F07.2</div>
+            <div class="feature-title">Gest&atilde;o de Categorias do Marketplace</div>
+            <div class="feature-description">CRUD de categorias de culin&aacute;ria com nome, &iacute;cone e ordena&ccedil;&atilde;o.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-049</span> Gerenciar categorias do marketplace (CRUD)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F07.3</div>
+            <div class="feature-title">Gest&atilde;o de Promo&ccedil;&otilde;es Globais da Plataforma</div>
+            <div class="feature-description">CRUD de cupons, regras de frete gr&aacute;tis e destaques no hero banner.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-050</span> Gerenciar cupons de desconto (criar, desativar)</div>
+              <div class="story-item"><span class="story-id">US-051</span> Configurar promo&ccedil;&atilde;o para hero banner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOUR RISKS                                                    -->
+    <!-- ============================================================ -->
+    <h2>Avalia&ccedil;&atilde;o dos 4 Riscos (Cagan)</h2>
+    <section class="section">
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--success);">Customer Value</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado com ressalvas</span></div>
+          <div class="risk-confidence">Confian&ccedil;a: Alta (80%)</div>
+          <div class="risk-body">Mercado de food delivery no Brasil atinge R$75 bi/ano (TAM). 5 segmentos validados com JTBDs distintos. 13 oportunidades priorizadas via RICE cobrindo 4 KRs. OPP-02 tem maior RICE (41.7) e OPP-12 maior RICE ajustado (80.0). <strong>Ressalva:</strong> cold start problem &mdash; consumidores com hist&oacute;rico no iFood podem n&atilde;o migrar sem massa cr&iacute;tica de restaurantes. Mitiga&ccedil;&atilde;o: cupom MVP10, frete gr&aacute;tis &gt; R$120 e UX premium como incentivos.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--info);">Business Value</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado</span></div>
+          <div class="risk-confidence">Confian&ccedil;a: Alta (85%)</div>
+          <div class="risk-body">4 KRs com metas mensur&aacute;veis: KR1 convers&atilde;o &gt; 8%, KR2 recompra &gt; 25%, KR3 ticket &gt; R$45, KR4 50+ restaurantes. SOM de R$18M/ano com comiss&atilde;o de 10-18%. Integra&ccedil;&atilde;o com ecp-digital-bank &eacute; diferencial &uacute;nico. Ranking por qualidade cria proposta de valor que iFood n&atilde;o pode replicar sem canibalizar receita de m&iacute;dia.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--warning);">Usability</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado com ressalvas</span></div>
+          <div class="risk-confidence">Confian&ccedil;a: Alta (78%)</div>
+          <div class="risk-body">14 hip&oacute;teses com 38 suposi&ccedil;&otilde;es falsific&aacute;veis, 15 de risco de usabilidade. Dois rounds de prototipa&ccedil;&atilde;o aprovados: low-fi (17 telas) e high-fi (17 telas Midnight Express). 7 princ&iacute;pios de Norman aplicados com rastreabilidade. <strong>Ressalva:</strong> autentica&ccedil;&atilde;o inline no ecp-digital-bank (risco de phishing perception) e espera de PIX via SSE (ansiedade).</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--danger);">Technical Feasibility</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado com ressalvas</span></div>
+          <div class="risk-confidence">Confian&ccedil;a: M&eacute;dia-Alta (72%)</div>
+          <div class="risk-body">Stack id&ecirc;ntica ao ecp-digital-bank (Node.js + Fastify + SQLite + React) &mdash; equipe com experi&ecirc;ncia comprovada. 51 stories (S=15, M=24, L=8, XL=1). <strong>Ressalva:</strong> integra&ccedil;&atilde;o ecp-digital-bank (lat&ecirc;ncia, SSE + webhook para PIX) requer spike t&eacute;cnico na semana 1 do Delivery. Paridade responsiva (desktop + mobile + tablet) com equipe enxuta &eacute; desafio.</div>
+        </div>
+      </div>
+      <p style="margin-top: 16px;"><strong>Veredicto geral:</strong> Aprovado com ressalvas &mdash; confian&ccedil;a 79%. Recomenda&ccedil;&atilde;o: prosseguir para Delivery com 5 condi&ccedil;&otilde;es, sendo 1 bloqueante (spike t&eacute;cnico ecp-digital-bank).</p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- HITL HISTORY                                                  -->
+    <!-- ============================================================ -->
+    <h2>HITLs da Fase 02</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>HITL</th><th>Escopo</th><th>Decis&atilde;o</th></tr></thead>
+        <tbody>
+          <tr><td>#2</td><td>Prioriza&ccedil;&atilde;o de oportunidades (13 de 19 para MVP, 5 temas, RICE scores)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#3</td><td>Insights e hip&oacute;teses (8 insights, 14 hip&oacute;teses em 5 temas, 6 selecionadas)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#4</td><td>Prot&oacute;tipo low-fi (17 telas wireframe, 3 jornadas)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#5</td><td>Prot&oacute;tipo high-fi (17 telas full design Midnight Express)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#6</td><td>Backlog estruturado (7 &eacute;picos, 19 features, 51 stories) + 4 riscos avaliados</td><td><span class="badge approved">Aprovado</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FILES                                                         -->
+    <!-- ============================================================ -->
+    <h2>Artefatos Gerados</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">02-product-discovery/priorizacao-oportunidades.json</span>
+        <span class="file-ref">02-product-discovery/ideacao-hipoteses.json</span>
+        <span class="file-ref">02-product-discovery/backlog.json</span>
+        <span class="file-ref">02-product-discovery/four-risks-assessment.json</span>
+        <span class="file-ref">02-product-discovery/prototype/low-fi.html</span>
+        <span class="file-ref">02-product-discovery/prototype/high-fi.html</span>
+        <span class="file-ref">02-product-discovery/hitl-02.json</span>
+        <span class="file-ref">02-product-discovery/hitl-03.json</span>
+        <span class="file-ref">02-product-discovery/hitl-04.json</span>
+        <span class="file-ref">02-product-discovery/hitl-05.json</span>
+        <span class="file-ref">02-product-discovery/hitl-06.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

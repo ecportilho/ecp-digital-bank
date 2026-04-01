@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 02 — Product Discovery | ECP Banco Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Banco Digital docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Visão Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estratégico</a></li>
+      <li><a href="fase-02.html" class="active"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operação</a></li>
+      <li class="sidebar-section-title">Ecossistema</li>
+      <li><a href="ecp-ecosystem.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instalação</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Fase 02 &mdash; Product Discovery</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITLs #2-#6 Aprovados</span>
+      <span>PO + Designer + PM</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Fase 02 &mdash; Product Discovery</h1>
+    <p class="subtitle">Oportunidades priorizadas, insights, hipóteses, protótipos, backlog estruturado e avaliação de riscos.</p>
+
+    <!-- Opportunities -->
+    <h2>Oportunidades Priorizadas para o MVP</h2>
+    <section class="section">
+      <p>10 oportunidades selecionadas (de 15 mapeadas), organizadas em 3 pilares:</p>
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Narrativa do MVP</div>
+        <div class="artifact-body">
+          <strong>3 pilares:</strong> (1) <span style="color:var(--lime)">ENTRADA</span> &mdash; onboarding rápido + valor imediato + comunicação web-first; (2) <span style="color:var(--info)">USO DIÁRIO</span> &mdash; Pix no browser + boletos + cartão virtual seguro; (3) <span style="color:var(--warning)">INTELIGÊNCIA</span> &mdash; extrato categorizado + transparência radical + segurança perceptível.
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Opp</th><th>Descrição</th><th>KR</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr><td><strong>opp-01</strong></td><td>Profissionais forçados a usar celular quebrando fluxo de trabalho</td><td>KR-01</td><td>27.0</td></tr>
+          <tr><td><strong>opp-11</strong></td><td>Taxas escondidas e linguagem confusa</td><td>KR-04</td><td>24.0</td></tr>
+          <tr><td><strong>opp-04</strong></td><td>Onboarding longo, burocrático, falhas em validação</td><td>KR-02</td><td>22.5</td></tr>
+          <tr><td><strong>opp-13</strong></td><td>Pix no computador impossível/burocrático</td><td>KR-05</td><td>22.5</td></tr>
+          <tr><td><strong>opp-05</strong></td><td>Sem valor imediato pós-cadastro</td><td>KR-02</td><td>18.0</td></tr>
+          <tr><td><strong>opp-10</strong></td><td>Insegurança em operações online no computador</td><td>KR-04</td><td>14.4</td></tr>
+          <tr><td><strong>opp-06</strong></td><td>Não entendem proposta web-first diferenciada</td><td>KR-02</td><td>14.0</td></tr>
+          <tr><td><strong>opp-14</strong></td><td>Gestão de boletos manual e fragmentada</td><td>KR-05</td><td>12.8</td></tr>
+          <tr><td><strong>opp-15</strong></td><td>Segurança granular em compras online (cartão virtual)</td><td>KR-05</td><td>12.8</td></tr>
+          <tr><td><strong>opp-02</strong></td><td>Não entendem para onde vai o dinheiro sem categorizar</td><td>KR-01</td><td>9.3</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Insights & Hypotheses -->
+    <h2>Insights e Hipóteses</h2>
+    <section class="section">
+      <h3>7 Insights Principais</h3>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-01 &mdash; Confiança alta</div>
+        <div class="artifact-title">Gap universal de experiência web é o maior diferencial competitivo disponível</div>
+        <div class="artifact-body">Todos os 6 concorrentes (Nubank, Inter, C6, PicPay, Mercado Pago, Neon) são 100% mobile-only ou possuem web extremamente limitada. A interface web deve ser desenhada nativamente para telas 1280px+, explorando densidade de informação, atalhos de teclado e multitasking.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-02 &mdash; Confiança alta</div>
+        <div class="artifact-title">Ausência de inteligência financeira nos extratos é um gap não-atendido</div>
+        <div class="artifact-body">Nenhum concorrente oferece categorização automática ou insights proativos no extrato. Usuários recorrem a apps terceiros (Organizze, Mobills). O extrato deve ser um "painel de inteligência financeira", não uma lista cronológica.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-03 &mdash; Confiança alta</div>
+        <div class="artifact-title">Onboarding é o momento crítico de conversão</div>
+        <div class="artifact-body">Time-to-first-action &lt;2h gera 3x mais ativação. Onboarding deve ser progressivo: mínimo de campos para criar conta, primeira ação guiada em &lt;2 minutos, revelação progressiva de funcionalidades.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-04 &mdash; Confiança alta</div>
+        <div class="artifact-title">Segurança perceptível é pré-requisito para confiança em banco novo</div>
+        <div class="artifact-body">Cada operação financeira deve ter feedback visual explícito de segurança: selos de proteção, confirmações graduais por valor, histórico de acessos visível, controles granulares de cartão virtual.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-05 &mdash; Confiança alta</div>
+        <div class="artifact-title">Transparência radical é diferenciador emocional contra incumbentes</div>
+        <div class="artifact-body">Toda tela transacional deve mostrar breakdown completo de custos antes da confirmação. Linguagem coloquial e direta, nunca jurídica.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-06 &mdash; Confiança alta</div>
+        <div class="artifact-title">Pix no desktop é a funcionalidade transacional mais demandada</div>
+        <div class="artifact-body">Nenhum concorrente oferece experiência Pix web fluida. Pix no desktop deve ser tão rápido quanto no celular, otimizado para teclado (tab entre campos, Enter para confirmar).</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-07 &mdash; Confiança média</div>
+        <div class="artifact-title">Ciclo salarial como eixo organizador é diferenciador</div>
+        <div class="artifact-body">Todos os concorrentes organizam extratos por mês-calendário, ignorando que o ciclo financeiro real do assalariado vai do dia do pagamento ao próximo. Dashboard deve oferecer visualização por ciclo salarial.</div>
+      </div>
+
+      <h3>10 Hipóteses Geradas &mdash; 4 Selecionadas para Prototipação</h3>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Hipótese</th><th>Opps</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>H1</strong></td><td>Dashboard Financeiro Web-First com Visão de Ciclo Salarial</td><td>opp-01, opp-02, opp-06</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td><strong>H2</strong></td><td>Onboarding Progressivo com Valor Imediato em 3 Etapas</td><td>opp-04, opp-05, opp-06</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td><strong>H3</strong></td><td>Pix Express Desktop &mdash; Transferência em 3 Cliques com Atalhos</td><td>opp-13, opp-01</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td><strong>H4</strong></td><td>Extrato Inteligente com Categorização Automática e Painel de Insights</td><td>opp-02, opp-01, opp-11</td><td><span class="badge approved">Selecionada</span></td></tr>
+          <tr><td>H5</td><td>Central de Transparência &mdash; Breakdown Visual de Custos</td><td>opp-11, opp-10</td><td><span class="badge neutral">Embutida em H3/H4</span></td></tr>
+          <tr><td>H6</td><td>Cartão Virtual com Controles Granulares</td><td>opp-15, opp-10</td><td><span class="badge neutral">Ciclo 2</span></td></tr>
+          <tr><td>H7</td><td>Central de Boletos com Status Visual e Alertas</td><td>opp-14, opp-11</td><td><span class="badge neutral">Próx. iteração</span></td></tr>
+          <tr><td>H8</td><td>Segurança Perceptível &mdash; Painel de Proteção</td><td>opp-10, opp-15, opp-13</td><td><span class="badge neutral">Embutida em H3/H4</span></td></tr>
+          <tr><td>H9</td><td>Layout Command-Palette Web-First com Navegação por Teclado</td><td>opp-01, opp-06</td><td><span class="badge neutral">Pós-MVP</span></td></tr>
+          <tr><td>H10</td><td>Web Notifications Inteligentes como Canal de Re-engajamento</td><td>opp-01, opp-10</td><td><span class="badge neutral">Delivery</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Personas -->
+    <h2>Personas Sint&eacute;ticas</h2>
+    <section class="section">
+      <p>5 personas representando os 4 segmentos de mercado. Constru&iacute;das por triangula&ccedil;&atilde;o de dados IBGE, FEBRABAN, reviews p&uacute;blicos e an&aacute;lise comportamental.</p>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--lime);">
+        <div class="artifact-label" style="color: var(--lime);">P-01 &mdash; Persona Prim&aacute;ria (MVP)</div>
+        <div class="artifact-title">Marina Oliveira, 28 anos &mdash; Analista de Marketing Digital</div>
+        <div class="artifact-body">
+          <p><strong>Segmento:</strong> Jovens Profissionais Assalariados | <strong>Renda:</strong> R$ 5.200/m&ecirc;s (CLT) | <strong>Pagamento:</strong> Dia 5</p>
+          <p><strong>Contexto:</strong> Passa 8-9h/dia no computador. Usa Nubank + BB (conta sal&aacute;rio). Faz 8 Pix/semana, sempre interrompendo o trabalho para pegar o celular.</p>
+          <p><strong>Frustra&ccedil;&otilde;es:</strong> Precisa pegar o celular para cada Pix. N&atilde;o sabe quanto gastou em alimenta&ccedil;&atilde;o no m&ecirc;s. O resumo do banco &eacute; por m&ecirc;s-calend&aacute;rio, n&atilde;o pelo ciclo salarial. Desistiu de apps de controle financeiro manual.</p>
+          <p><strong>Objetivos:</strong> Operar o banco sem sair do computador. Entender para onde vai o dinheiro sem esfor&ccedil;o. Saber quanto pode gastar at&eacute; o pr&oacute;ximo sal&aacute;rio.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Eu sei que ganho bem pra minha idade, mas no dia 25 eu j&aacute; t&ocirc; contando os dias pro pr&oacute;ximo pagamento. Se pelo menos eu conseguisse ver meus gastos de forma organizada...&rdquo;</p>
+          <p><strong>Insights:</strong> INS-01, INS-02, INS-03, INS-07 | <strong>KRs:</strong> KR-01, KR-02, KR-05</p>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--lime);">
+        <div class="artifact-label" style="color: var(--lime);">P-02 &mdash; Persona Prim&aacute;ria (MVP)</div>
+        <div class="artifact-title">Rafael Andrade Costa, 32 anos &mdash; Dev Backend S&ecirc;nior (Home Office)</div>
+        <div class="artifact-body">
+          <p><strong>Segmento:</strong> Jovens Profissionais Assalariados | <strong>Renda:</strong> R$ 12.500/m&ecirc;s (CLT) | <strong>Pagamento:</strong> Dia 25</p>
+          <p><strong>Contexto:</strong> 10h+/dia no computador (remote-first). Quase n&atilde;o usa celular. Gerencia finan&ccedil;as da fam&iacute;lia em 3 bancos diferentes.</p>
+          <p><strong>Frustra&ccedil;&otilde;es:</strong> Nubank n&atilde;o funciona no browser. Se irrita com interfaces web mal feitas. N&atilde;o tem vis&atilde;o consolidada. Quer investir mais mas n&atilde;o sabe quanto sobra.</p>
+          <p><strong>Objetivos:</strong> Banco 100% no browser. Vis&atilde;o de cash flow familiar. Categorizac&atilde;o autom&aacute;tica.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Eu passo o dia inteiro no computador. Por que eu preciso pegar o celular pra fazer um Pix? Em 2026 isso n&atilde;o faz sentido nenhum.&rdquo;</p>
+          <p><strong>Insights:</strong> INS-01, INS-02, INS-06 | <strong>KRs:</strong> KR-01, KR-05</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">P-03 &mdash; Persona Secund&aacute;ria (Ciclo 2)</div>
+        <div class="artifact-title">Thiago Nascimento, 24 anos &mdash; Designer Freelancer + Uber</div>
+        <div class="artifact-body">
+          <p><strong>Segmento:</strong> Freelancers e Gig Economy | <strong>Renda:</strong> R$ 3.000&ndash;5.500/m&ecirc;s (vari&aacute;vel, MEI)</p>
+          <p><strong>Contexto:</strong> Renda irregular, mistura Pix pessoal com clientes. Nenhum controle financeiro. Usa PicPay por cashback.</p>
+          <p><strong>Frustra&ccedil;&otilde;es:</strong> Nunca sabe se o m&ecirc;s foi lucrativo. Mistura gastos pessoais e profissionais. PicPay mudou regras sem avisar.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Tem m&ecirc;s que eu ganho 5 mil, tem m&ecirc;s que mal fecha 3. O problema &eacute; que eu s&oacute; descubro isso quando j&aacute; gastei.&rdquo;</p>
+          <p><strong>Insights:</strong> INS-02, INS-05 | <strong>KRs:</strong> KR-01, KR-03</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">P-04 &mdash; Persona Terci&aacute;ria (Ciclo 2+)</div>
+        <div class="artifact-title">Camila Santos Ferreira, 22 anos &mdash; Estagi&aacute;ria de RH + Universit&aacute;ria</div>
+        <div class="artifact-body">
+          <p><strong>Segmento:</strong> Nativos Digitais Universit&aacute;rios | <strong>Renda:</strong> R$ 1.800/m&ecirc;s (bolsa est&aacute;gio)</p>
+          <p><strong>Contexto:</strong> Mobile-first, 10 Pix/semana, zero controle. Cart&atilde;o sempre no limite. Acha apps de finan&ccedil;as &ldquo;chatos&rdquo;.</p>
+          <p><strong>Frustra&ccedil;&otilde;es:</strong> No dia 15 j&aacute; n&atilde;o tem nada e n&atilde;o sabe pra onde foi. Cart&atilde;o sempre estourado.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Eu sei que devia controlar meus gastos, mas abrir planilha d&aacute; pregui&ccedil;a. Se o banco me mostrasse isso automaticamente, eu at&eacute; olhava.&rdquo;</p>
+          <p><strong>Insights:</strong> INS-02, INS-03, INS-05 | <strong>KRs:</strong> KR-02, KR-03</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">P-05 &mdash; Persona Secund&aacute;ria (Ciclo 2)</div>
+        <div class="artifact-title">Roberto Almeida, 41 anos &mdash; Gerente de Opera&ccedil;&otilde;es</div>
+        <div class="artifact-body">
+          <p><strong>Segmento:</strong> Adultos Pragm&aacute;ticos em Transi&ccedil;&atilde;o | <strong>Renda:</strong> R$ 14.000/m&ecirc;s (CLT)</p>
+          <p><strong>Contexto:</strong> 7h/dia no PC (Outlook, Excel, SAP). Cliente Ita&uacute; h&aacute; 20+ anos, paga R$32/m&ecirc;s de tarifa. Prefere computador a celular para opera&ccedil;&otilde;es financeiras.</p>
+          <p><strong>Frustra&ccedil;&otilde;es:</strong> Interface web do Ita&uacute; &eacute; dos anos 2000. Tem medo de confiar R$14 mil a banco digital. Quer sair mas precisa de seguran&ccedil;a vis&iacute;vel.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Eu n&atilde;o tenho nada contra banco digital, mas R$14 mil do meu sal&aacute;rio n&atilde;o vai pra um lugar que eu n&atilde;o confio. Me mostra que &eacute; seguro e eu troco na hora.&rdquo;</p>
+          <p><strong>Insights:</strong> INS-01, INS-04, INS-05 | <strong>KRs:</strong> KR-02, KR-04, KR-05</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Research -->
+    <h2>Pesquisa de Usu&aacute;rios &mdash; Achados Qualitativos</h2>
+    <section class="section">
+      <p>An&aacute;lise de sentimento a partir de reviews p&uacute;blicos (App Store, Google Play, Reclame Aqui, Reddit, Twitter).</p>
+
+      <h3>Dores Validadas com Evid&ecirc;ncias</h3>
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">Dor #1 &mdash; Frequ&ecirc;ncia Alta</div>
+        <div class="artifact-title">Impossibilidade de usar banco no computador</div>
+        <div class="artifact-body">
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Uso di&aacute;rio &oacute;timo, mas cad&ecirc; a vers&atilde;o web? Passo o dia no notebook e preciso pegar celular pra cada Pix&rdquo; &mdash; Review Nubank, App Store</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;O app web &eacute; t&atilde;o limitado que nem d&aacute; pra chamar de internet banking&rdquo; &mdash; Review Inter, Google Play</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Imposs&iacute;vel acessar pelo computador. Em 2025 isso &eacute; inaceit&aacute;vel&rdquo; &mdash; Reclame Aqui, C6 Bank</p>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">Dor #2 &mdash; Frequ&ecirc;ncia Alta</div>
+        <div class="artifact-title">Extrato sem intelig&ecirc;ncia &mdash; lista cronol&oacute;gica sem sentido</div>
+        <div class="artifact-body">
+          <p style="font-style: italic; color: var(--muted);">&ldquo;O extrato &eacute; s&oacute; uma lista de n&uacute;meros. N&atilde;o sei quanto gastei em comida vs transporte sem fazer conta de cabe&ccedil;a&rdquo; &mdash; Review Nubank</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Meu dinheiro some e o app n&atilde;o me ajuda a entender pra onde foi&rdquo; &mdash; Review PicPay</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Algu&eacute;m mais sente que o Nubank podia categorizar os gastos automaticamente?&rdquo; &mdash; Reddit r/investimentos</p>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--warning);">
+        <div class="artifact-label" style="color: var(--warning);">Dor #3 &mdash; Frequ&ecirc;ncia M&eacute;dia-Alta</div>
+        <div class="artifact-title">Inseguran&ccedil;a com bancos digitais</div>
+        <div class="artifact-body">
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Bloquearam minha conta sem explica&ccedil;&atilde;o. R$5.000 presos. Demorou 15 dias pra resolver&rdquo; &mdash; Reclame Aqui, Nubank</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;38% dos usu&aacute;rios relatam preocupa&ccedil;&atilde;o com seguran&ccedil;a ao usar banking no celular em locais p&uacute;blicos&rdquo; &mdash; FEBRABAN 2024</p>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--warning);">
+        <div class="artifact-label" style="color: var(--warning);">Dor #4 &mdash; Frequ&ecirc;ncia M&eacute;dia</div>
+        <div class="artifact-title">Falta de transpar&ecirc;ncia em custos e pol&iacute;ticas</div>
+        <div class="artifact-body">
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Prometeram cashback de 10% e mudaram pra 2% sem avisar. Golpe&rdquo; &mdash; Reclame Aqui, PicPay</p>
+          <p style="font-style: italic; color: var(--muted);">&ldquo;Nubank era transparente, agora que cresceu virou igual aos outros&rdquo; &mdash; Review App Store</p>
+        </div>
+      </div>
+
+      <h3>Valida&ccedil;&atilde;o de Suposi&ccedil;&otilde;es Cr&iacute;ticas</h3>
+      <table class="data-table">
+        <thead><tr><th>Suposi&ccedil;&atilde;o</th><th>Status</th><th>Confian&ccedil;a</th></tr></thead>
+        <tbody>
+          <tr><td>CLT preferem banco no computador durante expediente</td><td><span class="badge approved">Validada</span></td><td>Alta</td></tr>
+          <tr><td>Usu&aacute;rios confiar&atilde;o em banco digital novo</td><td><span class="badge neutral">Parcial</span></td><td>M&eacute;dia</td></tr>
+          <tr><td>Categoriza&ccedil;&atilde;o autom&aacute;tica gera engajamento</td><td><span class="badge approved">Validada</span></td><td>Alta</td></tr>
+          <tr><td>Pix no desktop &eacute; demandado pelo segmento-alvo</td><td><span class="badge approved">Validada</span></td><td>Alta</td></tr>
+          <tr><td>Ciclo salarial como eixo organizador &eacute; valioso</td><td><span class="badge neutral">Parcial</span></td><td>M&eacute;dia</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Prototypes -->
+    <h2>Protótipos</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Low-fi Prototype &mdash; HITL #4 Aprovado</div>
+          <div class="artifact-title">17 Telas Wireframe</div>
+          <div class="artifact-body">
+            <p>Wireframes de todas as telas do fluxo primário: Login, Onboarding (3 etapas), Dashboard, Extrato, Pix (enviar/receber/chaves), Boletos, Cartão, Perfil.</p>
+            <p><a href="prototype/low-fi.html">Ver protótipo low-fi &rarr;</a></p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">High-fi Prototype &mdash; HITL #5 Aprovado</div>
+          <div class="artifact-title">17 Telas Full Design</div>
+          <div class="artifact-body">
+            <p>Design completo em dark theme (#0b0f14 bg, #131c28 cards, #b7ff2a acento) com identidade visual aplicada, fonte Inter, componentes UI e estados interativos.</p>
+            <p><a href="prototype/high-fi.html">Ver protótipo high-fi &rarr;</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Epics, Features, Stories -->
+    <h2>Backlog Estruturado</h2>
+    <section class="section">
+
+      <!-- EP-001 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">EP-001</div>
+          <div class="epic-title">Entrada &mdash; Onboarding Progressivo e Valor Imediato Web-First</div>
+        </div>
+        <div class="epic-description">Para profissionais CLT brasileiros de 22-35 anos que precisam abrir conta num banco digital sem interromper seu fluxo de trabalho no computador. Reduz o onboarding a 2 minutos e entrega valor perceptível antes do cadastro completo. Meta: 40% de ativação em 7 dias (KR-02).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-001</div>
+            <div class="feature-title">Cadastro de Conta &mdash; Etapa 1: Dados Mínimos</div>
+            <div class="feature-description">4 campos (nome, e-mail, CPF, senha). Meta: taxa de conclusão &ge; 85% e tempo &lt; 2 min.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-001</span> Criar conta com dados mínimos em menos de 2 minutos</div>
+              <div class="story-item"><span class="story-id">US-002</span> Validar CPF duplicado em tempo real antes do submit</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-002</div>
+            <div class="feature-title">Configuração Inicial &mdash; Etapa 2: Salário, Chave Pix e Personalização</div>
+            <div class="feature-description">Tour guiado opcional: configurar data do salário, registrar primeira chave Pix, conhecer o dashboard.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-003</span> Configurar data de recebimento do salário no onboarding</div>
+              <div class="story-item"><span class="story-id">US-004</span> Registrar primeira chave Pix durante o onboarding</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-003</div>
+            <div class="feature-title">Welcome Experience &mdash; Etapa 3: Dashboard com Preview e Proposta Web-First</div>
+            <div class="feature-description">Dashboard vazio com preview simulado e animação "Seu banco. Na tela onde você produz."</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-005</span> Ver dashboard com dados simulados após cadastro</div>
+              <div class="story-item"><span class="story-id">US-006</span> Completar checklist de configuração gamificado</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-004</div>
+            <div class="feature-title">Login e Autenticação</div>
+            <div class="feature-description">Login seguro com sessão persistente de 8h, logout por inatividade de 30 min.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-007</span> Fazer login com e-mail e senha</div>
+              <div class="story-item"><span class="story-id">US-008</span> Receber aviso antes do logout automático</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP-002 -->
+      <div class="epic-block" style="border-left-color: var(--info);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--info);">EP-002</div>
+          <div class="epic-title">Uso Diário &mdash; Pix Desktop, Boletos e Cartão Virtual com Segurança Perceptível</div>
+        </div>
+        <div class="epic-description">Pix em 3 cliques com atalhos de teclado, pagamento de boletos integrado ao extrato e cartão virtual com controles granulares. Meta: 60% dos WAU com transação semanal (KR-05).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-005</div>
+            <div class="feature-title">Envio de Pix &mdash; 3 Níveis de Segurança por Valor</div>
+            <div class="feature-description">Ctrl+P abre modal. Nível 1 (&lt;R$500 contato salvo): 1 clique. Nível 2 (R$500-R$2k): senha. Nível 3 (&gt;R$2k): senha + resumo + timeout 30s.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-009</span> Enviar Pix para contato salvo em menos de 45 segundos</div>
+              <div class="story-item"><span class="story-id">US-010</span> Confirmar Pix acima de R$2.000 com autenticação reforçada</div>
+              <div class="story-item"><span class="story-id">US-011</span> Ver alerta de limite noturno ao enviar Pix entre 22h-6h</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-006</div>
+            <div class="feature-title">Recebimento de Pix &mdash; QR Code e Chave de Cobrança</div>
+            <div class="feature-description">QR Code gerado em &lt;2s, link compartilhável, notificação Web quando Pix for recebido.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-012</span> Gerar QR Code Pix com valor para cobrança</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-007</div>
+            <div class="feature-title">Gerenciamento de Chaves Pix</div>
+            <div class="feature-description">CRUD de chaves com máximo 5 (RN-05), soft delete (RN-07).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-013</span> Registrar chave Pix do tipo CPF</div>
+              <div class="story-item"><span class="story-id">US-014</span> Remover chave Pix com confirmação</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-008</div>
+            <div class="feature-title">Pagamento de Boletos com Transparência e Alertas</div>
+            <div class="feature-description">Colar código de barras, decodificação automática &lt;1s, breakdown de transparência.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-015</span> Pagar boleto colando código de barras</div>
+              <div class="story-item"><span class="story-id">US-016</span> Ver breakdown de transparência antes de confirmar pagamento</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-009</div>
+            <div class="feature-title">Cartão Virtual com Controles Granulares de Segurança</div>
+            <div class="feature-description">Card visual com últimos 4 dígitos, toggle de bloqueio, limite por transação, fatura dia 25 (RN-06).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-017</span> Bloquear/desbloquear cartão instantaneamente</div>
+              <div class="story-item"><span class="story-id">US-018</span> Visualizar fatura atual com progresso até fechamento</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP-003 -->
+      <div class="epic-block" style="border-left-color: var(--warning);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--warning);">EP-003</div>
+          <div class="epic-title">Inteligência &mdash; Dashboard Web-First, Extrato Categorizado e Transparência Radical</div>
+        </div>
+        <div class="epic-description">Dashboard com ciclo salarial, extrato com categorização automática &gt;85% de acurácia, insights proativos e breakdown visual de custos em toda operação. Meta: 15.000 WAU-EFI (KR-01) e NPS &ge; 60 (KR-04).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-010</div>
+            <div class="feature-title">Dashboard Web-First com Saldo e Visão de Ciclo Salarial</div>
+            <div class="feature-description">Card de saldo, visão de ciclo configurável, donut chart de gastos por categoria, insights proativos.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-019</span> Ver dashboard com gastos organizados por ciclo salarial</div>
+              <div class="story-item"><span class="story-id">US-020</span> Interagir com gráfico donut de categorias</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-011</div>
+            <div class="feature-title">Extrato Inteligente com Categorização Automática</div>
+            <div class="feature-description">Timeline com badges coloridas por categoria, painel lateral com donut chart, filtros avançados.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-021</span> Ver extrato com transações categorizadas automaticamente</div>
+              <div class="story-item"><span class="story-id">US-022</span> Editar categoria de transação com 1 clique</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-012</div>
+            <div class="feature-title">Insights Financeiros Contextuais e Proativos</div>
+            <div class="feature-description">Max 3 insights por sessão, ações sugeridas, alertas de gasto relativos ao ciclo.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-023</span> Receber insight sobre aumento de gasto em categoria</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-013</div>
+            <div class="feature-title">Transparência Radical &mdash; Breakdown Visual de Custos</div>
+            <div class="feature-description">Card "Transparência" antes de toda confirmação financeira. Selo "Sem taxas escondidas".</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-024</span> Ver breakdown de custos antes de confirmar Pix</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-014</div>
+            <div class="feature-title">Perfil, Segurança da Conta e Preferências</div>
+            <div class="feature-description">Histórico de logins, sessões ativas, indicador "Sessão protegida", troca de senha.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-025</span> Visualizar histórico de acessos da conta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Four Risks -->
+    <h2>Avaliação dos 4 Riscos (Cagan)</h2>
+    <section class="section">
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--success);">Customer Value</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado</span></div>
+          <div class="risk-confidence">Confiança: Alto</div>
+          <div class="risk-body">Gap competitivo universal confirmado: todos os 6 concorrentes são 100% mobile-only. Demanda latente comprovada pelo comportamento de workaround (Organizze, Mobills). 79% dos adultos 22-35 usam canais digitais como principal. 4 suposições de valor ainda não testadas com usuários reais.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--info);">Business Value</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado</span></div>
+          <div class="risk-confidence">Confiança: Médio</div>
+          <div class="risk-body">9 de 10 oportunidades com cobertura direta pelas hipóteses. Todos os 5 KRs têm pelo menos uma hipótese associada. KR-03 (retenção D30 55%) é o gap de maior risco &mdash; sem mecanismo direto de retenção no MVP. SAM de R$ 72 bilhões valida o mercado.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--warning);">Usability</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado</span></div>
+          <div class="risk-confidence">Confiança: Alto</div>
+          <div class="risk-body">Dois rounds de prototipação aprovados sem solicitação de mudanças: low-fi (17 telas) e high-fi (17 telas em dark theme). Cobertura completa do fluxo primário. Design web-first nativo para 1280px+. 5 friction points identificados, todos de impacto médio ou baixo (exceto FP-05: Web Notifications opt-in).</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--danger);">Technical Feasibility</div>
+          <div class="risk-verdict"><span class="badge approved">Aprovado</span></div>
+          <div class="risk-confidence">Confiança: Médio</div>
+          <div class="risk-body">Stack madura e bem definida: React 18.3, Fastify 5.0, SQLite3, TypeScript. 2 constraints de alta severidade: acurácia de categorização (meta ajustada para &gt;80%) e ausência de integração real com SPI/DICT (path via BaaS para go-to-market).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Rules -->
+    <h2>Regras de Negócio (RN-01 a RN-10)</h2>
+    <section class="section">
+      <div class="rules-list">
+        <div class="rule-item"><div class="rule-id">RN-01</div><div class="rule-text">Limite diário Pix R$5.000 em horário comercial (6h-22h)</div></div>
+        <div class="rule-item"><div class="rule-id">RN-02</div><div class="rule-text">Limite noturno Pix R$1.000 por transação (22h-6h)</div></div>
+        <div class="rule-item"><div class="rule-id">RN-03</div><div class="rule-text">Autenticação reforçada para transações acima de R$2.000</div></div>
+        <div class="rule-item"><div class="rule-id">RN-04</div><div class="rule-text">Saldo insuficiente bloqueia Pix e pagamentos</div></div>
+        <div class="rule-item"><div class="rule-id">RN-05</div><div class="rule-text">Máximo de 5 chaves Pix por conta (1 CPF + 4 outras)</div></div>
+        <div class="rule-item"><div class="rule-id">RN-06</div><div class="rule-text">Limite do cartão virtual independente do saldo; fatura fecha dia 25</div></div>
+        <div class="rule-item"><div class="rule-id">RN-07</div><div class="rule-text">Soft delete &mdash; nenhum registro é deletado fisicamente</div></div>
+        <div class="rule-item"><div class="rule-id">RN-08</div><div class="rule-text">Idempotência via idempotency_key em requisições POST</div></div>
+        <div class="rule-item"><div class="rule-id">RN-09</div><div class="rule-text">Valores armazenados em centavos (integer), exibidos em BRL no front-end</div></div>
+        <div class="rule-item"><div class="rule-id">RN-10</div><div class="rule-text">Rate limit: máximo 10 Pix por hora por usuário</div></div>
+      </div>
+    </section>
+
+    <!-- HITL History -->
+    <h2>HITLs da Fase 02</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>HITL</th><th>Escopo</th><th>Decisão</th></tr></thead>
+        <tbody>
+          <tr><td>#2</td><td>Priorização de oportunidades (10 de 15 para MVP)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#3</td><td>Insights e hipóteses (7 insights, 10 hipóteses, 4 selecionadas)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#4</td><td>Protótipo low-fi (17 telas wireframe)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#5</td><td>Protótipo high-fi (17 telas full design dark theme)</td><td><span class="badge approved">Aprovado</span></td></tr>
+          <tr><td>#6</td><td>Backlog estruturado (3 épicos, 14 features, 25 stories) + 4 riscos avaliados</td><td><span class="badge approved">Aprovado</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Files -->
+    <h2>Artefatos Gerados</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">02-product-discovery/personas.json</span>
+        <span class="file-ref">02-product-discovery/user-research.json</span>
+        <span class="file-ref">02-product-discovery/opportunity-prioritization.json</span>
+        <span class="file-ref">02-product-discovery/insight-synthesis-and-ideation.json</span>
+        <span class="file-ref">02-product-discovery/backlog-estruturado.json</span>
+        <span class="file-ref">02-product-discovery/four-risks-assessment.json</span>
+        <span class="file-ref">02-product-discovery/hitl-02.json</span>
+        <span class="file-ref">02-product-discovery/hitl-03.json</span>
+        <span class="file-ref">02-product-discovery/hitl-04.json</span>
+        <span class="file-ref">02-product-discovery/hitl-05.json</span>
+        <span class="file-ref">02-product-discovery/hitl-06.json</span>
+        <span class="file-ref">02-product-discovery/phase-02-output.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

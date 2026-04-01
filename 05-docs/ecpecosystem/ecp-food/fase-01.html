@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 01 &mdash; Contexto Estrat&eacute;gico | ECP Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Food docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Vis&atilde;o Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html" class="active"><span class="nav-icon">01</span> Contexto Estrat&eacute;gico</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Opera&ccedil;&atilde;o</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Guia de Instala&ccedil;&atilde;o</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Fase 01 &mdash; Contexto Estrat&eacute;gico</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITL #1 Aprovado</span>
+      <span>Product Manager</span>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Fase 01 &mdash; Contexto Estrat&eacute;gico</h1>
+    <p class="subtitle">OKRs, North Star Metric, vis&atilde;o de produto, princ&iacute;pios, competidores, segmentos e OST.</p>
+
+    <!-- OKR -->
+    <h2>OKR Principal</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Objetivo</div>
+        <div class="artifact-title">Validar que FoodFlow entrega uma experi&ecirc;ncia de food delivery premium que consumidores preferem sobre incumbentes e que restaurantes artesanais adotam como canal principal em S&atilde;o Paulo</div>
+        <div class="artifact-body">
+          <p>4 Key Results mensur&aacute;veis | Medi&ccedil;&atilde;o semanal e mensal</p>
+        </div>
+      </div>
+
+      <div class="kr-grid">
+        <div class="kr-card">
+          <div class="kr-id">KR-01</div>
+          <div class="kr-description">Atingir taxa de convers&atilde;o (visitor-to-order) consistente acima de 8%</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Meta: 8%</div>
+          <div class="kr-metric">% de sess&otilde;es com pedido / total de sess&otilde;es &uacute;nicas</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0%</span><span>8%</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-02</div>
+          <div class="kr-description">Alcan&ccedil;ar taxa de recompra acima de 25% (2+ pedidos em 30 dias)</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Meta: 25%</div>
+          <div class="kr-metric">% consumidores com 2+ pedidos em janela de 30 dias corridos</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0%</span><span>25%</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-03</div>
+          <div class="kr-description">Atingir ticket m&eacute;dio acima de R$ 45 por pedido</div>
+          <div class="kr-meta">Baseline: R$ 0 &rarr; Meta: R$ 45</div>
+          <div class="kr-metric">GMV total / n&uacute;mero de pedidos completados</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>R$ 0</span><span>R$ 45</span></div>
+        </div>
+
+        <div class="kr-card">
+          <div class="kr-id">KR-04</div>
+          <div class="kr-description">Onboardar 50+ restaurantes artesanais ativos nos primeiros 3 meses</div>
+          <div class="kr-meta">Baseline: 0 &rarr; Meta: 50 restaurantes ativos</div>
+          <div class="kr-metric">Restaurantes com pelo menos 1 pedido/semana</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 0%;"></div></div>
+          <div class="progress-label"><span>0</span><span>50</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- North Star -->
+    <h2>North Star Metric</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">M&eacute;trica Estrela-Guia</div>
+        <div class="artifact-title" style="color: var(--lime); font-size: 1.3rem;">Pedidos Completados com Satisfa&ccedil;&atilde;o por Semana</div>
+        <div class="artifact-body">
+          <p><strong>Descri&ccedil;&atilde;o:</strong> N&uacute;mero de pedidos entregues com sucesso (sem cancelamento e sem reclama&ccedil;&atilde;o aberta) por semana ativa.</p>
+          <p><strong>F&oacute;rmula:</strong> &Sigma; (pedidos com status &lsquo;Entregue&rsquo; e sem ticket de reclama&ccedil;&atilde;o aberto em 48h) / semana</p>
+          <p><strong>Meta MVP:</strong> 630 pedidos/semana (90/dia) nos primeiros 3 meses</p>
+          <p><strong>Meta Ano 1:</strong> 6.300 pedidos/semana (900/dia)</p>
+          <h4>Input Metrics</h4>
+          <ul>
+            <li><strong>Taxa de Convers&atilde;o (Visitor-to-Order):</strong> % de sess&otilde;es que resultam em pedido. Meta: &gt; 8%</li>
+            <li><strong>Ticket M&eacute;dio por Pedido:</strong> GMV / pedidos. Meta: &gt; R$ 45</li>
+            <li><strong>Taxa de Recompra 30 dias:</strong> % consumidores com 2+ pedidos em 30 dias. Meta: &gt; 25%</li>
+            <li><strong>Tempo at&eacute; Primeiro Pedido (Time-to-Value):</strong> Mediana do tempo entre primeira visita e pedido. Meta: &lt; 5 minutos</li>
+            <li><strong>Restaurantes Ativos / Semana:</strong> Restaurantes com 1+ pedido nos &uacute;ltimos 7 dias. Meta: &gt; 40 (MVP), &gt; 200 (ano 1)</li>
+            <li><strong>NPS do Consumidor:</strong> Survey in-app ap&oacute;s 3&ordm; pedido. Meta: &gt; 40</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Principles -->
+    <h2>5 Princ&iacute;pios do Produto</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">Princ&iacute;pio #1</div>
+        <div class="artifact-title">Descoberta antes de tudo</div>
+        <div class="artifact-body">Cada tela deve ajudar o consumidor a encontrar o que quer comer em menos passos. Quando em d&uacute;vida entre adicionar complexidade ou simplificar a descoberta, simplifique. <em>Trade-off: Priorizamos experi&ecirc;ncia de descoberta mesmo que isso signifique mostrar menos restaurantes por tela.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princ&iacute;pio #2</div>
+        <div class="artifact-title">Checkout &eacute; sagrado</div>
+        <div class="artifact-body">Do carrinho ao pedido confirmado, zero distra&ccedil;&otilde;es e zero surpresas. Pre&ccedil;os transparentes, cupons que funcionam, pagamento que flui. <em>Trade-off: Priorizamos velocidade e clareza no checkout mesmo que isso limite op&ccedil;&otilde;es de upsell.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princ&iacute;pio #3</div>
+        <div class="artifact-title">Restaurante parceiro, n&atilde;o ref&eacute;m</div>
+        <div class="artifact-body">Restaurantes devem ter controle real sobre sua presen&ccedil;a: card&aacute;pio, pre&ccedil;os, promo&ccedil;&otilde;es, dados. Ranking transparente, sem &lsquo;pay-to-play&rsquo; obrigat&oacute;rio. <em>Trade-off: Priorizamos transpar&ecirc;ncia e controle do restaurante mesmo que isso reduza receita de m&iacute;dia paga.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princ&iacute;pio #4</div>
+        <div class="artifact-title">Design como diferencial competitivo</div>
+        <div class="artifact-body">A experi&ecirc;ncia visual do FoodFlow deve ser memor&aacute;vel. Dark mode premium, tipografia elegante, anima&ccedil;&otilde;es suaves, fotos que d&atilde;o fome. <em>Trade-off: Investimos mais tempo em craft visual mesmo que isso atrase entregas.</em></div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">Princ&iacute;pio #5</div>
+        <div class="artifact-title">Dados para decis&otilde;es, n&atilde;o para dashboards</div>
+        <div class="artifact-body">Cada m&eacute;trica que coletamos deve informar uma decis&atilde;o concreta &mdash; do restaurante (ajustar card&aacute;pio) ou da plataforma (melhorar recomenda&ccedil;&atilde;o). Se um dado n&atilde;o gera a&ccedil;&atilde;o, n&atilde;o o mostramos. <em>Trade-off: Poucos indicadores acion&aacute;veis sobre pain&eacute;is completos.</em></div>
+      </div>
+    </section>
+
+    <!-- Competitors -->
+    <h2>An&aacute;lise Competitiva</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead>
+          <tr><th>Concorrente</th><th>Market Share</th><th>For&ccedil;as</th><th>Gap para FoodFlow</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>iFood</td>
+            <td>~80%</td>
+            <td>Maior base (350k restaurantes), log&iacute;stica pr&oacute;pria, Clube iFood, IA de recomenda&ccedil;&atilde;o</td>
+            <td>UI polu&iacute;da, ranking opaco, sem curadoria real. Oportunidade de UX premium.</td>
+          </tr>
+          <tr>
+            <td>Rappi</td>
+            <td>~7%</td>
+            <td>Super-app (comida + mercado + farm&aacute;cia), Rappi Prime, forte em A/B</td>
+            <td>Dilui&ccedil;&atilde;o de foco. FoodFlow pode ser especialista em food.</td>
+          </tr>
+          <tr>
+            <td>99food</td>
+            <td>~3%</td>
+            <td>Integra&ccedil;&atilde;o 99/DiDi, comiss&otilde;es competitivas, subs&iacute;dios agressivos</td>
+            <td>Produto gen&eacute;rico, sem identidade premium. Validou espa&ccedil;o para challengers.</td>
+          </tr>
+          <tr>
+            <td>Keeta (ByteDance)</td>
+            <td>~1%</td>
+            <td>Apoio financeiro massivo, potencial TikTok, UX moderna</td>
+            <td>Marca nova sem confian&ccedil;a. FoodFlow como alternativa local com ecossistema ecp-digital-bank.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Segments -->
+    <h2>Segmentos de Mercado</h2>
+    <section class="section">
+      <div class="kr-grid">
+        <div class="kr-card">
+          <div class="kr-id">C1 &mdash; Explorador Gastron&ocirc;mico</div>
+          <div class="kr-description">Consumidor</div>
+          <div class="kr-meta">22-35 anos, A/B, SP, R$ 5-15k. Pede 3-5x/semana.</div>
+          <div class="kr-metric">JTBD: Descobrir restaurantes novos e interessantes perto de mim para viver experi&ecirc;ncias gastron&ocirc;micas variadas.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">C2 &mdash; Pr&aacute;tico Recorrente</div>
+          <div class="kr-description">Consumidor</div>
+          <div class="kr-meta">28-40 anos, CLT/PJ, SP, R$ 6-20k. Pede 2-4x/semana.</div>
+          <div class="kr-metric">JTBD: Repetir um pedido que j&aacute; sei que &eacute; bom gastando o m&iacute;nimo de tempo.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">C3 &mdash; Ca&ccedil;ador de Ofertas</div>
+          <div class="kr-description">Consumidor</div>
+          <div class="kr-meta">22-32 anos, estudantes/jovens, R$ 2-6k. Pede 1-3x/semana.</div>
+          <div class="kr-metric">JTBD: Encontrar promo&ccedil;&otilde;es e cupons reais para sentir que estou fazendo um bom neg&oacute;cio.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">R1 &mdash; Restaurante Artesanal</div>
+          <div class="kr-description">Restaurante</div>
+          <div class="kr-meta">1-3 unidades, R$ 50-300k/m&ecirc;s, chef/propriet&aacute;rio envolvido.</div>
+          <div class="kr-metric">JTBD: Quero uma plataforma que valorize a qualidade do meu produto sem depender de m&iacute;dia paga.</div>
+        </div>
+        <div class="kr-card">
+          <div class="kr-id">R2 &mdash; Dark Kitchen / Delivery-First</div>
+          <div class="kr-description">Restaurante</div>
+          <div class="kr-meta">Delivery-only, 1-5 marcas virtuais, R$ 30-150k/m&ecirc;s.</div>
+          <div class="kr-metric">JTBD: Quero analytics detalhados e boa exposi&ccedil;&atilde;o para otimizar card&aacute;pio e opera&ccedil;&atilde;o.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OST -->
+    <h2>Opportunity Solution Tree (OST)</h2>
+    <section class="section">
+      <p>19 oportunidades mapeadas na &aacute;rvore de oportunidades, organizadas por Key Result. Tipos: dor, necessidade, desejo.</p>
+
+      <h3>KR-01: Convers&atilde;o &gt; 8%</h3>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Consumidores sentem fadiga de decis&atilde;o ao navegar cat&aacute;logos longos e gen&eacute;ricos &mdash; precisam de curadoria que reduza esfor&ccedil;o cognitivo</td></tr>
+          <tr><td>2</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Consumidores abandonam pedido quando o checkout tem passos inesperados ou pre&ccedil;o final surpreende negativamente</td></tr>
+          <tr><td>3</td><td><span class="badge info">necessidade</span></td><td>Filtros e categorias relevantes que conectem diretamente com o que desejam comer naquele momento</td></tr>
+          <tr><td>4</td><td><span class="badge lime">desejo</span></td><td>Sentir confian&ccedil;a antes de pedir de restaurante novo &mdash; evid&ecirc;ncias visuais de qualidade (fotos, badges, ratings)</td></tr>
+          <tr><td>5</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Fluxo de pagamento com muitos passos ou autentica&ccedil;&atilde;o complexa destr&oacute;i convers&atilde;o</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-02: Recompra &gt; 25%</h3>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>6</td><td><span class="badge info">necessidade</span></td><td>Caminho ultra-r&aacute;pido para repetir pedidos anteriores sem refazer toda a jornada</td></tr>
+          <tr><td>7</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Aus&ecirc;ncia de incentivo de retorno faz consumidores voltarem ao app habitual (iFood)</td></tr>
+          <tr><td>8</td><td><span class="badge lime">desejo</span></td><td>Plataforma que &ldquo;me conhece&rdquo; &mdash; prefer&ecirc;ncias, favoritos e hist&oacute;rico criam experi&ecirc;ncia personalizada</td></tr>
+          <tr><td>9</td><td><span class="badge info">necessidade</span></td><td>Consist&ecirc;ncia na experi&ecirc;ncia &mdash; se primeiro pedido foi excelente mas segundo falhou, confian&ccedil;a quebra</td></tr>
+          <tr><td>10</td><td><span class="badge lime">desejo</span></td><td>Descobrir novidades curadas &mdash; n&atilde;o apenas repetir, mas expandir repert&oacute;rio gastron&ocirc;mico</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-03: Ticket M&eacute;dio &gt; R$ 45</h3>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>11</td><td><span class="badge info">necessidade</span></td><td>Confian&ccedil;a na qualidade para justificar pedidos de valor mais alto</td></tr>
+          <tr><td>12</td><td><span class="badge lime">desejo</span></td><td>Montar refei&ccedil;&otilde;es completas (entrada + prato + bebida) de forma intuitiva</td></tr>
+          <tr><td>13</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Frete torna pedidos pequenos invi&aacute;veis &mdash; percep&ccedil;&atilde;o de &ldquo;n&atilde;o vale pedir pouco&rdquo;</td></tr>
+          <tr><td>14</td><td><span class="badge info">necessidade</span></td><td>Restaurantes precisam comunicar valor via fotos, descri&ccedil;&otilde;es e badges que justifiquem pre&ccedil;os premium</td></tr>
+        </tbody>
+      </table>
+
+      <h3>KR-04: 50 Restaurantes Ativos</h3>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Tipo</th><th>Oportunidade</th></tr></thead>
+        <tbody>
+          <tr><td>15</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Restaurantes artesanais invis&iacute;veis em plataformas dominadas por grandes redes e algoritmos pay-to-play</td></tr>
+          <tr><td>16</td><td><span class="badge info">necessidade</span></td><td>Autonomia real para gerenciar card&aacute;pio, pre&ccedil;os e promo&ccedil;&otilde;es sem regras opacas</td></tr>
+          <tr><td>17</td><td><span class="badge lime">desejo</span></td><td>Entender comportamento dos consumidores &mdash; quais itens vendem mais, hor&aacute;rios, ticket m&eacute;dio</td></tr>
+          <tr><td>18</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">dor</span></td><td>Comiss&otilde;es altas que corroem margem, especialmente artesanais com custo de ingrediente elevado</td></tr>
+          <tr><td>19</td><td><span class="badge info">necessidade</span></td><td>Onboarding simples e r&aacute;pido &mdash; cadastrar, configurar entrega e come&ccedil;ar a receber pedidos sem burocracia</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Assumptions -->
+    <h2>Mapa de Suposi&ccedil;&otilde;es</h2>
+    <section class="section">
+      <p>7 suposi&ccedil;&otilde;es mapeadas: 3 de risco alto, 3 de risco m&eacute;dio, 1 de risco baixo.</p>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">A1 &mdash; Risco Alto &mdash; Tipo: Valor</div>
+        <div class="artifact-title">Consumidores urbanos 22-40 de SP est&atilde;o dispostos a migrar do iFood se a experi&ecirc;ncia de descoberta for significativamente melhor</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Landing page + waitlist + beta fechado com 200 early adopters</div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">A2 &mdash; Risco Alto &mdash; Tipo: Viabilidade de Neg&oacute;cio</div>
+        <div class="artifact-title">Restaurantes artesanais aceitar&atilde;o onboardar em plataforma nova sem volume inicial garantido</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Entrevistas com 30 donos + 0% comiss&atilde;o nos primeiros 3 meses + onboarding assistido</div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--danger);">
+        <div class="artifact-label" style="color: var(--danger);">A5 &mdash; Risco Alto &mdash; Tipo: Viabilidade</div>
+        <div class="artifact-title">&Eacute; poss&iacute;vel atingir massa cr&iacute;tica (50+ restaurantes e fluxo de consumidores) nos primeiros 3 meses em bairros-alvo de SP</div>
+        <div class="artifact-body"><strong>Como testar:</strong> Mapear densidade de restaurantes artesanais em Pinheiros, Vila Madalena, Itaim, Moema</div>
+      </div>
+    </section>
+
+    <!-- Market Sizing -->
+    <h2>Market Sizing</h2>
+    <section class="section">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">R$ 75bi</div>
+          <div class="stat-label">TAM &mdash; Food Delivery Brasil</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">R$ 12bi</div>
+          <div class="stat-label">SAM &mdash; Digital SP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">R$ 18mi</div>
+          <div class="stat-label">SOM &mdash; Nicho Premium SP</div>
+        </div>
+      </div>
+      <p>Brasil &eacute; o 4&ordm; maior mercado de delivery do mundo. S&atilde;o Paulo concentra ~16% do mercado nacional. SOM baseado em 50-80 restaurantes, ticket m&eacute;dio R$ 55, 900 pedidos/dia ap&oacute;s ramp-up.</p>
+    </section>
+
+    <!-- Files -->
+    <h2>Artefatos Gerados</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">01-strategic-context/phase-01-output.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>
