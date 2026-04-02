@@ -64,7 +64,7 @@ export function ProfileSwitcher() {
                   onClick={() => {
                     setIsOpen(false)
                     if (profile.type === 'pj') {
-                      const pjUrl = import.meta.env.VITE_PJ_APP_URL || 'http://localhost:5175'
+                      const pjUrl = import.meta.env.VITE_PJ_APP_URL || 'https://emps.ecportilho.com'
                       window.location.href = `${pjUrl}?switch=pj`
                     }
                   }}
