@@ -101,9 +101,9 @@ export function useAuth() {
     clearAuth()
   }, [clearAuth])
 
-  // Validate token on mount
+  // Validate token on mount — always check with server
   useEffect(() => {
-    if (state.token && !state.user) {
+    if (state.token) {
       api
         .get<{ user: User }>('/api/auth/me')
         .then((res) => {
@@ -113,7 +113,8 @@ export function useAuth() {
           clearAuth()
         })
     }
-  }, [state.token, state.user, clearAuth])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
     user: state.user,
