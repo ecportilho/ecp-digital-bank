@@ -1,6 +1,10 @@
+import crypto from 'node:crypto'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
+
+// Suffix changes on every restart, invalidating all previous tokens
+const JWT_RESTART_SUFFIX = crypto.randomBytes(16).toString('hex')
 import { errorHandler } from './shared/middleware/error-handler.js'
 import { authenticate } from './shared/middleware/auth.js'
 import { authRoutes } from './modules/auth/auth.routes.js'
@@ -29,7 +33,7 @@ export async function buildApp() {
 
   // JWT
   await app.register(jwt, {
-    secret: process.env.JWT_SECRET || 'ecp-digital-bank-dev-secret',
+    secret: (process.env.JWT_SECRET || 'ecp-digital-bank-dev-secret') + '-' + JWT_RESTART_SUFFIX,
     sign: {
       expiresIn: '7d',
     },
