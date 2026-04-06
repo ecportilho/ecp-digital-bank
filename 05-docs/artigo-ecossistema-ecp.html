@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como Construí um Ecossistema Financeiro Digital Completo com IA — ECP Ecosystem</title>
+  <meta name="description" content="Relato completo da construção de um ecossistema financeiro digital com 4 aplicações integradas usando um squad de agentes de IA multiagentes, Claude Code e Anthropic.">
+  <meta property="og:title" content="Como Construí um Ecossistema Financeiro Digital Completo com IA">
+  <meta property="og:description" content="Banco PF, Banco PJ, Gateway de Pagamentos e Delivery — 4 aplicações reais construídas por agentes de IA operando em squad.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0f14;
+      --bg-2: #0f1620;
+      --surface: #131c28;
+      --border: #1c2836;
+      --lime: #b7ff2a;
+      --lime-dim: rgba(183, 255, 42, 0.08);
+      --text: #eaf2ff;
+      --text-2: #a9b7cc;
+      --text-3: #7b8aa3;
+      --success: #3dff8b;
+      --info: #4da3ff;
+      --warning: #ffcc00;
+      --danger: #ff4d4d;
+      --font: 'Inter', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-2);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Article container */
+    .article {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Header */
+    .article-header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .article-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--lime);
+      background: var(--lime-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .article-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-3);
+    }
+
+    .article-meta .dot { color: var(--border); }
+
+    /* Typography */
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 56px 0 16px;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 36px 0 12px;
+    }
+
+    p {
+      margin-bottom: 16px;
+      font-size: 1.02rem;
+    }
+
+    strong { color: var(--text); font-weight: 600; }
+
+    a { color: var(--lime); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--lime);
+      padding: 16px 24px;
+      margin: 24px 0;
+      background: var(--lime-dim);
+      border-radius: 0 12px 12px 0;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--lime);
+    }
+
+    /* App card */
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 24px 0;
+      transition: border-color 0.2s;
+    }
+
+    .app-card:hover { border-color: rgba(183, 255, 42, 0.2); }
+
+    .app-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .app-card-icon {
+      font-size: 2rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .app-card-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .app-card-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-3);
+    }
+
+    .app-card-body {
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .app-card-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .feature-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--lime);
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+
+    .highlight-box strong { color: var(--lime); }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .stat-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--lime);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* Table */
+    .article-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+
+    .article-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--surface);
+      color: var(--text-3);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .article-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    .article-table td:first-child { color: var(--text); font-weight: 500; }
+
+    /* Divider */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* Footer */
+    .article-footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-3);
+    }
+
+    .article-footer a { color: var(--lime); }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-3);
+      margin-bottom: 32px;
+      text-decoration: none;
+    }
+    .back-link:hover { color: var(--lime); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .article { padding: 32px 16px 60px; }
+      h2 { font-size: 1.3rem; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<article class="article">
+
+  <a href="landing.html" class="back-link">&larr; Voltar para o Ecossistema</a>
+
+  <header class="article-header">
+    <span class="article-tag">Artigo Técnico</span>
+    <h1 class="article-title">Como Construí um Ecossistema Financeiro Digital Completo Usando Agentes de IA</h1>
+    <p class="article-subtitle">Do conceito à produção: 4 aplicações reais — banco pessoal, banco empresarial, gateway de pagamentos e delivery — criadas por um squad de agentes de IA operando com supervisão humana.</p>
+    <div class="article-meta">
+      <span>Edson Portilho</span>
+      <span class="dot">&bull;</span>
+      <span>Março 2026</span>
+      <span class="dot">&bull;</span>
+      <span>30 min de leitura</span>
+    </div>
+  </header>
+
+  <!-- Introdução -->
+  <p>Este artigo documenta a jornada de construção do <strong>ECP Ecosystem</strong> — uma plataforma financeira digital composta por 4 aplicações integradas, todas criadas com o auxílio de agentes de inteligência artificial operando em um modelo de squad com supervisão humana (Human-in-the-Loop).</p>
+
+  <p>O resultado é um ecossistema funcional, rodando em produção em uma VPS Ubuntu, com banco pessoal, banco empresarial, gateway de pagamentos e plataforma de delivery — todos conectados e processando transações reais via API do Asaas.</p>
+
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Aplicações</div></div>
+    <div class="stat-item"><div class="stat-value">29+</div><div class="stat-label">Endpoints</div></div>
+    <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">HITLs Aprovados</div></div>
+    <div class="stat-item"><div class="stat-value">2</div><div class="stat-label">Chatbots IA</div></div>
+  </div>
+
+  <hr>
+
+  <!-- 1. O Squad -->
+  <h2>1. O Squad de IA Multiagentes</h2>
+
+  <h3>O problema</h3>
+  <p>Construir software é um processo multidisciplinar: exige estratégia de produto, pesquisa de mercado, design de experiência, arquitetura técnica, desenvolvimento frontend e backend, qualidade e operações. Tradicionalmente, isso requer uma equipe de 8-12 pessoas trabalhando por meses.</p>
+
+  <p>A pergunta que motivou este projeto foi: <strong>é possível organizar agentes de IA em um squad que reproduza o ciclo completo de criação de produto, da estratégia à operação, com supervisão humana nos pontos críticos?</strong></p>
+
+  <h3>A solução: ECP AI Multi-Agent Squad</h3>
+  <p>Criei um framework de orquestração de agentes de IA organizado em <strong>4 fases sequenciais</strong>, com <strong>12 checkpoints de aprovação humana</strong> (HITL — Human in the Loop). Cada fase tem agentes especializados que executam tarefas específicas e entregam artefatos que alimentam a próxima fase.</p>
+
+  <table class="article-table">
+    <thead><tr><th>Fase</th><th>Agentes</th><th>Entregáveis</th></tr></thead>
+    <tbody>
+      <tr><td><strong>01 — Estratégia</strong></td><td>Product Manager</td><td>OKRs, OST, princípios de produto</td></tr>
+      <tr><td><strong>02 — Discovery</strong></td><td>Product Owner, Designer</td><td>Oportunidades, protótipos, backlog SAFe</td></tr>
+      <tr><td><strong>03 — Delivery</strong></td><td>Architect, Backend, Frontend, AI Engineer, QA</td><td>Código, API, banco, testes</td></tr>
+      <tr><td><strong>04 — Operação</strong></td><td>Operations, PM (A/B)</td><td>Deploy, SLOs, documentação</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>O diferencial:</strong> nenhum agente avança sem aprovação humana. O orquestrador apresenta os outputs de cada etapa, o humano avalia, aprova (com ou sem ressalvas) ou rejeita com feedback. O agente então ajusta e resubmete. Isso garante qualidade sem abrir mão da velocidade da IA.
+  </div>
+
+  <h3>Referências metodológicas</h3>
+  <p>O squad foi projetado com base em frameworks reais de produto e engenharia:</p>
+  <ul>
+    <li><strong>Torres (OST)</strong> — Opportunity Solution Tree para mapear oportunidades sem saltar para soluções</li>
+    <li><strong>Cagan (4 Riscos)</strong> — Avaliação de valor, usabilidade, viabilidade técnica e valor de negócio</li>
+    <li><strong>SAFe 6.0</strong> — Hierarquia Épico → Feature → User Story com BDD/Gherkin</li>
+    <li><strong>Evans (DDD)</strong> — Domain-Driven Design para modelagem de domínio</li>
+    <li><strong>Forsgren (DORA)</strong> — Métricas de engenharia para operações</li>
+  </ul>
+
+  <hr>
+
+  <!-- 2. ECP Digital Bank -->
+  <h2>2. ECP Digital Bank — O Banco Pessoal</h2>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-card-icon" style="background: rgba(183, 255, 42, 0.1);">🏦</div>
+      <div>
+        <div class="app-card-name">ecp-digital-bank</div>
+        <div class="app-card-subtitle">bank.ecportilho.com &bull; Porta 3333/5173</div>
+      </div>
+    </div>
+    <div class="app-card-body">
+      <p>O primeiro produto do ecossistema. Um banco digital completo para pessoas físicas, projetado como aplicação web-first — uma proposta incomum em um mercado dominado por apps mobile-only.</p>
+    </div>
+    <div class="app-card-features">
+      <span class="feature-badge">Pix enviar/receber</span>
+      <span class="feature-badge">Cartão virtual</span>
+      <span class="feature-badge">Extrato inteligente</span>
+      <span class="feature-badge">Pagamento de boletos</span>
+      <span class="feature-badge">Chatbot IA (Claude)</span>
+      <span class="feature-badge">Conta de serviço</span>
+    </div>
+  </div>
+
+  <h3>O problema que resolve</h3>
+  <p>Milhões de profissionais brasileiros passam 8-10 horas por dia no computador, mas são forçados a gerenciar finanças pelo celular — em telas pequenas, com dados fragmentados e sem contexto. O ECP Bank propõe uma experiência financeira completa no desktop, onde as pessoas trabalham e tomam decisões.</p>
+
+  <h3>Destaques técnicos</h3>
+  <p>O banco foi o primeiro produto a passar pelo squad completo (12 HITLs aprovados). Além das funcionalidades bancárias tradicionais, implementamos um <strong>chatbot com IA</strong> usando a API da Anthropic (Claude). O assistente utiliza um sistema de agentes com 4 especialidades (orquestrador, conhecimento, regras, transação) e 7 ferramentas que executam operações reais na conta: consultar saldo, enviar Pix, criar cartões, listar extrato.</p>
+
+  <p>O chatbot usa o padrão <code>tool_use</code> da API Claude, com um loop agêntico que permite até 5 iterações de uso de ferramentas antes de responder ao usuário. Isso significa que ele pode, em uma única conversa, consultar o saldo, verificar que há fundos suficientes, e executar uma transferência Pix — tudo com confirmação do usuário.</p>
+
+  <p>Também criamos uma <strong>conta de serviço</strong> (<code>platform@ecpay.dev</code>) com role <code>system</code> que permite ao gateway de pagamentos registrar compras na fatura do cartão e debitar a conta em pagamentos Pix — tudo via API protegida por role-based access control.</p>
+
+  <hr>
+
+  <!-- 3. ECP Digital Food -->
+  <h2>3. ECP Digital Food — O Delivery</h2>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-card-icon" style="background: rgba(255, 77, 77, 0.1);">🍕</div>
+      <div>
+        <div class="app-card-name">ecp-digital-food (FoodFlow)</div>
+        <div class="app-card-subtitle">food.ecportilho.com &bull; Porta 3000/5174</div>
+      </div>
+    </div>
+    <div class="app-card-body">
+      <p>Plataforma de delivery de comida com 6 restaurantes, catálogo de pratos, carrinho, pedidos e pagamento integrado. O primeiro consumidor real do ecossistema de pagamentos.</p>
+    </div>
+    <div class="app-card-features">
+      <span class="feature-badge">6 restaurantes</span>
+      <span class="feature-badge">Carrinho inteligente</span>
+      <span class="feature-badge">Pix copia e cola</span>
+      <span class="feature-badge">Cartão de crédito</span>
+      <span class="feature-badge">Split automático 85/15</span>
+      <span class="feature-badge">Chatbot IA (Claude)</span>
+    </div>
+  </div>
+
+  <h3>O problema que resolve</h3>
+  <p>O FoodFlow nasceu como caso de uso para validar o ecossistema de pagamentos. Um marketplace de delivery é o cenário perfeito: envolve múltiplas partes (cliente, restaurante, plataforma), exige split de pagamento, e requer integração com múltiplos métodos (Pix, cartão, boleto).</p>
+
+  <h3>Destaques técnicos</h3>
+  <p>O FoodFlow tem <strong>dois fluxos de pagamento completos</strong>:</p>
+  <ul>
+    <li><strong>Cartão de crédito:</strong> o pagamento passa pelo ECP Pay, que aprova a cobrança, registra na fatura do cartão da cliente no bank, e credita 85% na conta PJ do restaurante no emps.</li>
+    <li><strong>Pix copia e cola:</strong> o ECP Pay gera um código Pix, o cliente copia e paga, a confirmação chega via callback, a conta da cliente é debitada no bank, e o restaurante recebe o split no emps.</li>
+  </ul>
+
+  <p>O <strong>chatbot do FoodFlow</strong> é ainda mais ambicioso que o do bank: possui <strong>12 ferramentas</strong> que permitem ao usuário, por conversa natural, navegar restaurantes, buscar comidas, montar o carrinho, criar pedidos e pagar — tudo sem sair do chat. O assistente consulta o banco de dados em tempo real (cardápios com preços atuais, disponibilidade) e executa operações reais (adicionar ao carrinho, processar pagamento).</p>
+
+  <blockquote>
+    "Me mostra o cardápio do Brasa & Lenha" — o chatbot busca no banco, lista os pratos com preços e emojis, e pergunta o que o usuário quer pedir. "Adiciona a Picanha na Brasa" — ele encontra o ID real do item, adiciona ao carrinho e mostra o total atualizado.
+  </blockquote>
+
+  <hr>
+
+  <!-- 4. ECP Digital Emps -->
+  <h2>4. ECP Digital Emps — O Banco Empresarial</h2>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-card-icon" style="background: rgba(77, 163, 255, 0.1);">🏢</div>
+      <div>
+        <div class="app-card-name">ecp-digital-emps</div>
+        <div class="app-card-subtitle">emps.ecportilho.com &bull; Porta 3334/5175</div>
+      </div>
+    </div>
+    <div class="app-card-body">
+      <p>Banco digital para empresas com conta PJ, Pix empresarial, emissão de boletos, cartões corporativos e gestão de equipe. Compartilha sessão com o banco PF via JWT.</p>
+    </div>
+    <div class="app-card-features">
+      <span class="feature-badge">7 empresas cadastradas</span>
+      <span class="feature-badge">Conta PJ</span>
+      <span class="feature-badge">Emissão de boletos</span>
+      <span class="feature-badge">Pix empresarial</span>
+      <span class="feature-badge">Cartões corporativos</span>
+      <span class="feature-badge">Webhook de splits</span>
+    </div>
+  </div>
+
+  <h3>O problema que resolve</h3>
+  <p>Os 6 restaurantes do FoodFlow são empresas reais (MEI, LTDA). Quando um cliente paga um pedido, o restaurante precisa receber sua parte. Sem um banco PJ, esse dinheiro não teria para onde ir. O ECP Emps completa o ciclo financeiro: é onde os restaurantes veem seus recebimentos, gerenciam cobranças e operam financeiramente como empresas.</p>
+
+  <h3>Destaques técnicos</h3>
+  <p>O emps recebe <strong>webhooks do ECP Pay</strong> quando um split de pagamento é liquidado. O webhook chega em <code>POST /webhooks/payment-received</code>, autenticado por secret compartilhado, e credita automaticamente a conta PJ do restaurante. A Patricia Werneck, dona do Brasa & Lenha, vê no extrato: "Recebido — Pedido ecp-food — R$ 59,42".</p>
+
+  <p>O banco PJ <strong>compartilha JWT secret</strong> com o banco PF, permitindo que um usuário navegue entre sua conta pessoal e empresarial sem fazer login novamente. O ProfileSwitcher mostra dinamicamente o nome da empresa logada (não mais hardcoded), e o link "Alternar para PF" redireciona para o bank com um parâmetro <code>?switch=pj</code> que limpa o token anterior.</p>
+
+  <hr>
+
+  <!-- 5. ECP Digital Pay -->
+  <h2>5. ECP Digital Pay — O Gateway de Pagamentos</h2>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-card-icon" style="background: rgba(255, 204, 0, 0.1);">💳</div>
+      <div>
+        <div class="app-card-name">ecp-digital-pay</div>
+        <div class="app-card-subtitle">pay.ecportilho.com &bull; Porta 3335/5176</div>
+      </div>
+    </div>
+    <div class="app-card-body">
+      <p>Serviço centralizado de pagamentos do ecossistema. Abstrai gateways externos através do Provider Pattern, processa Pix, cartão e boleto, gerencia splits e notifica todos os participantes.</p>
+    </div>
+    <div class="app-card-features">
+      <span class="feature-badge">Provider Pattern</span>
+      <span class="feature-badge">Modo Internal (simulação)</span>
+      <span class="feature-badge">Modo Asaas (gateway real)</span>
+      <span class="feature-badge">Split de pagamento</span>
+      <span class="feature-badge">Cofre de tokens</span>
+      <span class="feature-badge">Dashboard admin</span>
+    </div>
+  </div>
+
+  <h3>O problema que resolve</h3>
+  <p>Sem o ECP Pay, cada aplicação do ecossistema teria que integrar diretamente com gateways de pagamento (Asaas, Stripe, etc.), duplicando código, tratamento de erros e lógica de webhooks. Se amanhã o Asaas mudar taxas ou sair do ar, a troca aconteceria em cada app individualmente — um pesadelo de manutenção.</p>
+
+  <p>O ECP Pay resolve isso com uma <strong>camada de abstração</strong>: todos os apps falam com o ECP Pay através de uma API única e padronizada. O Pay cuida de rotear para o gateway correto, processar splits, gerenciar tokens de cartão e notificar os participantes.</p>
+
+  <h3>O Provider Pattern</h3>
+  <p>A arquitetura mais elegante do ecossistema. Uma interface <code>PaymentProvider</code> define o contrato (Pix, cartão, boleto, estorno, status). Duas implementações concretas existem:</p>
+
+  <ul>
+    <li><strong>InternalAdapter:</strong> simulação local sem gateway externo. Pix aprova automaticamente após 3 segundos. Cartão aprova instantaneamente (rejeita se últimos 4 dígitos são 9999). Boleto gera barcode mock. Ideal para desenvolvimento, testes e demos.</li>
+    <li><strong>AsaasAdapter:</strong> gateway real via API Asaas v3. QR Code Pix real, processamento de cartão real com tokenização, boleto FEBRABAN com PDF. Testado no sandbox com CPF e cartão de teste.</li>
+  </ul>
+
+  <p>A troca entre modos é feita em <strong>runtime</strong>, sem reiniciar o servidor, via toggle no painel admin ou API. A mudança é registrada em audit log. Os apps consumidores nunca sabem qual modo está ativo — o contrato da API é idêntico.</p>
+
+  <h3>O fluxo completo de um pagamento</h3>
+  <p>Quando a Marina pede uma Picanha na Brasa (R$ 78,89) no FoodFlow e paga com cartão de crédito, acontece o seguinte em milissegundos:</p>
+
+  <ol>
+    <li>O <strong>FoodFlow</strong> envia <code>POST /pay/card</code> ao ECP Pay com o número do cartão, valor e identificação.</li>
+    <li>O <strong>ECP Pay</strong> processa via InternalAdapter (ou Asaas em produção) e retorna <code>status: completed</code>.</li>
+    <li>O ECP Pay calcula o <strong>split</strong>: R$ 67,06 (85%) para o restaurante + R$ 11,83 (15%) para a plataforma.</li>
+    <li>O ECP Pay <strong>notifica o bank</strong> via conta de serviço para registrar a compra na fatura do cartão da Marina.</li>
+    <li>O ECP Pay <strong>envia webhook ao emps</strong> para creditar R$ 67,06 na conta PJ do Brasa & Lenha.</li>
+    <li>O FoodFlow atualiza o pedido para "confirmado" e a Marina vê a confirmação na tela.</li>
+  </ol>
+
+  <p>Tudo isso verificado por um <strong>teste E2E automatizado</strong> com 23 checks que roda tanto no ambiente local (Windows 11) quanto na VPS (Ubuntu).</p>
+
+  <hr>
+
+  <!-- Infraestrutura -->
+  <h2>6. Infraestrutura e Deploy</h2>
+
+  <h3>Stack tecnológica</h3>
+  <table class="article-table">
+    <thead><tr><th>Camada</th><th>Tecnologia</th></tr></thead>
+    <tbody>
+      <tr><td>Backend</td><td>Fastify 5.0, TypeScript/JavaScript, better-sqlite3</td></tr>
+      <tr><td>Frontend</td><td>React 18.3, Vite 5.4, Tailwind CSS 3.4</td></tr>
+      <tr><td>IA</td><td>Anthropic Claude (Sonnet), tool_use pattern, agentes especializados</td></tr>
+      <tr><td>Pagamentos</td><td>Asaas API v3 (sandbox/produção), Provider Pattern</td></tr>
+      <tr><td>Infraestrutura</td><td>VPS Ubuntu 22.04, Nginx, PM2, Let's Encrypt SSL</td></tr>
+      <tr><td>Banco de dados</td><td>SQLite (4 bancos independentes, WAL mode)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Automação de deploy</h3>
+  <p>Cada aplicação possui dois instaladores automatizados:</p>
+  <ul>
+    <li><strong>Windows 11 (PowerShell):</strong> script .ps1 com 6 fases (pré-requisitos, dependências, ambiente, banco, startup, smoke test). Compila better-sqlite3 com Visual Studio Build Tools.</li>
+    <li><strong>VPS Ubuntu (Bash):</strong> script deploy-vps.sh com 12 etapas (sistema, clone, build, .env, DB, PM2, Nginx, SSL). Inclui Certbot para HTTPS automático.</li>
+  </ul>
+
+  <p>Além disso, 4 scripts de orquestração gerenciam o ecossistema completo na VPS: limpeza (<code>vps-cleanup.sh</code>), clone de repos (<code>vps-clone-repos.sh</code>), instalação sequencial com captura de secrets (<code>vps-install-all.sh</code>) e verificação E2E (<code>vps-verify.sh</code>).</p>
+
+  <h3>Domínios em produção</h3>
+  <table class="article-table">
+    <thead><tr><th>Domínio</th><th>Aplicação</th><th>Porta interna</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://bank.ecportilho.com" target="_blank">bank.ecportilho.com</a></td><td>Banco PF</td><td>3333</td></tr>
+      <tr><td><a href="https://emps.ecportilho.com" target="_blank">emps.ecportilho.com</a></td><td>Banco PJ</td><td>3334</td></tr>
+      <tr><td><a href="https://pay.ecportilho.com" target="_blank">pay.ecportilho.com</a></td><td>Gateway de Pagamentos</td><td>3335</td></tr>
+      <tr><td><a href="https://food.ecportilho.com" target="_blank">food.ecportilho.com</a></td><td>FoodFlow Delivery</td><td>3000</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- Claude Code: Por Dentro do Motor -->
+  <h2>7. Claude Code — O Motor por Trás do Squad</h2>
+
+  <p>Tudo que foi descrito até aqui — os 9 agentes, os 12 HITLs, as 4 fases, os chatbots — foi construído e executado dentro de uma única ferramenta: o <strong>Claude Code</strong>, o CLI oficial da Anthropic para desenvolvimento assistido por IA. Entender como ele funciona por dentro é fundamental para entender como este ecossistema foi possível.</p>
+
+  <h3>O que é o Claude Code</h3>
+  <p>Claude Code é um <strong>harness agêntico</strong> — um ambiente de execução que envolve o modelo Claude (LLM) e lhe dá acesso a ferramentas reais: ler arquivos, editar código, executar comandos no terminal, buscar na web, criar subprocessos. O loop central é simples: <strong>coletar contexto → agir → verificar resultado</strong>. Esse ciclo se repete até que a tarefa esteja completa ou o humano intervenha.</p>
+
+  <p>Diferente de um chatbot passivo que só responde perguntas, o Claude Code <strong>age no sistema de arquivos real</strong>. Quando ele edita um arquivo, o arquivo muda. Quando ele roda <code>npm install</code>, as dependências são instaladas. Quando ele cria um commit, o commit existe no git. É uma IA operando diretamente no seu ambiente de desenvolvimento.</p>
+
+  <div class="highlight-box">
+    <strong>O harness em uma frase:</strong> o Claude Code transforma um modelo de linguagem em um agente de software completo, com ferramentas, permissões, memória persistente e capacidade de delegar trabalho para sub-agentes especializados.
+  </div>
+
+  <h3>O sistema de ferramentas (Tools)</h3>
+  <p>O Claude Code não usa comandos "mágicos" — ele opera através de <strong>ferramentas tipadas</strong>, cada uma com um contrato de entrada/saída bem definido:</p>
+
+  <table class="article-table">
+    <thead><tr><th>Ferramenta</th><th>Função</th><th>Exemplo de uso no ECP</th></tr></thead>
+    <tbody>
+      <tr><td><code>Read</code></td><td>Ler arquivos (texto, imagem, PDF)</td><td>Ler <code>tech_spec.md</code> antes de gerar código</td></tr>
+      <tr><td><code>Edit</code></td><td>Editar trechos específicos de arquivos</td><td>Corrigir um bug no endpoint de Pix</td></tr>
+      <tr><td><code>Write</code></td><td>Criar ou reescrever arquivos</td><td>Gerar <code>server.js</code> do zero</td></tr>
+      <tr><td><code>Bash</code></td><td>Executar comandos no terminal</td><td>Rodar <code>npm test</code>, <code>git commit</code></td></tr>
+      <tr><td><code>Glob</code></td><td>Buscar arquivos por padrão</td><td>Encontrar todos os <code>*.test.js</code></td></tr>
+      <tr><td><code>Grep</code></td><td>Buscar conteúdo dentro de arquivos</td><td>Achar onde <code>ASAAS_API_KEY</code> é usado</td></tr>
+      <tr><td><code>Agent</code></td><td>Criar sub-agentes especializados</td><td>Delegar pesquisa de codebase</td></tr>
+      <tr><td><code>WebSearch</code> / <code>WebFetch</code></td><td>Buscar informações na web</td><td>Consultar docs da API Asaas</td></tr>
+    </tbody>
+  </table>
+
+  <p>Cada invocação de ferramenta é <strong>sandboxada</strong> e passa por um sistema de permissões. O usuário pode configurar regras de allow/deny por ferramenta, por padrão de comando, ou por diretório. Isso garante que a IA não execute ações destrutivas sem aprovação explícita.</p>
+
+  <h3>Arquivos CLAUDE.md — O DNA dos agentes</h3>
+  <p>O arquivo <code>CLAUDE.md</code> é o mecanismo central de configuração do Claude Code. Ele funciona como um <strong>system prompt persistente</strong> que é carregado automaticamente no início de cada sessão. É nele que definimos quem cada agente é, o que ele pode fazer, e quais regras deve seguir.</p>
+
+  <p>No ECP Squad, a hierarquia de CLAUDE.md funciona assim:</p>
+
+  <ul>
+    <li><strong>Raiz do squad</strong> (<code>/CLAUDE.md</code>) — Regras globais: ambiente Windows, contrato de inputs obrigatórios, regras invioláveis que todos os agentes devem seguir</li>
+    <li><strong>Orquestrador</strong> (<code>/agents/orchestrator/CLAUDE.md</code>) — Lógica de fases, mapeamento de HITLs, pré-flight check, regras de retroalimentação</li>
+    <li><strong>Cada agente</strong> (<code>/agents/product-manager/CLAUDE.md</code>, etc.) — Responsabilidades específicas, inputs esperados, outputs exigidos, subagentes disponíveis</li>
+    <li><strong>Cada subagente</strong> (<code>/agents/ai-engineer/subagents/chatbot-builder/CLAUDE.md</code>) — Especialização dentro do agente pai</li>
+  </ul>
+
+  <p>Quando o Claude Code abre uma sessão em um diretório, ele <strong>percorre a árvore de diretórios</strong> e carrega os CLAUDE.md encontrados. Arquivos na raiz são carregados imediatamente; arquivos em subdiretórios são carregados sob demanda quando o agente acessa aquele diretório. Isso significa que cada agente recebe automaticamente as instruções globais + suas instruções específicas.</p>
+
+  <div class="highlight-box">
+    <strong>Analogia:</strong> se o Claude (LLM) é o cérebro, o CLAUDE.md é a descrição do cargo. Ele não muda o modelo — ele muda o <em>comportamento</em> do modelo para aquele contexto específico.
+  </div>
+
+  <h3>Skills — Capacidades atômicas em Markdown</h3>
+  <p>Skills são <strong>unidades de trabalho reutilizáveis</strong> definidas como arquivos Markdown com frontmatter YAML. Cada skill descreve uma capacidade específica que um subagente sabe executar.</p>
+
+  <p>No ECP Squad, organizamos skills em uma hierarquia de 3 níveis:</p>
+
+  <pre style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto;"><code>agents/
+└── ai-engineer/                    # Agente
+    └── subagents/
+        └── chatbot-builder/        # Subagente
+            ├── CLAUDE.md           # Responsabilidades do subagente
+            └── skills/
+                ├── tool-use.md     # Skill: implementar tool_use
+                ├── guardrails.md   # Skill: aplicar guardrails
+                └── agent-loop.md   # Skill: loop agêntico</code></pre>
+
+  <p>Cada arquivo de skill contém:</p>
+  <ul>
+    <li><strong>Frontmatter</strong> — Nome e descrição (usado para decidir quando invocar)</li>
+    <li><strong>O que faz</strong> — Problema que resolve</li>
+    <li><strong>Padrão de implementação</strong> — Estrutura de código recomendada</li>
+    <li><strong>Safeguards</strong> — Tratamento de erros, rate limits, gates humanos</li>
+    <li><strong>Formato de output</strong> — JSON padronizado</li>
+  </ul>
+
+  <p>Skills são <strong>atômicas e idempotentes</strong>: executar a mesma skill duas vezes com os mesmos inputs produz o mesmo resultado, sem efeitos colaterais. Isso é fundamental para um sistema onde agentes podem ser interrompidos e retomados.</p>
+
+  <h3>Agentes e subagentes — Delegação inteligente</h3>
+  <p>O Claude Code possui uma ferramenta chamada <code>Agent</code> que permite criar <strong>subprocessos especializados</strong>. Cada subagente recebe seu próprio contexto isolado — ele não herda a conversa do agente pai, apenas o prompt de missão.</p>
+
+  <p>No ECP Squad, isso se traduz em uma cadeia de delegação:</p>
+
+  <ol>
+    <li>O <strong>orquestrador</strong> identifica a fase atual e chama o agente responsável (ex: AI Engineer)</li>
+    <li>O <strong>AI Engineer</strong> lê sua missão, consulta o <code>tech_spec.md</code>, e decide quais subagentes usar</li>
+    <li>O <strong>subagente chatbot-builder</strong> recebe a missão específica ("criar chatbot para o FoodFlow com 12 ferramentas")</li>
+    <li>O subagente executa as skills necessárias (<code>tool-use.md</code>, <code>agent-loop.md</code>, <code>guardrails.md</code>)</li>
+    <li>O resultado volta ao AI Engineer, que consolida e devolve ao orquestrador</li>
+  </ol>
+
+  <p>O isolamento de contexto é uma decisão arquitetural importante: cada subagente começa "limpo", sem o peso de toda a conversa anterior. Isso permite que tarefas complexas sejam divididas sem estourar a janela de contexto do modelo.</p>
+
+  <h3>Gestão de contexto e memória</h3>
+  <p>O Claude Code opera dentro de uma <strong>janela de contexto finita</strong> (até 1 milhão de tokens no Opus). À medida que a sessão avança, mensagens antigas são automaticamente compactadas — o harness sumariza interações anteriores para liberar espaço, preservando as instruções do CLAUDE.md que sobrevivem à compactação.</p>
+
+  <p>Além disso, o Claude Code possui um sistema de <strong>memória persistente</strong> baseado em arquivos:</p>
+
+  <ul>
+    <li><code>MEMORY.md</code> — Índice de memórias (carregado automaticamente no início de cada sessão)</li>
+    <li>Arquivos individuais de memória — Fatos sobre o usuário, feedbacks, estado do projeto, referências externas</li>
+    <li><code>context.json</code> — No ECP Squad, é o estado da sessão: fase atual, HITLs aprovados, inputs validados</li>
+  </ul>
+
+  <p>Essa combinação de compactação automática + memória persistente permite que sessões longas de desenvolvimento continuem coerentes mesmo após horas de trabalho.</p>
+
+  <h3>Hooks e permissões — Segurança em camadas</h3>
+  <p>O modelo de segurança do Claude Code opera em 3 camadas:</p>
+
+  <ol>
+    <li><strong>Permissões</strong> — Regras deny-first que controlam quais ferramentas podem ser usadas e com quais parâmetros. Deny bloqueia antes de ask (prompt para o usuário) e allow.</li>
+    <li><strong>Hooks</strong> — Comandos shell que executam automaticamente em eventos do ciclo de vida: antes de usar uma ferramenta (<code>PreToolUse</code>), após usar (<code>PostToolUse</code>), ao iniciar sessão (<code>SessionStart</code>). Hooks recebem JSON no stdin e retornam decisões (allow, block, ask).</li>
+    <li><strong>Sandbox</strong> — Isolamento a nível de sistema operacional que limita o que o processo pode fazer.</li>
+  </ol>
+
+  <p>No ECP Squad, usamos isso para garantir que nenhum agente execute comandos Unix no Windows (regra do CLAUDE.md raiz), que nenhum agente avance sem aprovação humana (HITL via orquestrador), e que operações destrutivas sempre peçam confirmação.</p>
+
+  <h3>Como tudo se conecta</h3>
+  <p>O fluxo completo de execução do squad, do ponto de vista do Claude Code:</p>
+
+  <pre style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.85rem; line-height: 1.6;"><code>1. Humano inicia sessão no Claude Code
+2. Harness carrega CLAUDE.md (raiz) → regras globais + contrato de inputs
+3. Orquestrador roda validate-inputs.mjs → valida 3 specs
+4. Orquestrador inicializa context.json → fase 01
+5. Loop de fases:
+   a. Orquestrador lê context.json → identifica agente da vez
+   b. Agente recebe missão + inputs da fase anterior
+   c. Agente lê specs (Read) → gera artefatos (Write/Edit)
+   d. Subagentes são criados (Agent tool) para tarefas específicas
+   e. Skills são executadas dentro dos subagentes
+   f. Output salvo em {REPO_DESTINO}/{fase}/
+   g. Orquestrador apresenta output ao humano → HITL
+   h. Humano aprova/rejeita → context.json atualizado
+   i. Próximo agente ou retry com feedback
+6. Após HITL #12: docs geradas, ciclo completo</code></pre>
+
+  <p>O que torna isso possível não é nenhuma tecnologia exótica — é a <strong>combinação de um LLM poderoso com um harness bem desenhado</strong>. O CLAUDE.md dá identidade, as ferramentas dão capacidade, os subagentes dão escala, as skills dão consistência, e o HITL dá segurança. O resultado é um sistema onde 1 humano + 9 agentes de IA produzem o output de um squad inteiro de produto.</p>
+
+  <hr>
+
+  <!-- Lições -->
+  <h2>8. Lições Aprendidas</h2>
+
+  <h3>Sobre agentes de IA em squad</h3>
+  <p>A IA é extraordinariamente boa em gerar código, estruturar documentos e seguir padrões. Onde ela falha é em decisões que exigem contexto de negócio, priorização estratégica e julgamento sobre trade-offs. O modelo HITL (Human-in-the-Loop) se mostrou essencial: o humano direciona, a IA executa, o humano valida.</p>
+
+  <h3>Sobre integrações entre sistemas</h3>
+  <p>A parte mais complexa não foi o código de cada aplicação individual — foi a <strong>cola entre elas</strong>. Variáveis de ambiente que precisam ser idênticas, portas que não podem colidir, tokens JWT compartilhados, webhooks com secrets simétricos, service accounts com roles corretas. Cada integração é uma superfície de falha. O teste E2E automatizado foi o que garantiu que tudo funcionava junto.</p>
+
+  <h3>Sobre deploy em produção</h3>
+  <p>A diferença entre "funciona no meu computador" e "funciona na VPS" é abismal. <code>dotenv/config</code> não carrega no ESM com tsx via PM2. O <code>npx vite build</code> tenta instalar o Vite 8 global em vez de usar o local. Heredocs do bash quebram quando o terminal cola comandos com espaços. Cada uma dessas falhas virou uma correção nos scripts de deploy — até que o processo ficou robusto o suficiente para instalar o ecossistema completo com um único comando.</p>
+
+  <h3>Sobre o Claude Code como ferramenta de desenvolvimento</h3>
+  <p>O Claude Code se mostrou ideal para este tipo de projeto porque combina autonomia com controle. A IA pode gerar centenas de linhas de código, mas cada decisão crítica passa pelo humano. Os CLAUDE.md garantem consistência: mesmo após horas de sessão, o agente continua seguindo as regras do <code>tech_spec.md</code>. E quando algo dá errado, o sistema de memória e contexto permite retomar de onde parou sem perder o fio da meada.</p>
+
+  <hr>
+
+  <!-- Conclusão -->
+  <h2>9. Conclusão</h2>
+
+  <p>O ECP Ecosystem demonstra que é possível construir sistemas financeiros complexos e integrados com IA assistindo em todas as fases — da estratégia de produto ao deploy em produção. Não como substituição da inteligência humana, mas como <strong>amplificação</strong>: o humano define o quê e o porquê, a IA executa o como com velocidade e consistência impossíveis para uma pessoa sozinha.</p>
+
+  <p>O resultado é um ecossistema real, com transações reais, em produção real — tudo construído de forma iterativa, com supervisão humana em cada decisão crítica, e com a disciplina de documentar, testar e automatizar cada etapa do processo.</p>
+
+  <blockquote>
+    "Tornar pagamentos invisíveis para o ecossistema ECP — qualquer app processa qualquer meio de pagamento com uma única chamada, sem conhecer gateways, sem duplicar código, sem depender de serviços externos para desenvolver."
+    <br><br>
+    — Objetivo estratégico do ECP Pay, aprovado no HITL #1
+  </blockquote>
+
+  <div class="stats-row" style="margin-top: 32px;">
+    <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Aplicações em produção</div></div>
+    <div class="stat-item"><div class="stat-value">23/23</div><div class="stat-label">Testes E2E passando</div></div>
+    <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Tools de IA (chatbots)</div></div>
+    <div class="stat-item"><div class="stat-value">1</div><div class="stat-label">Desenvolvedor humano</div></div>
+  </div>
+
+  <footer class="article-footer">
+    <p>
+      <a href="landing.html">ECP Ecosystem</a> &bull;
+      <a href="ecp-ecosystem.html">Documentação Técnica</a> &bull;
+      <a href="https://github.com/ecportilho" target="_blank">GitHub</a>
+    </p>
+    <p style="margin-top: 12px;">&copy; 2026 ECP — Ecossistema Financeiro Digital</p>
+    <p style="margin-top: 8px; font-size: 0.75rem;">Desenvolvido com Claude Code (Anthropic)</p>
+  </footer>
+
+</article>
+
+</body>
+</html>
