@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECP Ecosystem — Experimento com Squad de Multiagentes de IA</title>
+<meta name="description" content="Experimento com um squad de multiagentes de IA para criação de um ecossistema digital, avaliando como a IA agêntica potencializa o ciclo de desenvolvimento de produtos digitais.">
+<meta property="og:title" content="ECP Ecosystem — Squad de Multiagentes de IA">
+<meta property="og:description" content="Experimento avaliando como a IA agêntica potencializa velocidade, qualidade e produtividade no desenvolvimento de produtos digitais.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ─────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0b0f14;
+  --bg-2: #0f1620;
+  --surface: #131c28;
+  --border: #1c2836;
+  --lime: #b7ff2a;
+  --lime-dim: rgba(183, 255, 42, 0.08);
+  --lime-glow: rgba(183, 255, 42, 0.15);
+  --text: #eaf2ff;
+  --text-2: #a9b7cc;
+  --text-3: #7b8aa3;
+  --success: #3dff8b;
+  --info: #4da3ff;
+  --warning: #ffcc00;
+  --danger: #ff4d4d;
+  --gradient: linear-gradient(135deg, #b7ff2a 0%, #7ed100 100%);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── Animated Grid Background ─────────────────────── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(183,255,42,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(183,255,42,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridShift 20s linear infinite;
+}
+@keyframes gridShift {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+.grid-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(183,255,42,0.06) 0%, transparent 60%);
+}
+
+/* ── Section defaults ─────────────────────────────── */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 24px;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-2);
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* ── Fade-in animation ────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── HERO ─────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 40px;
+  position: relative;
+}
+.hero-logo {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.hero-logo .hex {
+  color: var(--lime);
+  text-shadow: 0 0 40px rgba(183,255,42,0.4), 0 0 80px rgba(183,255,42,0.15);
+  display: inline-block;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%, 100% { text-shadow: 0 0 40px rgba(183,255,42,0.4), 0 0 80px rgba(183,255,42,0.15); }
+  50% { text-shadow: 0 0 60px rgba(183,255,42,0.6), 0 0 120px rgba(183,255,42,0.25); }
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .hero-experiment {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--lime);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 24px;
+}
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-2);
+  max-width: 720px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+}
+.btn-primary {
+  background: var(--gradient);
+  color: #0b0f14;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 24px rgba(183,255,42,0.35);
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--lime);
+  box-shadow: 0 0 16px rgba(183,255,42,0.1);
+  transform: translateY(-2px);
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollBounce 2s ease-in-out infinite;
+  color: var(--text-3);
+  font-size: 1.5rem;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
+  50% { transform: translateX(-50%) translateY(10px); opacity: 1; }
+}
+
+/* ── EXPERIMENT SECTION ───────────────────────────── */
+.experiment-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  margin-top: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.experiment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient);
+  opacity: 0.7;
+}
+.experiment-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--lime);
+}
+.experiment-card p {
+  color: var(--text-2);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.experiment-card ul {
+  list-style: none;
+  margin-top: 16px;
+}
+.experiment-card ul li {
+  padding: 8px 0;
+  font-size: 0.92rem;
+  color: var(--text-2);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.experiment-card ul li::before {
+  content: '>';
+  color: var(--lime);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── STATS ────────────────────────────────────────── */
+.stats {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 24px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+.stat-item .stat-number {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--lime);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-item .stat-label {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 16px; }
+}
+
+/* ── APPS ─────────────────────────────────────────── */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+}
+.app-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.app-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 20px 20px 0 0;
+  opacity: 0.7;
+}
+.app-card[data-accent="lime"]::before   { background: var(--gradient); }
+.app-card[data-accent="info"]::before   { background: linear-gradient(135deg, #4da3ff, #2979cc); }
+.app-card[data-accent="warning"]::before { background: linear-gradient(135deg, #ffcc00, #e6a800); }
+.app-card[data-accent="danger"]::before  { background: linear-gradient(135deg, #ff6b35, #ff4d4d); }
+.app-card[data-accent="purple"]::before  { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+
+.app-card:hover { transform: translateY(-6px); }
+.app-card[data-accent="lime"]:hover    { border-color: rgba(183,255,42,0.3); box-shadow: 0 8px 40px rgba(183,255,42,0.08); }
+.app-card[data-accent="info"]:hover    { border-color: rgba(77,163,255,0.3); box-shadow: 0 8px 40px rgba(77,163,255,0.08); }
+.app-card[data-accent="warning"]:hover { border-color: rgba(255,204,0,0.3); box-shadow: 0 8px 40px rgba(255,204,0,0.08); }
+.app-card[data-accent="danger"]:hover  { border-color: rgba(255,107,53,0.3); box-shadow: 0 8px 40px rgba(255,107,53,0.08); }
+.app-card[data-accent="purple"]:hover  { border-color: rgba(168,85,247,0.3); box-shadow: 0 8px 40px rgba(168,85,247,0.08); }
+
+.app-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+.app-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.app-card .app-desc {
+  color: var(--text-2);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+.app-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+.app-features li {
+  padding: 6px 0;
+  font-size: 0.88rem;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-features li::before {
+  content: '>';
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.app-card[data-accent="lime"] .app-features li::before   { color: var(--lime); }
+.app-card[data-accent="info"] .app-features li::before    { color: var(--info); }
+.app-card[data-accent="warning"] .app-features li::before { color: var(--warning); }
+.app-card[data-accent="danger"] .app-features li::before  { color: var(--danger); }
+.app-card[data-accent="purple"] .app-features li::before  { color: #a855f7; }
+
+.app-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.app-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.app-card[data-accent="lime"] .app-link   { color: var(--lime); background: rgba(183,255,42,0.08); }
+.app-card[data-accent="info"] .app-link   { color: var(--info); background: rgba(77,163,255,0.08); }
+.app-card[data-accent="warning"] .app-link { color: var(--warning); background: rgba(255,204,0,0.08); }
+.app-card[data-accent="danger"] .app-link  { color: #ff6b35; background: rgba(255,107,53,0.08); }
+.app-card[data-accent="purple"] .app-link  { color: #a855f7; background: rgba(168,85,247,0.08); }
+.app-link:hover { transform: translateX(4px); }
+
+@media (max-width: 768px) {
+  .apps-grid { grid-template-columns: 1fr; }
+}
+
+/* ── SQUAD ────────────────────────────────────────── */
+.squad-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  margin-top: 56px;
+  position: relative;
+  overflow: hidden;
+}
+.squad-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  opacity: 0.7;
+}
+.squad-card .squad-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+.squad-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.squad-card .squad-desc {
+  color: var(--text-2);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+.agent-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  color: var(--text-2);
+  transition: border-color 0.2s;
+}
+.agent-badge:hover {
+  border-color: #a855f7;
+}
+.agent-badge .agent-emoji {
+  font-size: 1.2rem;
+}
+
+/* ── ARCHITECTURE ─────────────────────────────────── */
+.arch-diagram {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.arch-row {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.arch-node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 28px;
+  text-align: center;
+  min-width: 180px;
+  transition: border-color 0.3s ease;
+}
+.arch-node .arch-emoji { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+.arch-node .arch-name { font-weight: 700; font-size: 0.95rem; }
+.arch-node .arch-sub { font-size: 0.78rem; color: var(--text-3); margin-top: 2px; }
+.arch-node.center-node {
+  border-color: var(--lime);
+  box-shadow: 0 0 30px rgba(183,255,42,0.1);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(183,255,42,0.04) 100%);
+}
+.arch-connector {
+  width: 2px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--border), var(--lime), var(--border));
+  margin: 0 auto;
+}
+.arch-desc {
+  margin-top: 48px;
+  max-width: 640px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── TECH STACK ───────────────────────────────────── */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 48px;
+  justify-content: center;
+}
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-2);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.tech-badge:hover {
+  border-color: var(--lime);
+  color: var(--text);
+}
+.tech-badge span { font-size: 1.15rem; }
+
+/* ── PHASES ───────────────────────────────────────── */
+.phases-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.phase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.phase-card:hover {
+  border-color: var(--lime);
+}
+.phase-number {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--lime);
+  margin-bottom: 8px;
+}
+.phase-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.phase-card p {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+  .phases-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── FOOTER ───────────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 60px 24px 40px;
+  background: var(--bg-2);
+}
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+.footer-brand .footer-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.footer-brand .footer-logo .hex { color: var(--lime); }
+.footer-brand p { color: var(--text-3); font-size: 0.88rem; line-height: 1.6; max-width: 280px; }
+.footer-col h4 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 16px;
+}
+.footer-col a {
+  display: block;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  color: var(--text-2);
+  transition: color 0.2s ease;
+}
+.footer-col a:hover { color: var(--lime); }
+.footer-bottom {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-bottom p { font-size: 0.82rem; color: var(--text-3); }
+.claude-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+@media (max-width: 768px) {
+  .footer-content { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+@media (max-width: 480px) {
+  .footer-content { grid-template-columns: 1fr; }
+}
+
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+</style>
+</head>
+<body>
+
+<!-- Animated Grid Background -->
+<div class="grid-bg"></div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-logo">
+    <span class="hex">&#x2B21;</span> ECP
+  </div>
+  <div class="hero-experiment">Experimento &mdash; Squad de Multiagentes de IA</div>
+  <h1>Ecossistema Digital<br>Criado por Agentes de IA</h1>
+  <p>Um experimento com um squad de multiagentes de IA para a cria&ccedil;&atilde;o de um ecossistema digital completo, avaliando como a IA ag&ecirc;ntica potencializa o ciclo de desenvolvimento de produtos digitais em termos de <strong style="color: var(--lime);">velocidade</strong>, <strong style="color: var(--lime);">qualidade</strong> e <strong style="color: var(--lime);">produtividade</strong>.</p>
+  <div class="hero-buttons">
+    <a href="#apps" class="btn btn-primary">Explorar Produtos &#x2193;</a>
+    <a href="ecp-ai-multi-agents-squad/index.html" class="btn btn-secondary">Squad de IA &#x2192;</a>
+  </div>
+  <div class="scroll-indicator">&#x2039; &#x2193; &#x203A;</div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="stats">
+  <div class="container">
+    <div class="stats-grid reveal">
+      <div class="stat-item">
+        <div class="stat-number" data-target="4">0</div>
+        <div class="stat-label">Produtos Digitais</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="10">0</div>
+        <div class="stat-label">Agentes de IA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="4">0</div>
+        <div class="stat-label">Fases por Produto</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="12">0</div>
+        <div class="stat-label">Checkpoints Humanos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="36">0</div>
+        <div class="stat-label">Subagentes Especializados</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIMENT -->
+<section id="experiment">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">O Experimento</div>
+      <h2 class="section-title">IA ag&ecirc;ntica no ciclo<br>de produto digital</h2>
+      <p class="section-subtitle mx-auto">Este projeto avalia o impacto de um squad de multiagentes de IA no desenvolvimento completo de produtos digitais &mdash; do contexto estrat&eacute;gico ao deploy em produ&ccedil;&atilde;o.</p>
+    </div>
+    <div class="experiment-card reveal">
+      <h3>O que estamos avaliando</h3>
+      <p>O ECP Ecosystem &eacute; um ecossistema digital composto por 4 produtos integrados, todos criados e desenvolvidos com o aux&iacute;lio de um squad de multiagentes de IA. Cada produto passou pelas 4 fases do ciclo de desenvolvimento com 12 checkpoints de revis&atilde;o humana (Human in the Loop).</p>
+      <p>O experimento investiga tr&ecirc;s dimens&otilde;es fundamentais:</p>
+      <ul>
+        <li><strong>Velocidade:</strong> Quanto tempo um squad de IA reduz em cada fase do ciclo de produto &mdash; da pesquisa de mercado &agrave; opera&ccedil;&atilde;o em produ&ccedil;&atilde;o.</li>
+        <li><strong>Qualidade:</strong> Qual o n&iacute;vel de qualidade dos artefatos gerados pelos agentes &mdash; desde documentos estrat&eacute;gicos at&eacute; c&oacute;digo de produ&ccedil;&atilde;o com testes e CI/CD.</li>
+        <li><strong>Produtividade:</strong> Como a IA ag&ecirc;ntica amplifica a capacidade de um profissional individual, permitindo que uma &uacute;nica pessoa opere um squad completo de desenvolvimento.</li>
+      </ul>
+    </div>
+
+    <!-- Phases -->
+    <div class="phases-grid reveal" style="margin-top: 48px;">
+      <div class="phase-card">
+        <div class="phase-number">01</div>
+        <h4>Contexto Estrat&eacute;gico</h4>
+        <p>OKRs, North Star Metric, vis&atilde;o de produto, an&aacute;lise de mercado e posicionamento competitivo</p>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">02</div>
+        <h4>Product Discovery</h4>
+        <p>Research, idea&ccedil;&atilde;o, prototipa&ccedil;&atilde;o, backlog estruturado com &eacute;picos, features e user stories</p>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">03</div>
+        <h4>Product Delivery</h4>
+        <p>Arquitetura DDD, API backend, frontend React, chatbot IA, testes automatizados e quality gates</p>
+      </div>
+      <div class="phase-card">
+        <div class="phase-number">04</div>
+        <h4>Opera&ccedil;&atilde;o</h4>
+        <p>CI/CD, GMUD, deploy em produ&ccedil;&atilde;o, SLOs, monitoramento e testes A/B</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPS -->
+<section id="apps">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">Ecossistema ECP</div>
+      <h2 class="section-title">Quatro produtos,<br>um ecossistema digital</h2>
+      <p class="section-subtitle mx-auto">Cada produto foi criado pelo squad de multiagentes de IA, passando pelas 4 fases do ciclo de desenvolvimento com revis&atilde;o humana.</p>
+    </div>
+    <div class="apps-grid">
+      <!-- Bank PF -->
+      <div class="app-card reveal" data-accent="lime">
+        <span class="app-icon">&#x1F3E6;</span>
+        <h3>ECP Bank &mdash; Banco Digital PF</h3>
+        <p class="app-desc">Conta digital completa para pessoas f&iacute;sicas com Pix, cart&atilde;o virtual, extrato inteligente e assistente IA.</p>
+        <ul class="app-features">
+          <li>Pix enviar/receber</li>
+          <li>Cart&atilde;o virtual</li>
+          <li>Extrato inteligente</li>
+          <li>Chatbot IA (Claude)</li>
+        </ul>
+        <div class="app-links">
+          <a href="https://bank.ecportilho.com" class="app-link" target="_blank" rel="noopener">Acessar &#x2192;</a>
+          <a href="ecp-bank/index.html" class="app-link">Documenta&ccedil;&atilde;o &#x2192;</a>
+        </div>
+      </div>
+      <!-- Bank PJ -->
+      <div class="app-card reveal" data-accent="info">
+        <span class="app-icon">&#x1F3E2;</span>
+        <h3>ECP Emps &mdash; Banco Digital PJ</h3>
+        <p class="app-desc">Gest&atilde;o financeira para MEIs e microempresas com conta PJ, cobran&ccedil;as, Pix empresarial e categoriza&ccedil;&atilde;o por IA.</p>
+        <ul class="app-features">
+          <li>Conta PJ</li>
+          <li>Emiss&atilde;o de boletos</li>
+          <li>Pix empresarial</li>
+          <li>Gest&atilde;o de time</li>
+        </ul>
+        <div class="app-links">
+          <a href="https://emps.ecportilho.com" class="app-link" target="_blank" rel="noopener">Acessar &#x2192;</a>
+          <a href="ecp-emps/index.html" class="app-link">Documenta&ccedil;&atilde;o &#x2192;</a>
+        </div>
+      </div>
+      <!-- Pay -->
+      <div class="app-card reveal" data-accent="warning">
+        <span class="app-icon">&#x1F4B3;</span>
+        <h3>ECP Pay &mdash; Gateway de Pagamentos</h3>
+        <p class="app-desc">Servi&ccedil;o centralizado que processa Pix, cart&atilde;o e boleto para todo o ecossistema. Provider Pattern com modo simulado e Asaas real.</p>
+        <ul class="app-features">
+          <li>Provider Pattern (Internal/Asaas)</li>
+          <li>Split de pagamento</li>
+          <li>Cofre de tokens</li>
+          <li>Dashboard admin</li>
+        </ul>
+        <div class="app-links">
+          <a href="https://pay.ecportilho.com" class="app-link" target="_blank" rel="noopener">Acessar &#x2192;</a>
+          <a href="ecp-pay/index.html" class="app-link">Documenta&ccedil;&atilde;o &#x2192;</a>
+        </div>
+      </div>
+      <!-- Food -->
+      <div class="app-card reveal" data-accent="danger">
+        <span class="app-icon">&#x1F355;</span>
+        <h3>ECP Food &mdash; FoodFlow Delivery</h3>
+        <p class="app-desc">Plataforma de delivery com 6 restaurantes, pagamento integrado via ECP Pay e chatbot IA para pedidos.</p>
+        <ul class="app-features">
+          <li>6 restaurantes</li>
+          <li>Pix copia e cola</li>
+          <li>Cart&atilde;o de cr&eacute;dito</li>
+          <li>Chatbot IA (Claude)</li>
+        </ul>
+        <div class="app-links">
+          <a href="https://food.ecportilho.com" class="app-link" target="_blank" rel="noopener">Acessar &#x2192;</a>
+          <a href="ecp-food/index.html" class="app-link">Documenta&ccedil;&atilde;o &#x2192;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SQUAD -->
+<section id="squad">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">Motor do Ecossistema</div>
+      <h2 class="section-title">Squad de Multiagentes de IA</h2>
+      <p class="section-subtitle mx-auto">10 agentes especializados com 36 subagentes, operando em 4 fases sequenciais com 12 checkpoints de revis&atilde;o humana (HITL).</p>
+    </div>
+    <div class="squad-card reveal">
+      <span class="squad-icon">&#x1F916;</span>
+      <h3>ecp-ai-multi-agents-squad</h3>
+      <p class="squad-desc">Squad de multiagentes de IA para desenvolvimento de produto completo &mdash; do contexto estrat&eacute;gico ao deploy em produ&ccedil;&atilde;o. Cada agente &eacute; especialista em uma disciplina e colabora com os demais para gerar todos os artefatos de produto, design, c&oacute;digo e opera&ccedil;&atilde;o.</p>
+      <div class="agents-grid">
+        <div class="agent-badge"><span class="agent-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span> Product Manager</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F3A8;</span> Product Designer</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F4CB;</span> Product Owner</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F3DB;&#xFE0F;</span> Software Architect</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F527;</span> Back End Developer</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F916;</span> AI Engineer</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F4BB;</span> Front End Developer</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F9EA;</span> QA Engineer</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x2699;&#xFE0F;</span> Operations</div>
+        <div class="agent-badge"><span class="agent-emoji">&#x1F3AF;</span> Orchestrator</div>
+      </div>
+      <div class="app-links" style="margin-top: 24px;">
+        <a href="ecp-ai-multi-agents-squad/index.html" class="app-link" style="color: #a855f7; background: rgba(168,85,247,0.08);">Documenta&ccedil;&atilde;o do Squad &#x2192;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">Arquitetura</div>
+      <h2 class="section-title">Como tudo se conecta</h2>
+      <p class="section-subtitle mx-auto">O ECP Pay atua como hub central de pagamentos, conectando todas as aplica&ccedil;&otilde;es do ecossistema.</p>
+    </div>
+    <div class="arch-diagram reveal">
+      <div class="arch-row">
+        <div class="arch-node">
+          <span class="arch-emoji">&#x1F3E6;</span>
+          <div class="arch-name">Banco PF</div>
+          <div class="arch-sub">bank.ecportilho.com</div>
+        </div>
+        <div class="arch-node">
+          <span class="arch-emoji">&#x1F3E2;</span>
+          <div class="arch-name">Banco PJ</div>
+          <div class="arch-sub">emps.ecportilho.com</div>
+        </div>
+        <div class="arch-node">
+          <span class="arch-emoji">&#x1F355;</span>
+          <div class="arch-name">FoodFlow</div>
+          <div class="arch-sub">food.ecportilho.com</div>
+        </div>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-row">
+        <div class="arch-node center-node">
+          <span class="arch-emoji">&#x1F4B3;</span>
+          <div class="arch-name">ECP Pay &mdash; Gateway</div>
+          <div class="arch-sub">Hub central de pagamentos</div>
+        </div>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-row">
+        <div class="arch-node">
+          <span class="arch-emoji">&#x1F504;</span>
+          <div class="arch-name">Internal Provider</div>
+          <div class="arch-sub">Simula&ccedil;&atilde;o local</div>
+        </div>
+        <div class="arch-node">
+          <span class="arch-emoji">&#x1F3E7;</span>
+          <div class="arch-name">Asaas Provider</div>
+          <div class="arch-sub">Produ&ccedil;&atilde;o real</div>
+        </div>
+      </div>
+    </div>
+    <p class="arch-desc reveal">Todas as transa&ccedil;&otilde;es financeiras passam pelo ECP Pay. Os bancos PF e PJ utilizam a API para transfer&ecirc;ncias via Pix e pagamentos com cart&atilde;o. O FoodFlow integra pagamentos de delivery diretamente pelo gateway, com split autom&aacute;tico para os restaurantes.</p>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container text-center">
+    <div class="reveal">
+      <div class="section-label">Tecnologia</div>
+      <h2 class="section-title">Stack Tecnol&oacute;gica</h2>
+      <p class="section-subtitle mx-auto">Ferramentas modernas escolhidas pelos agentes de IA para performance, confiabilidade e experi&ecirc;ncia de desenvolvimento.</p>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech-badge"><span>&#x1F7E6;</span> TypeScript</div>
+      <div class="tech-badge"><span>&#x1F7E8;</span> JavaScript</div>
+      <div class="tech-badge"><span>&#x26A1;</span> Fastify 5</div>
+      <div class="tech-badge"><span>&#x269B;&#xFE0F;</span> React 18</div>
+      <div class="tech-badge"><span>&#x1F537;</span> Vite 5</div>
+      <div class="tech-badge"><span>&#x1F3A8;</span> Tailwind CSS</div>
+      <div class="tech-badge"><span>&#x1F5C4;&#xFE0F;</span> SQLite</div>
+      <div class="tech-badge"><span>&#x1F916;</span> Anthropic Claude</div>
+      <div class="tech-badge"><span>&#x1F4B0;</span> Asaas Gateway</div>
+      <div class="tech-badge"><span>&#x1F527;</span> PM2</div>
+      <div class="tech-badge"><span>&#x1F310;</span> Nginx</div>
+      <div class="tech-badge"><span>&#x1F427;</span> Ubuntu</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="footer-logo"><span class="hex">&#x2B21;</span> ECP Ecosystem</div>
+      <p>Ecossistema digital completo criado por um squad de multiagentes de IA. Um experimento avaliando velocidade, qualidade e produtividade da IA ag&ecirc;ntica no desenvolvimento de produtos.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produtos</h4>
+      <a href="https://bank.ecportilho.com" target="_blank" rel="noopener">ECP Bank</a>
+      <a href="https://emps.ecportilho.com" target="_blank" rel="noopener">ECP Emps</a>
+      <a href="https://pay.ecportilho.com" target="_blank" rel="noopener">ECP Pay</a>
+      <a href="https://food.ecportilho.com" target="_blank" rel="noopener">ECP Food</a>
+    </div>
+    <div class="footer-col">
+      <h4>Documenta&ccedil;&atilde;o</h4>
+      <a href="ecp-bank/index.html">ECP Bank</a>
+      <a href="ecp-emps/index.html">ECP Emps</a>
+      <a href="ecp-pay/index.html">ECP Pay</a>
+      <a href="ecp-food/index.html">ECP Food</a>
+      <a href="ecp-ai-multi-agents-squad/index.html">Squad de IA</a>
+    </div>
+    <div class="footer-col">
+      <h4>C&oacute;digo</h4>
+      <a href="https://github.com/ecportilho/ecp-digital-bank" target="_blank" rel="noopener">ecp-digital-bank</a>
+      <a href="https://github.com/ecportilho/ecp-digital-emps" target="_blank" rel="noopener">ecp-digital-emps</a>
+      <a href="https://github.com/ecportilho/ecp-digital-pay" target="_blank" rel="noopener">ecp-digital-pay</a>
+      <a href="https://github.com/ecportilho/ecp-digital-food" target="_blank" rel="noopener">ecp-digital-food</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 ECP Ecosystem &mdash; Experimento com Squad de Multiagentes de IA</p>
+    <div class="claude-badge">&#x1F916; Desenvolvido com Claude Code</div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+(function() {
+  'use strict';
+
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(function(el) {
+    revealObserver.observe(el);
+  });
+
+  var statsAnimated = false;
+  var statsObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !statsAnimated) {
+        statsAnimated = true;
+        animateCounters();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  var statsSection = document.getElementById('stats');
+  if (statsSection) statsObserver.observe(statsSection);
+
+  function animateCounters() {
+    document.querySelectorAll('.stat-number').forEach(function(el) {
+      var target = parseFloat(el.getAttribute('data-target'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var isDecimal = el.getAttribute('data-decimal') === 'true';
+      var duration = 1600;
+      var startTime = null;
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var ease = 1 - Math.pow(1 - progress, 3);
+        var current = ease * target;
+
+        if (isDecimal) {
+          el.textContent = current.toFixed(1) + suffix;
+        } else {
+          el.textContent = Math.floor(current) + suffix;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          if (isDecimal) {
+            el.textContent = target.toFixed(1) + suffix;
+          } else {
+            el.textContent = target + suffix;
+          }
+        }
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  var cards = document.querySelectorAll('.app-card.reveal');
+  cards.forEach(function(card, i) {
+    card.style.transitionDelay = (i * 0.1) + 's';
+  });
+})();
+</script>
+
+</body>
+</html>
