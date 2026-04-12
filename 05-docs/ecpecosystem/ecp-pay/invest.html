@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investimento &amp; Consumo | ECP Pay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+    .time-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; }
+    .time-card.highlight { border-color: var(--lime); background: linear-gradient(135deg, var(--surface) 0%, rgba(183,255,42,0.04) 100%); }
+    .time-value { font-size: 36px; font-weight: 800; line-height: 1; }
+    .time-value.lime { color: var(--lime); }
+    .time-value.info { color: var(--info); }
+    .time-value.muted { color: var(--text-2); }
+    .time-label { font-size: 13px; color: var(--muted); margin-top: 8px; }
+    .time-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+    .token-hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .token-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .token-num { font-size: 28px; font-weight: 800; color: var(--lime); }
+    .token-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .phase-row { display: grid; grid-template-columns: 140px 1fr 100px 80px 80px; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .phase-row.header { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
+    .phase-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .phase-bar-container { height: 24px; background: var(--bg); border-radius: 12px; overflow: hidden; }
+    .phase-bar { height: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 10px; font-weight: 700; color: var(--bg); min-width: 40px; }
+    .phase-tokens { font-size: 13px; font-weight: 600; color: var(--text-2); text-align: right; }
+    .phase-pct { font-size: 13px; font-weight: 700; text-align: right; }
+    .phase-time { font-size: 12px; color: var(--muted); text-align: right; }
+    .compare-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 40px; }
+    .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .compare-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .compare-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .compare-row:last-child { border-bottom: 0; }
+    .compare-label { font-size: 12px; color: var(--text-2); }
+    .compare-value { font-size: 13px; font-weight: 700; }
+    .donut-section { display: grid; grid-template-columns: 250px 1fr; gap: 40px; align-items: center; margin-bottom: 40px; }
+    .donut { width: 220px; height: 220px; border-radius: 50%; position: relative; }
+    .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; background: var(--surface); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-center-val { font-size: 22px; font-weight: 800; color: var(--lime); }
+    .donut-center-label { font-size: 10px; color: var(--muted); }
+    .legend { list-style: none; }
+    .legend li { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; color: var(--text-2); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .legend-pct { margin-left: auto; font-weight: 700; color: var(--text); font-size: 13px; }
+    .est-badge { display: inline-block; font-size: 9px; font-weight: 700; color: var(--warning); background: rgba(255,204,0,0.1); border: 1px solid rgba(255,204,0,0.3); padding: 2px 6px; border-radius: 4px; margin-left: 6px; letter-spacing: 0.5px; vertical-align: middle; }
+    .real-badge { display: inline-block; font-size: 9px; font-weight: 700; color: var(--success); background: rgba(61,255,139,0.1); border: 1px solid rgba(61,255,139,0.3); padding: 2px 6px; border-radius: 4px; margin-left: 6px; letter-spacing: 0.5px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-icon">$</span> ECP Pay</div>
+    <div class="sidebar-product"><strong>Payment Gateway</strong>Multi-provider</div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Vis&atilde;o Geral</a></li>
+      <li class="sidebar-section-title">Fases do Produto</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Contexto Estrat&eacute;gico</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Opera&ccedil;&atilde;o</a></li>
+      <li class="sidebar-section-title">Analytics</li>
+      <li><a href="invest.html"><span class="nav-icon">&#x1F4B0;</span> Investimento</a></li>
+    </ul>
+  </aside>
+
+  <header class="topbar">
+    <div class="topbar-title">Investimento &amp; Consumo de Tokens</div>
+    <div class="topbar-meta">
+      <span>Ciclo completo &mdash; 28-29/03/2026</span>
+      <a href="../indexv11.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecossistema</a>
+    </div>
+  </header>
+
+  <main class="content">
+    <h1>Investimento do Ciclo</h1>
+    <p class="subtitle">Consumo de tokens, tempo e efici&ecirc;ncia do squad para o ECP Pay (gateway de pagamentos). <span class="est-badge">EST</span> = estimativa proporcional &nbsp; <span class="real-badge">REAL</span> = dado verificado nos artefatos.</p>
+
+    <!-- ═══════════════════ TEMPO ═══════════════════ -->
+    <h2>Tempo Total de Desenvolvimento <span class="est-badge">EST</span></h2>
+
+    <div class="time-grid">
+      <div class="time-card highlight">
+        <div class="time-value lime">~55min</div>
+        <div class="time-label">Execu&ccedil;&atilde;o de Agentes (puro)</div>
+        <div class="time-sub">Soma estimada das dura&ccedil;&otilde;es dos ~18 agentes</div>
+      </div>
+      <div class="time-card">
+        <div class="time-value info">~1h 40min</div>
+        <div class="time-label">Lead Time sem HITL</div>
+        <div class="time-sub">Agentes + orquestra&ccedil;&atilde;o + explore + docs</div>
+      </div>
+      <div class="time-card">
+        <div class="time-value muted">~2h 05min</div>
+        <div class="time-label">Lead Time com HITL</div>
+        <div class="time-sub">Inclui ~25min de revis&atilde;o humana (~11 HITLs)</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ TOKENS ═══════════════════ -->
+    <h2>Consumo Total de Tokens <span class="est-badge">EST</span></h2>
+
+    <div class="token-hero">
+      <div class="token-stat">
+        <div class="token-num">~710.000</div>
+        <div class="token-label">Total Tokens</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--info);">~170</div>
+        <div class="token-label">Tool Uses</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--success);">~18</div>
+        <div class="token-label">Agentes Executados</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--warning);">141</div>
+        <div class="token-label">Skills Dispon&iacute;veis</div>
+      </div>
+    </div>
+
+    <div class="alert" style="background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2); color: var(--warning); padding: 16px 20px; border-radius: 13px; margin-bottom: 32px; font-size: 13px;">
+      <strong>Nota sobre estimativas:</strong> Fator de escala 0.91x vs ECP Emps (proporcional a 6.763 LoC / 76 arquivos / 17 features vs 8.257 LoC / 80 arquivos / 15 features). O ECP Pay &eacute; o produto mais compacto do ecossistema, mas com a maior <strong>densidade de complexidade por LoC</strong> (37,9 BCP/1K LoC) &mdash; cada linha carrega mais regras por conta do Provider Factory pattern e dual-mode operation.
+    </div>
+
+    <!-- ═══════════════════ POR FASE ═══════════════════ -->
+    <h2>Consumo por Fase <span class="est-badge">EST</span></h2>
+
+    <div style="margin-bottom: 32px;">
+      <div class="phase-row header">
+        <span>Fase</span><span>Distribui&ccedil;&atilde;o</span><span>Tokens</span><span>%</span><span>Tempo</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-name">Setup / Explore</span>
+        <div class="phase-bar-container"><div class="phase-bar" style="width: 14%; background: var(--info);">14%</div></div>
+        <span class="phase-tokens">~99K</span>
+        <span class="phase-pct" style="color: var(--info);">14%</span>
+        <span class="phase-time">~13min</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-name">01 &mdash; Estrat&eacute;gico</span>
+        <div class="phase-bar-container"><div class="phase-bar" style="width: 18%; background: var(--lime);">18%</div></div>
+        <span class="phase-tokens">~128K</span>
+        <span class="phase-pct" style="color: var(--lime);">18%</span>
+        <span class="phase-time">~10min</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-name">02 &mdash; Discovery</span>
+        <div class="phase-bar-container"><div class="phase-bar" style="width: 34%; background: var(--lime);">34%</div></div>
+        <span class="phase-tokens">~241K</span>
+        <span class="phase-pct" style="color: var(--lime);">34%</span>
+        <span class="phase-time">~18min</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-name">03 &mdash; Delivery</span>
+        <div class="phase-bar-container"><div class="phase-bar" style="width: 25%; background: var(--success);">25%</div></div>
+        <span class="phase-tokens">~178K</span>
+        <span class="phase-pct" style="color: var(--success);">25%</span>
+        <span class="phase-time">~18min</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-name">04 &mdash; Opera&ccedil;&atilde;o</span>
+        <div class="phase-bar-container"><div class="phase-bar" style="width: 9%; background: var(--warning);">9%</div></div>
+        <span class="phase-tokens">~64K</span>
+        <span class="phase-pct" style="color: var(--warning);">9%</span>
+        <span class="phase-time">~9min</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ DONUT ═══════════════════ -->
+    <h2>Distribui&ccedil;&atilde;o por Agente <span class="est-badge">EST</span></h2>
+
+    <div class="donut-section">
+      <div class="donut" style="background: conic-gradient(
+        var(--lime) 0deg 65deg,
+        #7ed100 65deg 97deg,
+        #4da3ff 97deg 155deg,
+        #59d8ff 155deg 173deg,
+        #3dff8b 173deg 198deg,
+        #22b870 198deg 230deg,
+        #2fd387 230deg 266deg,
+        #ff5fa2 266deg 302deg,
+        #ffcc00 302deg 338deg,
+        var(--text-3) 338deg 360deg
+      );">
+        <div class="donut-center">
+          <div class="donut-center-val">~710K</div>
+          <div class="donut-center-label">TOKENS TOTAL</div>
+        </div>
+      </div>
+      <ul class="legend">
+        <li><span class="legend-dot" style="background: var(--lime);"></span>Product Manager (4 sub)<span class="legend-pct">18%</span></li>
+        <li><span class="legend-dot" style="background: #7ed100;"></span>Product Owner (2 sub)<span class="legend-pct">9%</span></li>
+        <li><span class="legend-dot" style="background: #4da3ff;"></span>Product Designer (3 sub)<span class="legend-pct">16%</span></li>
+        <li><span class="legend-dot" style="background: #59d8ff;"></span>Trio PM+Designer+PO<span class="legend-pct">5%</span></li>
+        <li><span class="legend-dot" style="background: #3dff8b;"></span>Software Architect<span class="legend-pct">7%</span></li>
+        <li><span class="legend-dot" style="background: #22b870;"></span>Backend Developer<span class="legend-pct">9%</span></li>
+        <li><span class="legend-dot" style="background: #2fd387;"></span>Frontend Developer<span class="legend-pct">10%</span></li>
+        <li><span class="legend-dot" style="background: #ff5fa2;"></span>AI Engineer<span class="legend-pct">10%</span></li>
+        <li><span class="legend-dot" style="background: #ffcc00;"></span>Ops + QA<span class="legend-pct">10%</span></li>
+        <li><span class="legend-dot" style="background: var(--text-3);"></span>Explore / Overhead<span class="legend-pct">6%</span></li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════ DADOS REAIS ═══════════════════ -->
+    <h2>Artefatos Gerados <span class="real-badge">REAL</span></h2>
+
+    <div class="token-hero">
+      <div class="token-stat">
+        <div class="token-num" style="font-size: 22px;">77</div>
+        <div class="token-label">Arquivos criados</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="font-size: 22px; color: var(--info);">6.763</div>
+        <div class="token-label">Linhas de c&oacute;digo</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="font-size: 22px; color: var(--success);">24</div>
+        <div class="token-label">Endpoints API</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="font-size: 22px; color: var(--warning);">~11</div>
+        <div class="token-label">HITLs aprovados</div>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-title">Product Delivery (Fase 03)</div>
+        <div class="compare-row"><span class="compare-label">M&oacute;dulos de API (payment)</span><span class="compare-value">7</span></div>
+        <div class="compare-row"><span class="compare-label">M&oacute;dulos de admin</span><span class="compare-value">6</span></div>
+        <div class="compare-row"><span class="compare-label">Providers implementados</span><span class="compare-value">2 (Internal + Asaas)</span></div>
+        <div class="compare-row"><span class="compare-label">P&aacute;ginas frontend admin</span><span class="compare-value">8</span></div>
+        <div class="compare-row"><span class="compare-label">Componentes UI</span><span class="compare-value">11 (7 base + 4 novos)</span></div>
+        <div class="compare-row"><span class="compare-label">Tabelas SQLite</span><span class="compare-value">10</span></div>
+        <div class="compare-row"><span class="compare-label">&Iacute;ndices</span><span class="compare-value">16</span></div>
+        <div class="compare-row"><span class="compare-label">ADRs arquiteturais</span><span class="compare-value">6</span></div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title">Product Discovery (Fase 02)</div>
+        <div class="compare-row"><span class="compare-label">Oportunidades mapeadas</span><span class="compare-value">15</span></div>
+        <div class="compare-row"><span class="compare-label">Hip&oacute;teses de solu&ccedil;&atilde;o</span><span class="compare-value">7</span></div>
+        <div class="compare-row"><span class="compare-label">User Stories</span><span class="compare-value">24</span></div>
+        <div class="compare-row"><span class="compare-label">&Eacute;picos</span><span class="compare-value">2</span></div>
+        <div class="compare-row"><span class="compare-label">Key Results (KRs)</span><span class="compare-value">5</span></div>
+        <div class="compare-row"><span class="compare-label">WSJF top priorities</span><span class="compare-value">5</span></div>
+        <div class="compare-row"><span class="compare-label">Business Rules definidas</span><span class="compare-value">19</span></div>
+        <div class="compare-row"><span class="compare-label">Feature flags configuradas</span><span class="compare-value">3</span></div>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-title">Diferencial: Dual-Mode Operation <span class="real-badge">REAL</span></div>
+        <div class="compare-row"><span class="compare-label">Provider Factory pattern</span><span class="compare-value" style="color: var(--lime);">Sim (interface + factory)</span></div>
+        <div class="compare-row"><span class="compare-label">Modo Internal</span><span class="compare-value">QR mock + auto-approve + rules</span></div>
+        <div class="compare-row"><span class="compare-label">Modo External (Asaas)</span><span class="compare-value">API real + webhooks reais</span></div>
+        <div class="compare-row"><span class="compare-label">Hot-swap via feature flag</span><span class="compare-value" style="color: var(--lime);">Sim (sem restart)</span></div>
+        <div class="compare-row"><span class="compare-label">Card vault (tokeniza&ccedil;&atilde;o)</span><span class="compare-value">Cross-app, last4 only</span></div>
+        <div class="compare-row"><span class="compare-label">Callback retry (backoff)</span><span class="compare-value">30s / 2min / 10min</span></div>
+        <div class="compare-row"><span class="compare-label">Apps registrados (seed)</span><span class="compare-value">3 (bank + emps + food)</span></div>
+        <div class="compare-row"><span class="compare-label">Seed transactions</span><span class="compare-value">20 (7 pix + 8 card + 5 boleto)</span></div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title">Opera&ccedil;&atilde;o (Fase 04)</div>
+        <div class="compare-row"><span class="compare-label">Frontend build (Vite)</span><span class="compare-value" style="color: var(--success);">PASS (5.44s)</span></div>
+        <div class="compare-row"><span class="compare-label">TypeScript check</span><span class="compare-value" style="color: var(--success);">PASS (0 errors)</span></div>
+        <div class="compare-row"><span class="compare-label">Bundle size (JS gzip)</span><span class="compare-value">173.90 KB</span></div>
+        <div class="compare-row"><span class="compare-label">Bundle size (CSS gzip)</span><span class="compare-value">4.97 KB</span></div>
+        <div class="compare-row"><span class="compare-label">SLOs definidos</span><span class="compare-value">3</span></div>
+        <div class="compare-row"><span class="compare-label">DORA metrics tracked</span><span class="compare-value">4</span></div>
+        <div class="compare-row"><span class="compare-label">A/B tests planejados</span><span class="compare-value">3</span></div>
+        <div class="compare-row"><span class="compare-label">Agentes envolvidos</span><span class="compare-value">9 roles distintos</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ EFICIÊNCIA ═══════════════════ -->
+    <h2>M&eacute;tricas de Efici&ecirc;ncia</h2>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-title">Tokens por Artefato <span class="est-badge">EST</span></div>
+        <div class="compare-row"><span class="compare-label">Tokens / arquivo criado</span><span class="compare-value" style="color: var(--lime);">~9.221</span></div>
+        <div class="compare-row"><span class="compare-label">Tokens / endpoint API</span><span class="compare-value" style="color: var(--lime);">~29.583</span></div>
+        <div class="compare-row"><span class="compare-label">Tokens / linha de c&oacute;digo</span><span class="compare-value" style="color: var(--info);">~105</span></div>
+        <div class="compare-row"><span class="compare-label">Tokens / business rule</span><span class="compare-value" style="color: var(--info);">~37.368</span></div>
+        <div class="compare-row"><span class="compare-label">Tokens / HITL</span><span class="compare-value">~64.545</span></div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title">Compara&ccedil;&atilde;o com Equipe Humana</div>
+        <div class="compare-row"><span class="compare-label">Tempo de squad AI (com HITL)</span><span class="compare-value" style="color: var(--lime);">~2h 05min</span></div>
+        <div class="compare-row"><span class="compare-label">Estimativa equipe humana (3-4 devs)</span><span class="compare-value" style="color: var(--text-2);">~5-7 sprints</span></div>
+        <div class="compare-row"><span class="compare-label">Fator de acelera&ccedil;&atilde;o</span><span class="compare-value" style="color: var(--lime);">~90x</span></div>
+        <div class="compare-row"><span class="compare-label">Custo tokens (est. Opus 4.6)</span><span class="compare-value" style="color: var(--warning);">~US$ 14</span></div>
+        <div class="compare-row"><span class="compare-label">Custo equipe humana (est.)</span><span class="compare-value" style="color: var(--danger);">~R$ 90K+</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ BCP ═══════════════════ -->
+    <h2>Cross-reference: BCP</h2>
+
+    <div class="token-hero">
+      <div class="token-stat">
+        <div class="token-num">256</div>
+        <div class="token-label">BCP Total</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--info);">17</div>
+        <div class="token-label">Funcionalidades</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--success);">15,1</div>
+        <div class="token-label">BCP M&eacute;dio</div>
+      </div>
+      <div class="token-stat">
+        <div class="token-num" style="color: var(--warning);">37,9</div>
+        <div class="token-label">BCP / 1K LoC</div>
+      </div>
+    </div>
+
+  </main>
+</body>
+</html>

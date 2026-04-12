@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como funciona um agente — Product Manager | ECP Ecosystem</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0b0f14; --bg-2: #0f1620; --surface: #131c28; --border: #1c2836;
+  --lime: #b7ff2a; --lime-dim: rgba(183,255,42,0.08); --lime-glow: rgba(183,255,42,0.15);
+  --text: #eaf2ff; --text-2: #eaf2ff; --text-3: #eaf2ff;
+  --success: #3dff8b; --info: #4da3ff; --warning: #ffcc00; --danger: #ff4d4d;
+  --gradient: linear-gradient(135deg, #b7ff2a 0%, #7ed100 100%);
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(183,255,42,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(183,255,42,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.grid-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(183,255,42,0.06) 0%, transparent 60%);
+}
+
+/* Header */
+.top-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(11,15,20,0.92);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.top-header .left { display: flex; align-items: center; gap: 14px; }
+.top-header .hex { font-size: 1.8rem; color: var(--lime); text-shadow: 0 0 24px rgba(183,255,42,0.35); line-height: 1; }
+.top-header .brand-text { display: flex; flex-direction: column; gap: 1px; }
+.top-header .tag { font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime); }
+.top-header .title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
+.top-header .back {
+  font-size: 0.85rem; font-weight: 600; color: var(--text-3);
+  padding: 8px 16px; border: 1px solid var(--border); border-radius: 10px;
+  transition: all 0.2s;
+}
+.top-header .back:hover { border-color: var(--lime); color: var(--lime); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+section { padding: 60px 24px; position: relative; z-index: 1; }
+
+.section-label {
+  font-size: 1.2rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.15;
+  margin-bottom: 16px; letter-spacing: -0.5px;
+}
+.section-subtitle {
+  font-size: 1.05rem; color: var(--text-2); max-width: 820px; line-height: 1.7;
+  margin: 0 auto;
+}
+.text-center { text-align: center; }
+
+/* Spacer */
+.spacer { height: 80px; }
+
+/* ── Tree diagram ── */
+.tree-container {
+  display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 40px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 40px; position: relative; overflow: hidden;
+}
+.tree-container::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient); opacity: 0.7;
+}
+.tree-node {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 16px 24px;
+  background: var(--bg-2);
+  border: 2px solid var(--lime);
+  border-radius: 14px;
+  min-width: 280px; justify-content: center;
+  position: relative;
+}
+.tree-node .tn-emoji { font-size: 1.8rem; line-height: 1; }
+.tree-node .tn-info { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.tree-node .tn-level { font-size: 0.68rem; letter-spacing: 2px; font-weight: 700; color: var(--lime); text-transform: uppercase; }
+.tree-node .tn-name { font-size: 1.05rem; font-weight: 800; }
+.tree-connector {
+  width: 2px; height: 36px; background: var(--lime); position: relative;
+}
+.tree-connector::after {
+  content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+  border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--lime);
+}
+
+/* ── Level cards ── */
+.level-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.level-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient); opacity: 0.7;
+}
+.level-card .lc-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.level-card .lc-badge {
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 10px; background: var(--lime-dim); color: var(--lime); border-radius: 6px;
+  border: 1px solid rgba(183,255,42,0.3);
+}
+.level-card .lc-emoji { font-size: 2.4rem; line-height: 1; }
+.level-card h3 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; }
+.level-card .lc-sub { font-size: 0.82rem; color: var(--text-3); margin-top: 4px; font-family: var(--mono); }
+
+.lc-description { font-size: 0.95rem; color: var(--text-2); line-height: 1.7; margin-bottom: 20px; }
+.lc-description strong { color: var(--text); }
+
+.lc-role {
+  display: grid; grid-template-columns: auto 1fr; gap: 12px 18px;
+  padding: 18px 22px; background: var(--bg-2); border: 1px dashed var(--border); border-radius: 12px;
+  margin-bottom: 20px;
+}
+.lc-role dt { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--lime); font-weight: 700; padding-top: 2px; }
+.lc-role dd { font-size: 0.92rem; color: var(--text-2); }
+
+/* Code block */
+.code-block {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 22px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6;
+  overflow-x: auto; margin: 12px 0;
+}
+.code-block .k { color: var(--lime); }
+.code-block .s { color: var(--info); }
+.code-block .c { color: var(--text-3); font-style: italic; }
+.code-block .p { color: var(--warning); }
+
+/* Steps */
+.steps { margin-top: 16px; }
+.steps ol { list-style: none; counter-reset: step; padding-left: 0; }
+.steps ol li {
+  counter-increment: step;
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 10px 0; font-size: 0.92rem; color: var(--text-2);
+}
+.steps ol li::before {
+  content: counter(step);
+  flex-shrink: 0;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--lime-dim); color: var(--lime);
+  font-size: 0.75rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(183,255,42,0.3);
+  font-family: var(--mono);
+}
+
+/* IO tags */
+.io-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+@media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+.io-card {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px;
+}
+.io-card .io-label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 10px;
+}
+
+/* Flow */
+.flow-section { margin-top: 40px; }
+.flow-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; position: relative; overflow: hidden;
+}
+.flow-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient); opacity: 0.7;
+}
+.flow-card h3 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 16px; color: var(--lime); }
+.flow-list { list-style: none; }
+.flow-list li {
+  padding: 10px 0 10px 30px; position: relative; font-size: 0.95rem; color: var(--text-2); line-height: 1.6;
+}
+.flow-list li::before {
+  content: '>'; color: var(--lime); font-weight: 700; position: absolute; left: 8px; top: 10px;
+}
+.flow-list li strong { color: var(--text); }
+
+footer {
+  padding: 40px 24px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text-3); font-size: 0.85rem;
+  background: var(--bg-2);
+}
+footer .hex { color: var(--lime); }
+
+@media (max-width: 720px) {
+  .top-header { padding: 12px 18px; }
+  .top-header .title { font-size: 0.95rem; }
+  .tree-node { min-width: auto; padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="grid-bg"></div>
+
+<!-- Header -->
+<header class="top-header">
+  <div class="left">
+    <span class="hex">&#x2B21;</span>
+    <div class="brand-text">
+      <span class="tag">Experimento 804 &mdash; Squad de Multiagentes de IA</span>
+      <span class="title">Como funciona um agente</span>
+    </div>
+  </div>
+  <a href="indexv11.html" class="back">&#x2190; Voltar ao Ecossistema</a>
+</header>
+
+<div class="spacer"></div>
+
+<!-- INTRO -->
+<section>
+  <div class="container text-center">
+    <div class="section-label">Anatomia de um agente</div>
+    <h2 class="section-title">Agente &rarr; Subagente &rarr; Skill</h2>
+    <p class="section-subtitle">Cada agente do squad &eacute; constru&iacute;do em 3 n&iacute;veis hier&aacute;rquicos. Vamos demonstrar como funciona usando como exemplo o <strong style="color: var(--lime);">Product Manager</strong>, seu subagente de <strong style="color: var(--lime);">Market Research</strong> e a skill de <strong style="color: var(--lime);">Competitor Analysis</strong>.</p>
+
+    <!-- Tree -->
+    <div class="tree-container">
+      <div class="tree-node">
+        <span class="tn-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+        <div class="tn-info">
+          <span class="tn-level">N&iacute;vel 1 &middot; Agente</span>
+          <span class="tn-name">Product Manager</span>
+        </div>
+      </div>
+      <div class="tree-connector"></div>
+      <div class="tree-node">
+        <span class="tn-emoji">&#x1F50D;</span>
+        <div class="tn-info">
+          <span class="tn-level">N&iacute;vel 2 &middot; Subagente</span>
+          <span class="tn-name">Market Research</span>
+        </div>
+      </div>
+      <div class="tree-connector"></div>
+      <div class="tree-node">
+        <span class="tn-emoji">&#x2699;&#xFE0F;</span>
+        <div class="tn-info">
+          <span class="tn-level">N&iacute;vel 3 &middot; Skill</span>
+          <span class="tn-name">Competitor Analysis</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NIVEL 1: AGENTE -->
+<section style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="level-card">
+      <div class="lc-head">
+        <span class="lc-badge">N&iacute;vel 1 &middot; Agente</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 20px;">
+        <span class="lc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+        <div>
+          <h3>Product Manager</h3>
+          <div class="lc-sub">agents/product-manager/</div>
+        </div>
+      </div>
+
+      <p class="lc-description">O <strong>agente</strong> &eacute; o n&iacute;vel mais alto da hierarquia. &Eacute; um <strong>especialista em uma disciplina</strong> do desenvolvimento de produto &mdash; como se fosse um profissional s&ecirc;nior com um papel espec&iacute;fico dentro do squad. Ele n&atilde;o executa tarefas sozinho: delega para subagentes especializados e consolida os resultados.</p>
+
+      <dl class="lc-role">
+        <dt>Papel</dt>
+        <dd>Especialista em estrat&eacute;gia de produto. Opera na <strong>Fase 01 (Contexto Estrat&eacute;gico)</strong> e na <strong>Fase 04 (Opera&ccedil;&atilde;o)</strong>. Nunca roteia tarefas para outros agentes &mdash; apenas para seus pr&oacute;prios subagentes.</dd>
+        <dt>Input</dt>
+        <dd><code style="font-family: var(--mono); font-size: 0.88rem; color: var(--info);">product_briefing_spec.md</code> &mdash; escopo funcional, regras de neg&oacute;cio, p&uacute;blico-alvo.</dd>
+        <dt>Output</dt>
+        <dd>Objetivo + Key Results + Opportunity Solution Tree + Princ&iacute;pios de Produto.</dd>
+        <dt>Subagentes</dt>
+        <dd>Possui <strong>4 subagentes</strong>: Market Research, Product Vision, Product Strategy e Metrics.</dd>
+      </dl>
+
+      <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.7;">&#x1F4A1; <strong style="color: var(--text);">Analogia:</strong> pense no <em>Product Manager</em> como o diretor de um time esportivo. Ele n&atilde;o joga no campo, mas define a estrat&eacute;gia e escala jogadores (subagentes) para cada momento da partida.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NIVEL 2: SUBAGENTE -->
+<section>
+  <div class="container">
+    <div class="level-card">
+      <div class="lc-head">
+        <span class="lc-badge">N&iacute;vel 2 &middot; Subagente</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 20px;">
+        <span class="lc-emoji">&#x1F50D;</span>
+        <div>
+          <h3>Market Research</h3>
+          <div class="lc-sub">agents/product-manager/subagents/market-research/</div>
+        </div>
+      </div>
+
+      <p class="lc-description">O <strong>subagente</strong> &eacute; um especialista de segunda ordem &mdash; foca em um <strong>subdom&iacute;nio espec&iacute;fico</strong> dentro da disciplina do agente pai. Ele executa tarefas usando skills (ferramentas) bem definidas. &Eacute; como um analista s&ecirc;nior que reporta ao diretor.</p>
+
+      <dl class="lc-role">
+        <dt>Quando aciona</dt>
+        <dd>Acionado pelo Product Manager <strong>no in&iacute;cio da Fase 01</strong>. &Eacute; o primeiro a rodar &mdash; suas descobertas fundamentam todo o resto.</dd>
+        <dt>Responsabilidade</dt>
+        <dd>Coletar e sintetizar <strong>evid&ecirc;ncias de mercado</strong> para embasar decis&otilde;es estrat&eacute;gicas.</dd>
+        <dt>Skills dispon&iacute;veis</dt>
+        <dd><strong>4 skills</strong>: market-sizing (TAM/SAM/SOM), <strong style="color: var(--lime);">competitor-analysis</strong>, trend-scanning e customer-segmentation.</dd>
+      </dl>
+
+      <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.7;">&#x1F4A1; <strong style="color: var(--text);">Analogia:</strong> se o Product Manager &eacute; o diretor, o <em>Market Research</em> &eacute; o analista que fica na sala de guerra com mapas, gr&aacute;ficos e relat&oacute;rios. Ele tem <strong>ferramentas espec&iacute;ficas</strong> para cada tipo de an&aacute;lise.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NIVEL 3: SKILL -->
+<section style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="level-card">
+      <div class="lc-head">
+        <span class="lc-badge">N&iacute;vel 3 &middot; Skill</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 20px;">
+        <span class="lc-emoji">&#x2699;&#xFE0F;</span>
+        <div>
+          <h3>Competitor Analysis</h3>
+          <div class="lc-sub">.../market-research/skills/competitor-analysis.md</div>
+        </div>
+      </div>
+
+      <p class="lc-description">A <strong>skill</strong> &eacute; o n&iacute;vel mais concreto e execut&aacute;vel. &Eacute; uma <strong>ferramenta ou procedimento</strong> bem definido, com input, output e passos claros. A skill &eacute; como uma <strong>receita de bolo</strong> que a IA segue para produzir um resultado determin&iacute;stico.</p>
+
+      <dl class="lc-role">
+        <dt>Objetivo</dt>
+        <dd>Mapear concorrentes diretos e indiretos, identificar gaps e oportunidades de posicionamento. Usar na Fase 01 para fundamentar as oportunidades da OST com evid&ecirc;ncias de mercado.</dd>
+        <dt>Formato</dt>
+        <dd>Arquivo <code style="font-family: var(--mono); color: var(--info);">.md</code> com metadados (nome, descri&ccedil;&atilde;o), schema de input/output e passos numerados.</dd>
+      </dl>
+
+      <!-- Input / Output -->
+      <div class="io-grid">
+        <div class="io-card">
+          <div class="io-label">&#x25B6; Input que a skill recebe</div>
+          <div class="code-block"><span class="p">{</span>
+  <span class="k">"product"</span>: <span class="s">"o produto"</span>,
+  <span class="k">"segment"</span>: <span class="s">"string"</span>,
+  <span class="k">"depth"</span>: <span class="s">"superficial | detalhado"</span>
+<span class="p">}</span></div>
+        </div>
+        <div class="io-card">
+          <div class="io-label">&#x25C0; Output que a skill entrega</div>
+          <div class="code-block"><span class="p">{</span>
+  <span class="k">"competitors"</span>: <span class="p">[{</span>
+    <span class="k">"name"</span>: <span class="s">""</span>,
+    <span class="k">"type"</span>: <span class="s">"direct | indirect"</span>,
+    <span class="k">"strengths"</span>: <span class="p">[]</span>,
+    <span class="k">"weaknesses"</span>: <span class="p">[]</span>,
+    <span class="k">"positioning"</span>: <span class="s">""</span>
+  <span class="p">}]</span>,
+  <span class="k">"market_gaps"</span>: <span class="p">[]</span>,
+  <span class="k">"differentiation_opportunities"</span>: <span class="p">[]</span>
+<span class="p">}</span></div>
+        </div>
+      </div>
+
+      <!-- Passos -->
+      <div class="steps">
+        <h4 style="font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime); margin-top: 24px; margin-bottom: 8px;">Passos que a skill executa</h4>
+        <ol>
+          <li>Listar concorrentes diretos (ex: Trello, Notion, Asana, Linear)</li>
+          <li>Listar concorrentes indiretos (ex: planilhas, post-its)</li>
+          <li>Analisar for&ccedil;as e fraquezas de cada um</li>
+          <li>Identificar gaps n&atilde;o atendidos</li>
+          <li>Mapear oportunidades de diferencia&ccedil;&atilde;o</li>
+        </ol>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-3); line-height: 1.7; margin-top: 20px;">&#x1F4A1; <strong style="color: var(--text);">Analogia:</strong> a <em>skill</em> &eacute; como uma <strong>ferramenta na caixa do analista</strong>: um gabarito pronto que transforma uma entrada em uma sa&iacute;da estruturada. O subagente escolhe qual skill usar em cada momento, como um marceneiro escolhe entre serra, martelo ou chave de fenda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMO TUDO SE CONECTA -->
+<section>
+  <div class="container">
+    <div class="text-center" style="margin-bottom: 32px;">
+      <div class="section-label">Na pr&aacute;tica</div>
+      <h2 class="section-title">Como os 3 n&iacute;veis trabalham juntos</h2>
+    </div>
+
+    <div class="flow-card">
+      <h3>Fluxo de execu&ccedil;&atilde;o na Fase 01</h3>
+      <ul class="flow-list">
+        <li>O <strong>Orquestrador</strong> do squad chama o agente <strong>Product Manager</strong> no in&iacute;cio da Fase 01.</li>
+        <li>O <strong>Product Manager</strong> l&ecirc; o briefing do produto e decide chamar primeiro o subagente <strong>Market Research</strong>.</li>
+        <li>O <strong>Market Research</strong> olha as skills dispon&iacute;veis e escolhe a <strong>Competitor Analysis</strong> para mapear o cen&aacute;rio competitivo.</li>
+        <li>A skill <strong>Competitor Analysis</strong> recebe input (produto, segmento, profundidade) e executa os 5 passos definidos.</li>
+        <li>A skill devolve um <strong>JSON estruturado</strong> com concorrentes, gaps e oportunidades.</li>
+        <li>O subagente <strong>Market Research</strong> tamb&eacute;m roda outras skills (market-sizing, trend-scanning, customer-segmentation) e consolida tudo.</li>
+        <li>O <strong>Product Manager</strong> recebe o resultado do Market Research e aciona os pr&oacute;ximos subagentes (Vision, Strategy, Metrics).</li>
+        <li>Ao fim da Fase 01, o Product Manager entrega o <strong>output consolidado</strong> (Objetivo, KRs, OST) e atinge o <strong>HITL #1</strong> para aprova&ccedil;&atilde;o humana.</li>
+      </ul>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px;">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: center;">
+        <div style="font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime); font-weight: 700; margin-bottom: 8px;">N&iacute;vel 1 &middot; Agente</div>
+        <div style="font-size: 2.4rem; margin-bottom: 8px;">&#x1F9D1;&#x200D;&#x1F4BC;</div>
+        <div style="font-size: 1rem; font-weight: 700;">10 agentes</div>
+        <div style="font-size: 0.82rem; color: var(--text-3); margin-top: 4px;">no squad completo</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: center;">
+        <div style="font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime); font-weight: 700; margin-bottom: 8px;">N&iacute;vel 2 &middot; Subagente</div>
+        <div style="font-size: 2.4rem; margin-bottom: 8px;">&#x1F50D;</div>
+        <div style="font-size: 1rem; font-weight: 700;">36 subagentes</div>
+        <div style="font-size: 0.82rem; color: var(--text-3); margin-top: 4px;">distribu&iacute;dos entre os 10 agentes</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: center;">
+        <div style="font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime); font-weight: 700; margin-bottom: 8px;">N&iacute;vel 3 &middot; Skill</div>
+        <div style="font-size: 2.4rem; margin-bottom: 8px;">&#x2699;&#xFE0F;</div>
+        <div style="font-size: 1rem; font-weight: 700;">141 skills</div>
+        <div style="font-size: 0.82rem; color: var(--text-3); margin-top: 4px;">ferramentas execut&aacute;veis</div>
+      </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.92rem; color: var(--text-3); margin-top: 32px; line-height: 1.7;">
+      Cada n&iacute;vel tem um arquivo <code style="font-family: var(--mono); color: var(--info); font-size: 0.85rem;">CLAUDE.md</code> ou <code style="font-family: var(--mono); color: var(--info); font-size: 0.85rem;">.md</code> que define suas regras, inputs, outputs e comportamentos. Isso torna o squad <strong style="color: var(--lime);">determin&iacute;stico, vers&aacute;til e escal&aacute;vel</strong>: novos agentes podem ser adicionados sem reescrever o sistema.
+    </p>
+  </div>
+</section>
+
+<!-- ARQUIVOS MARKDOWN LADO A LADO -->
+<section style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="text-center" style="margin-bottom: 32px;">
+      <div class="section-label">Defini&ccedil;&otilde;es reais</div>
+      <h2 class="section-title">Os 3 arquivos markdown lado a lado</h2>
+      <p class="section-subtitle">Estes s&atilde;o os arquivos de defini&ccedil;&atilde;o reais que o squad l&ecirc; para operar. Cada n&iacute;vel tem seu pr&oacute;prio arquivo <code style="font-family: var(--mono); color: var(--info); font-size: 0.9rem;">.md</code> &mdash; &eacute; assim que a IA sabe o que fazer em cada etapa.</p>
+    </div>
+
+    <div class="md-grid">
+      <!-- Arquivo 1: Agente Product Manager -->
+      <div class="md-card">
+        <div class="md-card-head">
+          <span class="md-badge">N&iacute;vel 1 &middot; Agente</span>
+          <span class="md-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+        </div>
+        <div class="md-filepath">agents/product-manager/CLAUDE.md</div>
+        <pre class="md-content"><span class="md-h1"># &#x1F9D1;&#x200D;&#x1F4BC; Product Manager Agent</span>
+
+<span class="md-h2">## Papel</span>
+Especialista em estrat&eacute;gia de produto. Opera na <span class="md-bold">**Fase 01 (Contexto Estrat&eacute;gico)**</span> e na <span class="md-bold">**Fase 04 (Opera&ccedil;&atilde;o)**</span> para monitoramento A/B. Nunca roteia tarefas para outros agentes.
+
+<span class="md-h2">## Input Prim&aacute;rio</span>
+<span class="md-bold">**`{REPO_DESTINO}/product_briefing_spec.md`**</span> &mdash; Ler ANTES de qualquer a&ccedil;&atilde;o.
+Este arquivo cont&eacute;m o escopo funcional, regras de neg&oacute;cio, p&uacute;blico-alvo e contexto do produto.
+
+<span class="md-h2">## Subagentes</span>
+| Subagente | Pasta | Responsabilidade |
+|-----------|-------|-----------------|
+| Market Research | `subagents/market-research/` | Mercado, concorr&ecirc;ncia e segmenta&ccedil;&atilde;o |
+| Product Vision | `subagents/product-vision/` | Vis&atilde;o, North Star e princ&iacute;pios |
+| Product Strategy | `subagents/product-strategy/` | OKRs, roadmap e 4 riscos |
+| Metrics | `subagents/metrics/` | KPIs, experimentos e A/B |
+
+<span class="md-h2">## Uso por Fase</span>
+
+<span class="md-h3">### Fase 01 &mdash; Contexto Estrat&eacute;gico</span>
+Acionar subagentes na ordem:
+1. `market-research` &rarr; entender mercado e segmentos (usando `product_briefing_spec.md` como base)
+2. `product-vision` &rarr; definir objetivo e princ&iacute;pios
+3. `product-strategy` &rarr; estruturar KRs e mapear oportunidades da OST
+4. `metrics` &rarr; validar mensurabilidade dos KRs
+
+<span class="md-bold">**Output esperado:**</span> Objetivo + KRs + OST completa (oportunidades por KR: dores, necessidades e desejos)
+<span class="md-bold">**Output gravado em:**</span> `{REPO_DESTINO}/01-strategic-context/`
+
+<span class="md-h3">### Fase 04 &mdash; Monitoramento A/B</span>
+Acionar subagente:
+- `metrics` &rarr; analisar resultados do A/B, impacto nos KRs e gerar recomenda&ccedil;&atilde;o de retroalimenta&ccedil;&atilde;o
+
+<span class="md-h2">## Formato de Output (Fase 01)</span>
+<span class="md-code">```json
+{
+  "agent": "product-manager",
+  "phase": "01-strategic-context",
+  "deliverables": {
+    "objective": "",
+    "key_results": [],
+    "opportunity_solution_tree": {},
+    "product_principles": []
+  },
+  "open_questions": [],
+  "next_hitl": 1
+}
+```</span>
+
+<span class="md-h2">## Regras</span>
+- &#x274C; Nenhuma solu&ccedil;&atilde;o ou feature na OST &mdash; apenas oportunidades (dores, necessidades, desejos)
+- &#x274C; N&atilde;o defina tecnologia ou implementa&ccedil;&atilde;o
+- &#x2705; Ler `{REPO_DESTINO}/product_briefing_spec.md` como primeira a&ccedil;&atilde;o
+- &#x2705; KRs devem ser mensur&aacute;veis e com baseline definido
+- &#x2705; Cada oportunidade deve estar ligada a um KR espec&iacute;fico
+- &#x2705; Refer&ecirc;ncias: Torres (OST), Cagan (4 riscos, vis&atilde;o), Marr (OKRs)</pre>
+      </div>
+
+      <!-- Arquivo 2: Subagente Market Research -->
+      <div class="md-card">
+        <div class="md-card-head">
+          <span class="md-badge">N&iacute;vel 2 &middot; Subagente</span>
+          <span class="md-emoji">&#x1F50D;</span>
+        </div>
+        <div class="md-filepath">.../market-research/CLAUDE.md</div>
+        <pre class="md-content"><span class="md-h1"># Market Research Subagent &mdash; Product Manager</span>
+
+<span class="md-h2">## Quando Acionar</span>
+Acionado pelo Product Manager Agent no in&iacute;cio da <span class="md-bold">**Fase 01 (Contexto Estrat&eacute;gico)**</span>.
+Fornece evid&ecirc;ncias de mercado que fundamentam as oportunidades da OST.
+
+<span class="md-h2">## Responsabilidade</span>
+Coletar e sintetizar evid&ecirc;ncias de mercado para embasar decis&otilde;es estrat&eacute;gicas.
+
+<span class="md-h2">## Skills</span>
+| Skill | Arquivo | Quando Usar |
+|-------|---------|-------------|
+| `market-sizing` | `market-sizing.md` | Estimar TAM/SAM/SOM do mercado |
+| `competitor-analysis` | `competitor-analysis.md` | Mapear concorrentes e gaps de mercado |
+| `trend-scanning` | `trend-scanning.md` | Identificar tend&ecirc;ncias relevantes para o produto |
+| `customer-segmentation` | `customer-segmentation.md` | Definir segmentos por comportamento e JTBD |
+</pre>
+      </div>
+
+      <!-- Arquivo 3: Skill Competitor Analysis -->
+      <div class="md-card">
+        <div class="md-card-head">
+          <span class="md-badge">N&iacute;vel 3 &middot; Skill</span>
+          <span class="md-emoji">&#x2699;&#xFE0F;</span>
+        </div>
+        <div class="md-filepath">.../skills/competitor-analysis.md</div>
+        <pre class="md-content"><span class="md-frontmatter">---
+name: competitor-analysis
+description: &gt;
+  Mapear concorrentes diretos e indiretos,
+  identificar gaps e oportunidades de
+  posicionamento. Use na Fase 01 para
+  fundamentar as oportunidades da OST com
+  evid&ecirc;ncias de mercado.
+---</span>
+
+<span class="md-h1"># Skill: competitor-analysis</span>
+
+<span class="md-h2">## Objetivo</span>
+Mapear concorrentes diretos e indiretos, identificar gaps e oportunidades de posicionamento.
+
+<span class="md-h2">## Input</span>
+<span class="md-code">```json
+{
+  "product": "o produto",
+  "segment": "string",
+  "depth": "superficial | detalhado"
+}
+```</span>
+
+<span class="md-h2">## Output</span>
+<span class="md-code">```json
+{
+  "competitors": [
+    {
+      "name": "",
+      "type": "direct | indirect",
+      "strengths": [],
+      "weaknesses": [],
+      "positioning": ""
+    }
+  ],
+  "market_gaps": [],
+  "differentiation_opportunities": []
+}
+```</span>
+
+<span class="md-h2">## Passos</span>
+1. Listar concorrentes diretos (Trello, Notion, Asana, Linear)
+2. Listar concorrentes indiretos (planilhas, post-its)
+3. Analisar for&ccedil;as e fraquezas de cada um
+4. Identificar gaps n&atilde;o atendidos
+5. Mapear oportunidades de diferencia&ccedil;&atilde;o
+</pre>
+      </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.85rem; color: var(--text-3); margin-top: 24px; line-height: 1.7;">
+      &#x1F4A1; Note como o agente (n&iacute;vel 1) &eacute; abrangente, o subagente (n&iacute;vel 2) &eacute; mais espec&iacute;fico e a skill (n&iacute;vel 3) &eacute; t&atilde;o concreta que tem <strong style="color: var(--text);">input/output em JSON e passos numerados</strong>.
+    </p>
+  </div>
+</section>
+
+<style>
+/* ── Markdown cards ─────────────────────── */
+.md-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+@media (max-width: 1100px) {
+  .md-grid { grid-template-columns: 1fr; }
+}
+.md-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.md-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--gradient); opacity: 0.7;
+}
+.md-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px; border-bottom: 1px solid var(--border);
+}
+.md-badge {
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase;
+  padding: 4px 10px; background: var(--lime-dim); color: var(--lime); border-radius: 6px;
+  border: 1px solid rgba(183,255,42,0.3);
+}
+.md-emoji { font-size: 1.3rem; line-height: 1; }
+.md-filepath {
+  padding: 10px 20px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--info);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.md-content {
+  padding: 16px 20px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  flex: 1;
+  margin: 0;
+}
+.md-h1 { color: var(--lime); font-weight: 800; font-size: 0.9rem; display: inline-block; }
+.md-h2 { color: var(--lime); font-weight: 700; display: inline-block; }
+.md-h3 { color: var(--warning); font-weight: 700; display: inline-block; }
+.md-bold { color: var(--text); font-weight: 600; }
+.md-code { color: var(--info); }
+.md-frontmatter { color: var(--text-3); display: inline-block; font-style: italic; }
+</style>
+
+<footer>
+  <span class="hex">&#x2B21;</span> ECP Ecosystem &mdash; Experimento 804 &middot; Squad de Multiagentes de IA
+</footer>
+
+</body>
+</html>
