@@ -222,7 +222,7 @@ section {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 40px 40px 20px;
+  padding: 40px;
   margin-top: 48px;
   position: relative;
   overflow: hidden;
@@ -260,9 +260,6 @@ section {
   text-align: left;
   position: relative;
   line-height: 1.5;
-}
-.experiment-card > :last-child {
-  margin-bottom: 0;
 }
 .experiment-card ul li::before {
   content: '>';
@@ -670,32 +667,34 @@ footer {
 .text-center { text-align: center; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 
-/* ── Top Nav ────────────────────────────────────── */
-.top-nav {
+/* ── Side Nav ────────────────────────────────────── */
+.side-nav {
+  position: fixed;
+  left: 24px;
+  top: 96px;
+  z-index: 90;
   display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
 }
-.top-nav a {
+.side-nav a {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 10px;
+  padding: 10px 14px;
   border-radius: 10px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--lime);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
-.top-nav a:hover {
+.side-nav a:hover {
   color: var(--lime);
   background: var(--lime-dim);
 }
-.top-nav a .nav-dot {
+.side-nav a .nav-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -704,24 +703,107 @@ footer {
   transition: background 0.2s, box-shadow 0.2s;
   opacity: 0.5;
 }
-.top-nav a:hover .nav-dot {
+.side-nav a:hover .nav-dot {
   background: var(--lime);
   box-shadow: 0 0 8px rgba(183,255,42,0.7);
   opacity: 1;
 }
-.top-nav a.active {
+.side-nav a.active {
   color: var(--lime);
   background: var(--lime-dim);
 }
-.top-nav a.active .nav-dot {
+.side-nav a.active .nav-dot {
   background: var(--lime);
   box-shadow: 0 0 8px rgba(183,255,42,0.7);
   opacity: 1;
 }
-@media (max-width: 900px) {
-  .top-nav a { padding: 6px 10px; font-size: 0.82rem; }
-  .top-nav a .nav-dot { display: none; }
-  .squad-3col { grid-template-columns: 1fr !important; }
+
+/* ═══════════════════ PRINT / PDF ═══════════════════ */
+@media print {
+  @page {
+    size: 500mm 340mm; /* custom largo para caber tudo */
+    margin: 10mm;
+  }
+  /* Forçar grid arch+fluxo a 2 colunas no print */
+  .arch-flow-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+  }
+  /* Garantir que Ecossistema inteiro tente ficar numa página */
+  #ecossistema { page-break-inside: auto !important; }
+  html, body {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Esconder elementos não essenciais */
+  .side-nav, #hero, .spacer, .grid-bg, footer { display: none !important; }
+
+  /* FORÇAR visibilidade dos .reveal (IntersectionObserver não dispara em print) */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+
+  /* Reduzir padding das sections para caber em A4 landscape */
+  section { padding: 16px 20px !important; min-height: auto !important; }
+
+  /* Cada seção principal começa em nova página (somente before, evita páginas vazias) */
+  #experiment { page-break-before: avoid !important; break-before: avoid !important; }
+  #squad,
+  #ecossistema,
+  #resultados {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Evitar quebras dentro dos cards principais */
+  .experiment-card,
+  .app-card,
+  .arch-diagram,
+  .md-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Ajustes de tamanho para impressão */
+  .container { max-width: 100% !important; padding: 0 !important; }
+  .section-title { font-size: 1.5rem !important; margin-bottom: 16px !important; }
+  .section-label { font-size: 1rem !important; margin-bottom: 4px !important; }
+
+  /* Compactar cards do experimento */
+  .experiment-card { padding: 18px !important; margin-top: 0 !important; }
+  .experiment-card h3 { font-size: 1rem !important; margin-bottom: 8px !important; }
+  .experiment-card p { font-size: 0.85rem !important; margin-bottom: 6px !important; }
+  .experiment-card ul li { padding: 4px 0 4px 18px !important; font-size: 0.82rem !important; }
+
+  /* Compactar cards de produto */
+  .app-card { padding: 16px !important; }
+  .app-card h3 { font-size: 0.95rem !important; margin-bottom: 6px !important; }
+  .app-card .app-icon { font-size: 1.8rem !important; margin-bottom: 8px !important; }
+  .app-card .app-features li { font-size: 0.75rem !important; padding: 3px 0 !important; }
+
+  /* Forçar cores dos backgrounds */
+  .experiment-card, .level-card, .app-card,
+  .arch-node, .md-card { background: var(--surface) !important; }
+
+  /* Compactar seção Ecossistema específicamente */
+  #ecossistema .apps-grid { margin-top: 20px !important; gap: 12px !important; }
+  #ecossistema .app-card { padding: 14px !important; }
+  #ecossistema .app-card .app-icon { font-size: 1.5rem !important; margin-bottom: 6px !important; }
+  #ecossistema .app-card h3 { font-size: 0.85rem !important; }
+  #ecossistema .app-card .app-features li { font-size: 0.7rem !important; padding: 2px 0 !important; }
+  #ecossistema .app-card .app-links { margin-top: 8px !important; }
+  #ecossistema .arch-node { padding: 6px 12px !important; min-width: 140px !important; }
+  #ecossistema .arch-node .arch-emoji { font-size: 1.3rem !important; }
+  #ecossistema .arch-node .arch-name { font-size: 0.78rem !important; }
+  #ecossistema .arch-node .arch-sub { font-size: 0.68rem !important; }
+  #ecossistema h2 { margin: 16px 0 12px !important; font-size: 1.4rem !important; }
+  #ecossistema h3 { font-size: 0.9rem !important; margin-bottom: 10px !important; }
+  #ecossistema p { font-size: 0.82rem !important; }
 }
 </style>
 </head>
@@ -729,6 +811,14 @@ footer {
 
 <!-- Animated Grid Background -->
 <div class="grid-bg"></div>
+
+<!-- SIDE NAV -->
+<nav class="side-nav">
+  <a href="#experiment"><span class="nav-dot"></span> Experimento</a>
+  <a href="#squad"><span class="nav-dot"></span> Squad de IA</a>
+  <a href="#ecossistema"><span class="nav-dot"></span> Ecossistema</a>
+  <a href="#resultados"><span class="nav-dot"></span> Resultados</a>
+</nav>
 
 <!-- FIXED HEADER -->
 <header id="hero" style="
@@ -741,38 +831,33 @@ footer {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  padding: 22px 32px;
+  padding: 14px 32px;
   display: flex;
   align-items: center;
   gap: 24px;
 ">
   <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
-    <span style="font-size: 2.2rem; color: var(--lime); text-shadow: 0 0 24px rgba(183,255,42,0.35); line-height: 1;">&#x2B21;</span>
-    <span style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;">ECP</span>
+    <span style="font-size: 1.8rem; color: var(--lime); text-shadow: 0 0 24px rgba(183,255,42,0.35); line-height: 1;">&#x2B21;</span>
+    <span style="font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px;">ECP</span>
   </div>
-  <div style="display: flex; flex-direction: column; gap: 3px;">
-    <span style="font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime);">Experimento 804 &mdash; Squad de Multiagentes de IA</span>
+  <div style="display: flex; flex-direction: column; gap: 1px;">
+    <span style="font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lime);">Experimento 804 &mdash; Squad de Multiagentes de IA</span>
+    <span style="font-size: 1.1rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2;">Ecossistema Digital Criado por Agentes de IA</span>
   </div>
-  <nav class="top-nav">
-    <a href="#experiment"><span class="nav-dot"></span> Experimento</a>
-    <a href="#squad"><span class="nav-dot"></span> Squad de IA</a>
-    <a href="#ecossistema"><span class="nav-dot"></span> Ecossistema</a>
-    <a href="#resultados"><span class="nav-dot"></span> Resultados</a>
-  </nav>
 </header>
 
 <!-- Spacer to compensate fixed header -->
-<div style="height: 104px;"></div>
+<div style="height: 80px;"></div>
 
 <!-- EXPERIMENTO: CONTEXTO → PROBLEMA → HIPÓTESE (primeira seção da landing) -->
-<section id="experiment" style="padding-top: 20px;">
+<section id="experiment" style="padding-top: 60px;">
   <div class="container">
     <div class="text-center reveal">
-      <h2 class="section-title" style="font-size: clamp(1.4rem, 2.2vw, 1.8rem);">O Experimento</h2>
+      <h2 class="section-title" style="font-size: clamp(2.5rem, 5vw, 3.5rem);">O Experimento</h2>
     </div>
 
     <!-- 3 cards: Contexto, Problema, Hipótese -->
-    <div class="experiment-trio reveal" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 16px;">
+    <div class="experiment-trio reveal" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;">
 
       <!-- CONTEXTO -->
       <div class="experiment-card" style="margin-top: 0;">
@@ -797,7 +882,7 @@ footer {
           <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(255,204,0,0.08); border: 1px solid rgba(255,204,0,0.3); font-size: 0.85rem; font-weight: 800; color: var(--warning);">2</span>
           Problema
         </h3>
-        <p><strong style="color: var(--warning);">Avaliar o Impacto</strong> que isso poderia ter no <strong style="color: var(--warning);">ciclo de desenvolvimento de produtos</strong> como um todo (Contexto Estrat&eacute;gico, Product Discovery, Product Delivery, Opera&ccedil;&atilde;o do Produto) e n&atilde;o apenas na etapa de desenvolvimento do software e consequentemente em nossa competitividade.</p>
+        <p><strong style="color: var(--lime);">Avaliar o Impacto</strong> que isso poderia ter no <strong style="color: var(--lime);">ciclo de desenvolvimento de produtos</strong> como um todo (Contexto Estrat&eacute;gico, Product Discovery, Product Delivery, Opera&ccedil;&atilde;o do Produto) e n&atilde;o apenas na etapa de desenvolvimento do software e consequentemente em nossa competitividade.</p>
         <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;">
           <li><strong style="color: var(--warning);">Velocidade</strong></li>
           <li><strong style="color: var(--warning);">Produtividade</strong></li>
@@ -825,90 +910,75 @@ footer {
 </section>
 
 <!-- SQUAD DE IA MULTIAGENTES -->
-<section id="squad" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 24px 60px;">
+<section id="squad" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 60px 24px;">
   <div class="container">
     <div class="text-center reveal">
-      <h2 class="section-title" style="margin-bottom: 0; font-size: clamp(1.4rem, 2.2vw, 1.8rem);">
-        <span style="color: var(--lime); letter-spacing: 4px; text-transform: uppercase;">Solu&ccedil;&atilde;o:</span>
-        Squad de Multiagentes de IA
-      </h2>
+      <div class="section-label" style="font-size: 1.5rem; letter-spacing: 4px;">Solu&ccedil;&atilde;o</div>
+      <h2 class="section-title" style="margin-bottom: 0; margin-top: 12px;">Squad de Multiagentes de IA</h2>
     </div>
 
-    <!-- 2 colunas: Estrutura + 4 Aspectos 2x2 (esquerda) | Agentes (direita) -->
-    <div class="squad-3col reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; align-items: start;">
+    <!-- Big numbers do squad (compacto) -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;" class="reveal">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center;">
+        <div style="font-size: 2.2rem; font-weight: 900; color: var(--lime); line-height: 1;">10</div>
+        <div style="font-size: 1rem; color: var(--text); margin-top: 4px; font-weight: 700;">Agentes</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center;">
+        <div style="font-size: 2.2rem; font-weight: 900; color: var(--info); line-height: 1;">36</div>
+        <div style="font-size: 1rem; color: var(--text); margin-top: 4px; font-weight: 700;">Subagentes</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center;">
+        <div style="font-size: 2.2rem; font-weight: 900; color: var(--warning); line-height: 1;">141</div>
+        <div style="font-size: 1rem; color: var(--text); margin-top: 4px; font-weight: 700;">Skills</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center;">
+        <div style="font-size: 2.2rem; font-weight: 900; color: var(--success); line-height: 1;">12</div>
+        <div style="font-size: 1rem; color: var(--text); margin-top: 4px; font-weight: 700;">HITLs / produto</div>
+      </div>
+    </div>
 
-      <!-- Agentes especializados (vai para a direita via order) -->
-      <div style="order: 2;">
-        <h3 style="font-size: 0.95rem; font-weight: 700; text-align: center; margin-bottom: 10px; color: var(--text-2);">Agentes Especializados</h3>
-        <div class="agents-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); grid-auto-flow: column; gap: 8px; max-width: 90%; margin: 0 0 0 auto;">
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span> Product Manager</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F3A8;</span> Product Designer</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F4CB;</span> Product Owner</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F3DB;&#xFE0F;</span> Software Architect</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F527;</span> Back End Dev</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F916;</span> AI Engineer</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F4BB;</span> Front End Dev</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F9EA;</span> QA Engineer</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x2699;&#xFE0F;</span> Operations</div>
-          <div class="agent-badge" style="padding: 8px 10px; font-size: 0.82rem; font-weight: 700; color: var(--text); min-height: 90px;"><span class="agent-emoji">&#x1F3AF;</span> Orchestrator</div>
+    <!-- Agentes (compacto) -->
+    <div class="reveal" style="margin-top: 24px;">
+      <h3 style="font-size: 0.95rem; font-weight: 700; text-align: center; margin-bottom: 14px; color: var(--text-2);">Agentes Especializados</h3>
+      <div class="agents-grid" style="grid-template-columns: repeat(5, 1fr); gap: 10px;">
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span> Product Manager</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F3A8;</span> Product Designer</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F4CB;</span> Product Owner</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F3DB;&#xFE0F;</span> Software Architect</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F527;</span> Back End Dev</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F916;</span> AI Engineer</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F4BB;</span> Front End Dev</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F9EA;</span> QA Engineer</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x2699;&#xFE0F;</span> Operations</div>
+        <div class="agent-badge" style="padding: 12px 14px; font-size: 0.95rem; font-weight: 700; color: var(--text);"><span class="agent-emoji">&#x1F3AF;</span> Orchestrator</div>
+      </div>
+    </div>
+
+    <!-- Fases do ciclo (compacto) -->
+    <div class="reveal" style="margin-top: 24px;">
+      <h3 style="font-size: 0.95rem; font-weight: 700; text-align: center; margin-bottom: 14px; color: var(--text-2);">4 Aspectos de Gest&atilde;o de Produtos</h3>
+      <div class="phases-grid" style="gap: 16px;">
+        <div class="phase-card" style="padding: 20px;">
+          <div class="phase-number" style="font-size: 1.6rem; margin-bottom: 4px;">01</div>
+          <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Contexto Estrat&eacute;gico</h4>
+          <p style="font-size: 0.75rem;">OKRs, North Star, vis&atilde;o de produto, mercado</p>
+        </div>
+        <div class="phase-card" style="padding: 20px;">
+          <div class="phase-number" style="font-size: 1.6rem; margin-bottom: 4px;">02</div>
+          <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Product Discovery</h4>
+          <p style="font-size: 0.75rem;">Research, idea&ccedil;&atilde;o, prot&oacute;tipos, backlog</p>
+        </div>
+        <div class="phase-card" style="padding: 20px;">
+          <div class="phase-number" style="font-size: 1.6rem; margin-bottom: 4px;">03</div>
+          <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Product Delivery</h4>
+          <p style="font-size: 0.75rem;">Arquitetura, backend, frontend, QA</p>
+        </div>
+        <div class="phase-card" style="padding: 20px;">
+          <div class="phase-number" style="font-size: 1.6rem; margin-bottom: 4px;">04</div>
+          <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Opera&ccedil;&atilde;o</h4>
+          <p style="font-size: 0.75rem;">CI/CD, GMUD, deploy, SLOs, A/B</p>
         </div>
       </div>
-
-      <!-- Estrutura em cima + 4 Aspectos 2x2 embaixo (vai para a esquerda via order) -->
-      <div style="display: flex; flex-direction: column; gap: 32px; order: 1;">
-
-        <!-- Estrutura (números) -->
-        <div>
-          <h3 style="font-size: 0.95rem; font-weight: 700; text-align: center; margin-bottom: 10px; color: var(--text-2);">Estrutura do Squad</h3>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; text-align: center; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 1.7rem; font-weight: 900; color: var(--lime); line-height: 1;">10</div>
-              <div style="font-size: 0.9rem; color: var(--text); margin-top: 4px; font-weight: 700;">Agentes</div>
-            </div>
-            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; text-align: center; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 1.7rem; font-weight: 900; color: var(--info); line-height: 1;">36</div>
-              <div style="font-size: 0.9rem; color: var(--text); margin-top: 4px; font-weight: 700;">Subagentes</div>
-            </div>
-            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; text-align: center; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 1.7rem; font-weight: 900; color: var(--warning); line-height: 1;">141</div>
-              <div style="font-size: 0.9rem; color: var(--text); margin-top: 4px; font-weight: 700;">Skills</div>
-            </div>
-            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; text-align: center; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 1.7rem; font-weight: 900; color: var(--success); line-height: 1;">12</div>
-              <div style="font-size: 0.9rem; color: var(--text); margin-top: 4px; font-weight: 700;">HITLs / produto</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4 Aspectos de Gestão de Produtos (2x2) -->
-        <div>
-          <h3 style="font-size: 0.95rem; font-weight: 700; text-align: center; margin-bottom: 10px; color: var(--text-2);">4 Aspectos de Gest&atilde;o de Produtos</h3>
-          <div class="phases-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 0;">
-            <div class="phase-card" style="padding: 10px 14px; min-height: 90px;">
-              <div class="phase-number" style="font-size: 1.2rem; margin-bottom: 2px;">01</div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Contexto Estrat&eacute;gico</h4>
-              <p style="font-size: 0.75rem;">OKRs, North Star, vis&atilde;o de produto, mercado</p>
-            </div>
-            <div class="phase-card" style="padding: 10px 14px; min-height: 90px;">
-              <div class="phase-number" style="font-size: 1.2rem; margin-bottom: 2px;">02</div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Product Discovery</h4>
-              <p style="font-size: 0.75rem;">Research, idea&ccedil;&atilde;o, prot&oacute;tipos, backlog</p>
-            </div>
-            <div class="phase-card" style="padding: 10px 14px; min-height: 90px;">
-              <div class="phase-number" style="font-size: 1.2rem; margin-bottom: 2px;">03</div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Product Delivery</h4>
-              <p style="font-size: 0.75rem;">Arquitetura, backend, frontend, QA</p>
-            </div>
-            <div class="phase-card" style="padding: 10px 14px; min-height: 90px;">
-              <div class="phase-number" style="font-size: 1.2rem; margin-bottom: 2px;">04</div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 4px;">Opera&ccedil;&atilde;o</h4>
-              <p style="font-size: 0.75rem;">CI/CD, GMUD, deploy, SLOs, A/B</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
     <!-- Link docs -->
@@ -920,17 +990,15 @@ footer {
 </section>
 
 <!-- O QUE FOI CONSTRUÍDO -->
-<section id="ecossistema" style="padding: 20px 24px 100px;">
+<section id="ecossistema">
   <div class="container">
     <div class="text-center reveal">
-      <h2 class="section-title" style="font-size: clamp(1.4rem, 2.2vw, 1.8rem);">
-        <span style="color: var(--lime); letter-spacing: 4px; text-transform: uppercase;">O que foi constru&iacute;do:</span>
-        Ecossistema de produtos digitais
-      </h2>
+      <div class="section-label" style="font-size: 1.5rem; letter-spacing: 4px;">O que foi constru&iacute;do</div>
+      <h2 class="section-title">Ecossistema ECP</h2>
     </div>
 
     <!-- 4 App cards (sem números de BCP/Lead Time, apenas o que é cada produto) -->
-    <div class="apps-grid" style="margin-top: 16px;">
+    <div class="apps-grid" style="margin-top: 48px;">
       <div class="app-card reveal" data-accent="lime">
         <span class="app-icon">&#x1F3E6;</span>
         <h3>ECP Bank (PF)</h3>
@@ -995,7 +1063,7 @@ footer {
 
     <!-- Título da seção integrada -->
     <div class="text-center reveal" style="margin-top: 72px; margin-bottom: 32px;">
-      <h2 style="font-size: clamp(1.4rem, 2.2vw, 1.8rem); font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;">Como os produtos se conectam</h2>
+      <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;">Como os produtos se conectam</h2>
     </div>
 
     <!-- Arquitetura + Fluxo lado a lado -->
@@ -1095,14 +1163,15 @@ footer {
 </section>
 
 <!-- RESULTADOS EXECUTIVOS -->
-<section id="resultados" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 24px 100px;">
+<section id="resultados" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
     <div class="text-center reveal">
-      <h2 class="section-title" style="font-size: clamp(1.4rem, 2.2vw, 1.8rem); color: var(--text);">Resultados</h2>
+      <div class="section-label" style="font-size: 1.5rem; letter-spacing: 4px;">Resultados do Ecossistema &mdash; 4 Produtos</div>
+      <h2 class="section-title">Complexidade, Produtividade &amp; Velocidade</h2>
     </div>
 
     <!-- 3 blocos executivos -->
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 16px;" class="reveal">
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;" class="reveal">
 
       <!-- BLOCO 1: Complexidade -->
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px; position: relative; overflow: hidden;">
@@ -1146,7 +1215,7 @@ footer {
             <div style="font-size: 0.72rem; color: var(--text-3);">Tempo / BCP (AI)</div>
           </div>
           <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
-            <div style="font-size: 1.4rem; font-weight: 800; color: var(--lime); white-space: nowrap;">~10h&nbsp;28min</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--lime);">~5h 47min</div>
             <div style="font-size: 0.72rem; color: var(--text-3);">Esfor&ccedil;o AI Squad</div>
           </div>
           <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
@@ -1165,16 +1234,20 @@ footer {
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(135deg, var(--info), #2979cc);opacity:0.7;"></div>
         <h3 style="font-size: 1rem; font-weight: 700; color: var(--info); margin-bottom: 20px;">Velocidade (Lead Time)</h3>
         <div style="text-align: center; margin-bottom: 20px;">
-          <div style="font-size: 3.2rem; font-weight: 900; color: var(--info); line-height: 1; white-space: nowrap;">~28h&nbsp;16min</div>
+          <div style="font-size: 3.2rem; font-weight: 900; color: var(--info); line-height: 1;">~10h 28min</div>
           <div style="font-size: 0.82rem; color: var(--text-3); margin-top: 6px;">Lead Time Total com HITL</div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
-            <div style="font-size: 1.4rem; font-weight: 800; color: var(--info); white-space: nowrap;">~17h&nbsp;16min</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--info);">~8h 38min</div>
             <div style="font-size: 0.72rem; color: var(--text-3);">Lead Time sem HITL</div>
           </div>
           <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
-            <div style="font-size: 1.4rem; font-weight: 800; color: var(--info);">~11h</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--info);">~5h 47min</div>
+            <div style="font-size: 0.72rem; color: var(--text-3);">Esfor&ccedil;o AI Squad</div>
+          </div>
+          <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--info);">~1h 50min</div>
             <div style="font-size: 0.72rem; color: var(--text-3);">Pausa HITL (revis&atilde;o)</div>
           </div>
           <div style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center;">
@@ -1264,29 +1337,12 @@ footer {
   'use strict';
 
   // Side nav active state
-  var navLinks = document.querySelectorAll('.top-nav a');
+  var navLinks = document.querySelectorAll('.side-nav a');
   var sections = [];
   navLinks.forEach(function(link) {
     var id = link.getAttribute('href').replace('#', '');
     var el = document.getElementById(id);
     if (el) sections.push({ id: id, el: el, link: link });
-  });
-
-  // Clicar num item do nav: scroll suave alinhando topo da seção abaixo do menu fixo
-  navLinks.forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      var id = link.getAttribute('href').replace('#', '');
-      var el = document.getElementById(id);
-      if (!el) return;
-      e.preventDefault();
-      var header = document.querySelector('header#hero');
-      var headerH = header ? header.getBoundingClientRect().height : 104;
-      var rect = el.getBoundingClientRect();
-      var absTop = rect.top + window.scrollY;
-      var target = absTop - headerH;
-      window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
-      history.replaceState(null, '', '#' + id);
-    });
   });
 
   function updateActiveNav() {
