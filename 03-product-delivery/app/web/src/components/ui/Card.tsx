@@ -19,7 +19,7 @@ export function Card({
   children,
   ...props
 }: CardProps) {
-  const baseClasses = 'rounded-card border'
+  const baseClasses = 'rounded-card border shadow-card'
   const variantClasses =
     variant === 'highlighted'
       ? 'bg-surface border-lime/30'

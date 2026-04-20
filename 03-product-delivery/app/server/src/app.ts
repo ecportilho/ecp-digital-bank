@@ -17,6 +17,10 @@ import { usersRoutes } from './modules/users/users.routes.js'
 import { notificationsRoutes } from './modules/notifications/notifications.routes.js'
 import { dashboardRoutes } from './modules/dashboard/dashboard.routes.js'
 import { chatRoutes } from './modules/chat/chat.routes.js'
+import { webhooksRoutes } from './modules/webhooks/webhooks.routes.js'
+import { adminRoutes } from './modules/admin/admin.routes.js'
+import { startEcpPayRetryWorker } from './services/ecp-pay-retry-worker.js'
+import { startRecurringPaymentsWorker } from './modules/payments/payments.service.js'
 
 export async function buildApp() {
   const app = Fastify({
@@ -56,9 +60,17 @@ export async function buildApp() {
   await app.register(notificationsRoutes, { prefix: '/api/notifications' })
   await app.register(dashboardRoutes, { prefix: '/api/dashboard' })
   await app.register(chatRoutes, { prefix: '/api/chat' })
+  await app.register(webhooksRoutes, { prefix: '/api/webhooks' })
+  await app.register(adminRoutes, { prefix: '/api/admin' })
 
   // Health check
   app.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))
+
+  // Background workers — skip in test env to keep tests deterministic
+  if (process.env.NODE_ENV !== 'test') {
+    startEcpPayRetryWorker()
+    startRecurringPaymentsWorker()
+  }
 
   return app
 }

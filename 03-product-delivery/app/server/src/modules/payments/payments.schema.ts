@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+export const RecurrenceRuleSchema = z.enum(['none', 'daily', 'weekly', 'monthly', 'yearly'])
+
 export const PayBoletoSchema = z.object({
   boletoCode: z
     .string()
@@ -13,6 +15,11 @@ export const PayBoletoSchema = z.object({
   scheduledFor: z
     .string()
     .datetime({ message: 'Data de agendamento inválida' })
+    .optional(),
+  recurrence: RecurrenceRuleSchema.optional().default('none'),
+  recurrenceEndDate: z
+    .string()
+    .datetime({ message: 'Data final da recorrência inválida' })
     .optional(),
 })
 

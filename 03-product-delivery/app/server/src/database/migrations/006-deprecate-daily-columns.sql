@@ -1,0 +1,13 @@
+-- ECP Digital Bank — Deprecate lazy-reset columns on accounts
+-- Migration: 006-deprecate-daily-columns.sql
+--
+-- The columns `accounts.daily_transferred_cents` and `accounts.last_transfer_date` are no
+-- longer maintained. Daily Pix debited total is now computed on-the-fly via
+-- `getDailyTransferred(accountId)` (see `src/modules/pix/pix.service.ts`) which sums today's
+-- debit/pix transactions directly. This eliminates the "stale after day rollover" bug where
+-- a user who visited /accounts/me before transferring on a new day would see yesterday's
+-- cumulative total.
+--
+-- Columns are kept in the schema for backwards compatibility (older builds still read them)
+-- but carry no authoritative data going forward.
+SELECT 1;

@@ -55,7 +55,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
         className={`
           relative w-full ${sizeClasses[size]}
           bg-surface rounded-card border border-border
-          shadow-2xl
+          shadow-modal
         `}
         role="dialog"
         aria-modal="true"

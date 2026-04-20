@@ -1,5 +1,5 @@
 import { getDb } from '../connection.js'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,7 +19,9 @@ async function runMigrations() {
     )
   `)
 
-  const migrationFiles = ['001-initial.sql', '002-chat.sql', '003-ecp-pay-integration.sql', '004-user-roles.sql']
+  const migrationFiles = readdirSync(__dirname)
+    .filter((f) => f.endsWith('.sql'))
+    .sort()
 
   for (const file of migrationFiles) {
     const alreadyApplied = db.prepare('SELECT id FROM _migrations WHERE name = ?').get(file)

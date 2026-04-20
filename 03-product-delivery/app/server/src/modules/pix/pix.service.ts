@@ -36,11 +36,22 @@ function isNightTime(): boolean {
   return hour >= 20 || hour < 6
 }
 
-function isSameDay(date1: string | null): boolean {
-  if (!date1) return false
-  const d1 = new Date(date1).toDateString()
-  const d2 = new Date().toDateString()
-  return d1 === d2
+/**
+ * Compute daily Pix debited total on-the-fly, summing today's completed/pending debits.
+ * Replaces the lazy `daily_transferred_cents` column read which required `isSameDay` reset.
+ * The columns `daily_transferred_cents` and `last_transfer_date` are deprecated — no longer updated.
+ */
+export function getDailyTransferred(accountId: string): number {
+  const db = getDb()
+  const row = db.prepare(`
+    SELECT COALESCE(SUM(amount_cents), 0) as total
+    FROM transactions
+    WHERE account_id = ?
+      AND type = 'debit'
+      AND category = 'pix'
+      AND created_at >= date('now', 'start of day')
+  `).get(accountId) as { total: number }
+  return row.total
 }
 
 export class PixService {
@@ -137,10 +148,8 @@ export class PixService {
       throw Errors.insufficientBalance()
     }
 
-    // RN-01: Check daily transfer limit
-    const dailyTransferred = isSameDay(senderAccount.last_transfer_date)
-      ? senderAccount.daily_transferred_cents
-      : 0
+    // RN-01: Check daily transfer limit (computed on-the-fly from today's transactions)
+    const dailyTransferred = getDailyTransferred(accountId)
 
     if (dailyTransferred + input.amountCents > senderAccount.daily_transfer_limit_cents) {
       throw Errors.dailyLimitExceeded(senderAccount.daily_transfer_limit_cents)
@@ -170,30 +179,37 @@ export class PixService {
 
     // Get receiver user info
     const receiverUser = db
-      .prepare('SELECT name FROM users WHERE id = (SELECT user_id FROM accounts WHERE id = ?)')
-      .get(targetKey.account_id) as { name: string } | undefined
+      .prepare('SELECT u.name, u.cpf FROM users u JOIN accounts a ON a.user_id = u.id WHERE a.id = ?')
+      .get(targetKey.account_id) as { name: string; cpf: string } | undefined
+
+    // Get sender user info — for counterpart fields on the receiver's credit transaction
+    const senderUser = db
+      .prepare('SELECT u.name, u.cpf FROM users u JOIN accounts a ON a.user_id = u.id WHERE a.id = ?')
+      .get(accountId) as { name: string; cpf: string } | undefined
 
     const receiverName = receiverUser?.name ?? 'Destinatário'
+    const receiverCpf = receiverUser?.cpf ?? null
+    const senderName = senderUser?.name ?? 'Remetente'
+    const senderCpf = senderUser?.cpf ?? null
+    // Multi-tenant internal: both sides live in ECP Digital Bank today.
+    // When/if cross-institution Pix is wired, this needs to come from the Pix message payload.
+    const institution = 'ECP Digital Bank'
     const senderNewBalance = senderAccount.balance_cents - input.amountCents
     const receiverNewBalance = receiverAccount.balance_cents + input.amountCents
     const transactionId = generateId()
     const now = new Date().toISOString()
-    const today = now.split('T')[0] ?? now
 
     // Execute transfer atomically
     const doTransfer = db.transaction(() => {
-      // Debit sender
+      // Debit sender. Columns `daily_transferred_cents` and `last_transfer_date` are deprecated
+      // in favour of the on-the-fly `getDailyTransferred` helper. Left in the schema for compat.
       db.prepare(`
         UPDATE accounts
         SET balance_cents = ?,
-            daily_transferred_cents = ?,
-            last_transfer_date = ?,
             updated_at = datetime('now')
         WHERE id = ?
       `).run(
         senderNewBalance,
-        dailyTransferred + input.amountCents,
-        today,
         accountId
       )
 
@@ -206,22 +222,22 @@ export class PixService {
 
       // Record debit transaction for sender
       db.prepare(`
-        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, pix_key, pix_key_type, status, created_at)
-        VALUES (?, ?, 'debit', 'pix', ?, ?, ?, ?, ?, ?, 'completed', ?)
+        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, counterpart_document, counterpart_institution, pix_key, pix_key_type, status, created_at)
+        VALUES (?, ?, 'debit', 'pix', ?, ?, ?, ?, ?, ?, ?, ?, 'completed', ?)
       `).run(
         transactionId, accountId, input.amountCents, senderNewBalance,
         input.description ?? `Pix enviado para ${receiverName}`,
-        receiverName, input.pixKey, targetKey.key_type, now
+        receiverName, receiverCpf, institution, input.pixKey, targetKey.key_type, now
       )
 
       // Record credit transaction for receiver
       db.prepare(`
-        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, pix_key, pix_key_type, status, created_at)
-        VALUES (?, ?, 'credit', 'pix', ?, ?, ?, ?, ?, ?, 'completed', ?)
+        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, counterpart_document, counterpart_institution, pix_key, pix_key_type, status, created_at)
+        VALUES (?, ?, 'credit', 'pix', ?, ?, ?, ?, ?, ?, ?, ?, 'completed', ?)
       `).run(
         generateId(), targetKey.account_id, input.amountCents, receiverNewBalance,
         input.description ?? `Pix recebido`,
-        'Remetente', input.pixKey, targetKey.key_type, now
+        senderName, senderCpf, institution, input.pixKey, targetKey.key_type, now
       )
 
       // Update rate limit counter

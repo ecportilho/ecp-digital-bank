@@ -52,7 +52,7 @@ Agregador único em `GET /api/dashboard` que devolve para a home:
 ### 3.3. Pix
 
 - **Gerenciar chaves** (`/api/pix/keys`): criação, listagem e soft delete. Tipos aceitos: `cpf`, `email`, `phone`, `random`. Limite de 5 chaves ativas por usuário (`server/src/modules/pix/pix.service.ts:9`).
-- **Enviar Pix** (`POST /api/pix/transfer`) com fluxo em 4 passos no front (`chave → valor → confirmação → sucesso`, ver `web/src/routes/pix/enviar.tsx`).
+- **Enviar Pix** (`POST /api/pix/transfer`) com fluxo em 4 passos no front (`chave → valor → confirmação → sucesso`, ver `web/src/routes/pix/enviar.tsx`). Ao persistir, o serviço popula em ambas as pontas do extrato (débito do remetente e crédito do recebedor) os campos `counterpart_name` (nome real do titular) e `counterpart_document` (CPF) — o extrato do recebedor mostra o nome real do remetente, não mais o placeholder `Remetente`.
 - **Lookup de chave** (`GET /api/pix/lookup?key=`) para exibir o nome do titular antes da confirmação.
 - **Receber Pix via QR Code** (`POST /api/pix/qrcode`): o banco delega a criação da cobrança para a **ECP Pay** (`server/src/services/ecp-pay-client.ts:43`), registra uma transação `pending` local com `metadata.ecp_pay_tx_id` e retorna `qrCode`, `qrCodeText` e `expiration`.
 - **Débito por CPF/e-mail** (`POST /api/pix/debit-by-cpf`): endpoint exclusivo de contas `system` usado pela ECP Pay para registrar no extrato do pagador uma compra feita em apps parceiros (ex.: bank, food).
@@ -170,7 +170,7 @@ Todas as rotas autenticadas compartilham o layout `ProtectedLayout` (Sidebar + H
 3. ECP Pay devolve `transaction_id`, `qr_code` (base64 PNG) e `qr_code_text` (EMV).
 4. Bank registra transação local `pending` com `metadata.ecp_pay_tx_id`.
 5. Front exibe QR + código copia-e-cola.
-6. Quando o pagador efetua o pagamento, a ECP Pay chama `POST /api/pix/debit-by-cpf` no bank para debitar o pagador e o valor é creditado (o fluxo de credit final via webhook está implementado parcialmente — ver backlog).
+6. Quando o pagador efetua o pagamento, a ECP Pay debita o pagador e notifica o bank via webhook `POST /api/webhooks/ecp-pay/payment-confirmed` (header `X-Webhook-Secret`). O webhook localiza a transação pendente gerada no passo 4, marca como `completed`, credita o saldo do recebedor e gera notification `Pix recebido`. Idempotente: `eventId` duplicado é tratado como no-op (status 200 `duplicate`), sem creditar em dobro.
 
 ### 6.4. Conversa com Assistente IA
 1. Usuário abre o widget flutuante ou acessa `/chat`.
@@ -222,8 +222,7 @@ As métricas abaixo saem direto do dashboard ou podem ser extraídas do SQLite:
 - **TED e débito automático** não estão implementados (categorias `transfer`, `withdrawal`, `fee` existem no enum mas não há endpoints dedicados).
 - **Cartão físico**: o schema aceita `type: 'physical'` mas o fluxo de emissão/entrega não existe.
 - **Conta PJ**: o `ProfileSwitcher` mostra placeholder PF/PJ, mas back-end só tem PF.
-- **Agendamento recorrente de pagamentos**: `scheduledFor` aceita apenas uma data única, sem recorrência.
-- **Webhook de confirmação de Pix recebido via QR Code** da ECP Pay ainda requer polling manual (a transação fica `pending` até o payer debit, mas o credit final no recebedor está no backlog).
+- **Agendamento recorrente de pagamentos**: `POST /api/payments/boleto` aceita `recurrence: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'` + `recurrenceEndDate` opcional. A próxima instância é materializada 1 dia antes do `scheduledFor` pelo worker diário `materializeRecurringPayments` e fica linkada via `recurrence_parent_id`.
 - **Autenticação reforçada real** (RN-03): o `reinforcedToken` é aceito pelo endpoint mas não há um fluxo de 2FA/biometria emitindo esse token — é placeholder para integração futura.
 - **Limite diário Pix é por conta, não por transação noturna em cadeia** — a regra noturna (RN-02) aplica-se por transação individual.
 

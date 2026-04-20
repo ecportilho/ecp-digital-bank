@@ -28,6 +28,7 @@ A identidade dark-mode com acento lime foi preservada da v3.0 e está implementa
 |-------|-------|-----------------|-----|
 | Lime (acento) | `#b7ff2a` | `bg-lime`, `text-lime` | CTAs primários, links ativos, badge de notificação, logo |
 | Lime Pressed | `#7ed100` | `bg-lime-pressed` | Estado hover/pressed de botões primários |
+| Lime Dim | `rgb(183 255 42 / 0.1)` | `bg-lime-dim`, `text-lime-dim` | Background sutil de item ativo (ex.: perfil PF selecionado no `ProfileSwitcher`), badge `PJ` em lista |
 
 ### 1.3. Cores Semânticas
 
@@ -47,7 +48,7 @@ A identidade dark-mode com acento lime foi preservada da v3.0 e está implementa
 | Text Tertiary | `#7b8aa3` | `text-text-tertiary` | Placeholders, timestamps, legendas |
 | Família | Inter | `font-sans` | Fonte única em todo o app |
 
-A fonte Inter é carregada via CDN/fallback `sans-serif` em `globals.css:21` (`--font-family: 'Inter', sans-serif`) e aplicada globalmente em `html { font-family: var(--font-family) }`.
+A fonte Inter é servida **localmente** via `web/public/fonts/inter/inter-{400,500,600,700}.woff2` declarados em 4 blocos `@font-face` no topo de `globals.css`. Não há mais dependência de CDN / Google Fonts; o `index.html` não contém mais `<link rel="preconnect">` para `fonts.googleapis.com`.
 
 ### 1.5. Border Radius
 
@@ -56,7 +57,27 @@ A fonte Inter é carregada via CDN/fallback `sans-serif` em `globals.css:21` (`-
 | Card | 18px | `rounded-card` | Cards, modais, containers principais |
 | Control | 13px | `rounded-control` | Botões, inputs, badges, tabs |
 
-### 1.6. Scrollbar customizada
+### 1.6. Spacing tokens
+
+| Token | Valor | Classe Tailwind | Uso |
+|-------|-------|-----------------|-----|
+| Inline | 8px | `gap-inline`, `p-inline`, `m-inline` | Distância entre elementos inline (icon + label) |
+| Card gap | 16px | `gap-card-gap`, `p-card-gap` | Espaçamento padrão interno/entre cards |
+| Section | 32px | `gap-section`, `py-section` | Separação entre seções da página |
+
+Variáveis CSS equivalentes: `--spacing-inline`, `--spacing-card-gap`, `--spacing-section` em `globals.css`.
+
+### 1.7. Shadow tokens
+
+| Token | Classe Tailwind | Uso |
+|-------|-----------------|-----|
+| `card` | `shadow-card` | Sombra leve — `Card` default para leve elevação sobre o fundo |
+| `elevated` | `shadow-elevated` | Sombra média — dropdowns (`ProfileSwitcher`, notificações no `Header`) |
+| `modal` | `shadow-modal` | Sombra forte — overlays centrais (`Modal`, `ChatWidget` expandido) |
+
+Variáveis CSS equivalentes: `--shadow-card`, `--shadow-elevated`, `--shadow-modal`. Substituíram os `shadow-lg`/`shadow-xl`/`shadow-2xl` inline antes usados diretamente.
+
+### 1.8. Scrollbar customizada
 
 Definida em `globals.css:45` (apenas webkit):
 
@@ -76,7 +97,7 @@ Definida em `globals.css:45` (apenas webkit):
 | **Autoprefixer** | 10.4.19 | Prefixos de vendor automáticos |
 | **Lucide React** | 0.400.0 | Ícones SVG vetoriais (single source para navegação, ações, status) |
 
-O Tailwind **não usa preset de fonte externa** — apenas define `Inter` como família primária na config. A inclusão concreta da Inter fica a cargo do ambiente do usuário ou de um link em `index.html`.
+O Tailwind define `Inter` como família primária na config (`fontFamily.sans: ['Inter', 'sans-serif']`) e os arquivos woff2 são servidos de `web/public/fonts/inter/` via `@font-face` em `globals.css` — pipeline inteiramente local, sem CDN.
 
 ---
 
@@ -238,6 +259,7 @@ Tamanho padrão na sidebar: 18px. No header: 20px. Em badges: 10–14px.
   /* Accent */
   --color-lime: #b7ff2a;
   --color-lime-pressed: #7ed100;
+  --color-lime-dim: rgb(183 255 42 / 0.1);
 
   /* Text */
   --color-text-primary: #eaf2ff;
@@ -253,6 +275,16 @@ Tamanho padrão na sidebar: 18px. No header: 20px. Em badges: 10–14px.
   /* Radius */
   --radius-card: 18px;
   --radius-control: 13px;
+
+  /* Spacing */
+  --spacing-inline: 8px;
+  --spacing-card-gap: 16px;
+  --spacing-section: 32px;
+
+  /* Shadow */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.4);
+  --shadow-modal: 0 20px 48px rgb(0 0 0 / 0.55);
 
   /* Typography */
   --font-family: 'Inter', sans-serif;
@@ -271,9 +303,9 @@ Extraídas da leitura sistemática das páginas e componentes:
 2. **Acento lime reservado para ações primárias** — CTAs, estados ativos, brand mark. Nunca para texto normal.
 3. **Monetário sempre via `formatCurrency(cents)`** — formato pt-BR, símbolo R$ com duas casas. Toggle `Eye/EyeOff` no dashboard oculta valores substituindo por `------`.
 4. **Status sempre semântico** — credit = success, debit = default/danger, pendente = warning.
-5. **Elevação por borda, não por sombra** — superfícies se diferenciam via `bg-surface` + `border border-border`. Sombras aparecem apenas em overlays (dropdown de notificações, chat widget).
+5. **Elevação por borda + sombra tokenizada** — superfícies se diferenciam principalmente via `bg-surface` + `border border-border`. Sombras vêm dos tokens `shadow-card` (leve, default do `Card`), `shadow-elevated` (dropdowns) e `shadow-modal` (overlays centrais).
 6. **Transições padrão** — `transition-colors duration-150 ease` nos hovers; `transition-all duration-200` nos elementos interativos maiores (chat widget button).
-7. **Spacing** — grid de 4 (Tailwind default). Cards com `p-6`, inputs com `px-4 py-2.5`, botões md com `px-5 py-2.5`.
+7. **Spacing** — grid de 4 (Tailwind default). Tokens extras explícitos disponíveis: `inline` (8px), `card-gap` (16px), `section` (32px). Cards com `p-6`, inputs com `px-4 py-2.5`, botões md com `px-5 py-2.5`.
 8. **Responsividade** — breakpoints Tailwind. Sidebar aparece em `lg:`, MobileNav em `<lg`. Headers com `md:` para saudação.
 9. **Feedback de loading** — spinner SVG animado em Button (`animate-spin`) + ring lime (`border-2 border-lime border-t-transparent rounded-full animate-spin`) em carregamentos de página.
 10. **Acessibilidade mínima** — `aria-label` em botões icon-only, `focus:ring-2 focus:ring-lime/30` em botões. Alt text em imagens não é relevante (sem imagens raster no app).
@@ -299,9 +331,7 @@ A spec v3.0 mencionava subpastas específicas (`components/dashboard/`, `compone
 ## 12. Recomendações (Backlog de Design)
 
 - Extrair componentes reutilizáveis das rotas grandes (dashboard/extrato/cartoes) para uma subpasta temática quando houver repetição.
-- Definir explicitamente um `<tokens>` para spacings (hoje usa-se apenas os defaults do Tailwind).
-- Documentar estados hover/focus/disabled de todos os componentes em um storybook (não existe).
-- Incluir a fonte Inter como asset no projeto (hoje depende do SO ou fallback).
+- **Storybook implementado (Onda 2)**: `@storybook/react-vite` 8.x em `web/.storybook/` com `main.ts`, `preview.ts` importando `globals.css` e seis stories (`Button`, `Card`, `Input`, `Modal`, `Table`, `Badge`) em `src/components/ui/*.stories.tsx`. Scripts: `npm run storybook` (dev, porta 6006) e `npm run build-storybook`. Próximo passo: cobrir `components/chat/` e `components/layout/`.
 - Avaliar consolidar `.card`, `.btn-primary`, `.input-field` legadas em `globals.css:64` — hoje coexistem com os componentes React (que são a fonte preferida).
 
 ---

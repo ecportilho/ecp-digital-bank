@@ -90,17 +90,23 @@ server/
 │   │       ├── 002-chat.sql       # chat_conversations, chat_messages, knowledge_base
 │   │       ├── 003-ecp-pay-integration.sql  # transactions.metadata
 │   │       ├── 004-user-roles.sql # users.role
+│   │       ├── 005-webhook-events.sql  # Tabela de ledger de webhooks (idempotência)
+│   │       ├── 006-deprecate-daily-columns.sql  # Doc-only: deprecia `daily_transferred_cents` / `last_transfer_date`
+│   │       ├── 007-ecp-pay-retry-queue.sql     # Fila persistente de retry para ECP Pay
+│   │       ├── 008-recurrence.sql              # `recurrence_*` colunas em transactions
 │   │       └── run.ts             # Runner de migrations
-│   ├── modules/                   # 10 módulos de domínio
+│   ├── modules/                   # 12 módulos de domínio
 │   │   ├── auth/        (register, login, me)
 │   │   ├── accounts/    (me, balance, limit)
 │   │   ├── pix/         (keys, transfer, qrcode, lookup, debit-by-cpf)
 │   │   ├── transactions/(list, detail)
 │   │   ├── cards/       (CRUD, block, invoice, purchase, purchase-by-number)
-│   │   ├── payments/    (boleto, scheduled)
+│   │   ├── payments/    (boleto, scheduled, recurrence + materializer)
 │   │   ├── users/       (me, change-password)
 │   │   ├── notifications/(list, unread-count, read, read-all)
 │   │   ├── dashboard/   (agregador)
+│   │   ├── webhooks/    (ECP Pay payment-confirmed, idempotente)
+│   │   ├── admin/       (inspeção de fila ECP Pay — role=system)
 │   │   └── chat/        (multi-agente Anthropic)
 │   │       ├── chat.routes.ts
 │   │       ├── chat.schema.ts
@@ -113,7 +119,8 @@ server/
 │   │           ├── prompts/       (4 system prompts)
 │   │           └── tools/         (6 tools de ação)
 │   ├── services/
-│   │   └── ecp-pay-client.ts      # Cliente HTTP para a plataforma ECP Pay
+│   │   ├── ecp-pay-client.ts      # Cliente HTTP para a plataforma ECP Pay
+│   │   └── ecp-pay-retry-worker.ts # Worker com backoff exponencial sobre `ecp_pay_retry_queue`
 │   ├── shared/
 │   │   ├── errors/
 │   │   │   ├── app-error.ts
@@ -212,7 +219,7 @@ web/
 │   ├── components/
 │   │   ├── layout/
 │   │   │   ├── Sidebar.tsx       # Menu lateral (lg+ breakpoint) com submenu Pix
-│   │   │   ├── Header.tsx        # Saudação + ProfileSwitcher + dropdown de notificações
+│   │   │   ├── Header.tsx        # Saudação + ProfileSwitcher + dropdown de notificações (polling 30s pausado via `visibilitychange` quando a aba fica em background)
 │   │   │   ├── MobileNav.tsx     # Bottom tab mobile
 │   │   │   └── ProfileSwitcher.tsx
 │   │   ├── ui/                   # Biblioteca de componentes próprios
@@ -239,7 +246,8 @@ web/
 │   │   └── globals.css           # CSS vars do tema + @tailwind directives
 │   └── test/
 ├── index.html
-├── tailwind.config.ts            # Paleta dark completa
+├── tailwind.config.ts            # Paleta dark completa + tokens `lime.dim`, spacing (`inline`/`card-gap`/`section`) e boxShadow (`card`/`elevated`/`modal`)
+├── public/fonts/inter/           # Inter woff2 400/500/600/700 servidos localmente (sem CDN)
 ├── vite.config.ts
 ├── postcss.config.js
 ├── tsconfig.json
@@ -521,7 +529,7 @@ Base URL: `http://localhost:3333` — **todas as rotas funcionais têm prefixo `
 | GET | `/keys` | Listar chaves ativas |
 | POST | `/keys` | Criar chave (`cpf`/`email`/`phone`/`random`) |
 | DELETE | `/keys/:keyId` | Soft delete da chave |
-| POST | `/transfer` | Enviar Pix (valida RN-01 a RN-05, RN-10, RN-11) |
+| POST | `/transfer` | Enviar Pix (valida RN-01 a RN-05, RN-10, RN-11) · popula `counterpart_name`, `counterpart_document` e `counterpart_institution` (= `ECP Digital Bank`) nas duas transações (débito do remetente e crédito do recebedor) |
 | GET | `/lookup?key=` | Descobrir titular antes de confirmar envio |
 | POST | `/qrcode` | Criar cobrança Pix via ECP Pay |
 | POST | `/debit-by-cpf` | **(role `system`)** Debitar conta por CPF/e-mail para ECP Pay |
@@ -664,7 +672,7 @@ Via `@anthropic-ai/sdk 0.80.0`. Modelo default `claude-sonnet-4-20250514`, overr
 - **CORS** restrito à origem do front-end.
 - **Rate limit de Pix** de 5 transferências por janela de 5 minutos (`pix.service.ts:12–13, 243`).
 - **Idempotência em integrações externas** via `X-Idempotency-Key`.
-- **LGPD**: dados de chaves Pix de terceiros são retornados apenas no `lookup`; `counterpart_document` não é exposto no extrato.
+- **LGPD**: dados de chaves Pix de terceiros são retornados apenas no `lookup`; `counterpart_document` é persistido em `transactions` mas não é retornado no endpoint público de extrato (o service filtra no mapeamento de resposta).
 - **Valores monetários sempre como `integer`**, eliminando erros de float.
 
 ---
@@ -689,7 +697,10 @@ Via `@anthropic-ai/sdk 0.80.0`. Modelo default `claude-sonnet-4-20250514`, overr
 - **Monorepo sem workspaces**: cada pasta (`server/`, `web/`) tem seu próprio `package.json`, e a raiz orquestra via `npm --prefix`.
 - **Sem ORM**: queries SQL diretas via `better-sqlite3` (síncrono, rápido). Preserva simplicidade.
 - **Sem SSR**: SPA pura. SEO não é relevante para painel autenticado.
-- **Sem webhooks assíncronos internos**: a propagação de `Pix recebido via QR` depende da ECP Pay chamar `/api/pix/debit-by-cpf` no bank. O credit final do QR Code para o dono da cobrança ainda exige polling/integração futura.
+- **Webhook ECP Pay → bank implementado** (Onda 2): `POST /api/webhooks/ecp-pay/payment-confirmed` protegido por `X-Webhook-Secret`, idempotente via `webhook_events(source, event_id)` UNIQUE, localiza a transação pendente por `transactions.metadata.ecp_pay_tx_id` e credita/cancela atomicamente gerando notification. Ver `server/src/modules/webhooks/`.
+- **Retry queue para ECP Pay (Onda 2)**: boleto que falha na integração com ECP Pay é enfileirado em `ecp_pay_retry_queue` com backoff exponencial 5m→15m→1h→6h→24h, após 5 tentativas vai para `dead_letter`. Worker `startEcpPayRetryWorker` roda `setInterval(30s)` em produção; em teste é chamado via `processEcpPayRetryQueueTick()`. Inspeção em `GET /api/admin/ecp-pay-queue` (role=system).
+- **Agendamento recorrente (Onda 2)**: `POST /api/payments/boleto` aceita `recurrence: 'none'|'daily'|'weekly'|'monthly'|'yearly'` + `recurrenceEndDate`. Colunas `recurrence_rule`, `recurrence_end_date`, `recurrence_parent_id` em `transactions`. Materializer diário `materializeRecurringPayments()` cria a próxima instância quando `scheduled_for <= now+1d`.
+- **Daily transferred on-the-fly (Onda 2)**: colunas `accounts.daily_transferred_cents` e `accounts.last_transfer_date` estão **deprecadas** — o valor é calculado agora via `getDailyTransferred(accountId)` somando débitos/pix do dia atual (`date('now', 'start of day')`). Elimina o bug de "valor stale após virada de dia" visível em `/accounts/me`.
 - **Jest no server, Vitest no web**: histórico; não há razão forte para consolidar.
 - **`concurrently` sem `--kill-others`**: pode deixar processos órfãos no Windows; fica como melhoria.
 

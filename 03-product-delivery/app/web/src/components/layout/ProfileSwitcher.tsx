@@ -56,7 +56,7 @@ export function ProfileSwitcher() {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute left-0 top-full mt-2 z-50 w-72 bg-surface border border-border rounded-card shadow-xl">
+          <div className="absolute left-0 top-full mt-2 z-50 w-72 bg-surface border border-border rounded-card shadow-elevated">
             <div className="p-2 space-y-1">
               {profiles.map((profile) => (
                 <button

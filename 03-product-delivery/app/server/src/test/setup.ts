@@ -1,6 +1,6 @@
 import { buildApp } from '../app.js'
 import { getDb, closeDb } from '../database/connection.js'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { FastifyInstance } from 'fastify'
@@ -14,11 +14,12 @@ export async function setupTestApp(): Promise<FastifyInstance> {
 
   app = await buildApp()
 
-  // Run migration
   const db = getDb()
-  const sqlPath = path.join(__dirname, '../database/migrations/001-initial.sql')
-  const sql = readFileSync(sqlPath, 'utf-8')
-  db.exec(sql)
+  const migrationsDir = path.join(__dirname, '../database/migrations')
+  const files = readdirSync(migrationsDir).filter((f) => f.endsWith('.sql')).sort()
+  for (const file of files) {
+    db.exec(readFileSync(path.join(migrationsDir, file), 'utf-8'))
+  }
 
   return app
 }
@@ -33,10 +34,14 @@ export async function cleanupTestApp(): Promise<void> {
 export function clearDb(): void {
   const db = getDb()
   db.exec(`
+    DELETE FROM chat_messages;
+    DELETE FROM chat_conversations;
     DELETE FROM notifications;
     DELETE FROM card_purchases;
     DELETE FROM invoices;
     DELETE FROM cards;
+    DELETE FROM ecp_pay_retry_queue;
+    DELETE FROM webhook_events;
     DELETE FROM transactions;
     DELETE FROM pix_keys;
     DELETE FROM pix_rate_limit;

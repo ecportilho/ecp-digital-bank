@@ -162,7 +162,7 @@ describe('Pix Module', () => {
         method: 'POST',
         url: '/api/pix/transfer',
         headers: { authorization: `Bearer ${token}` },
-        payload: { pixKey: 'second@email.com', amountCents: 99999999 },
+        payload: { pixKey: 'second@email.com', amountCents: 2000000 },
       })
 
       expect(response.statusCode).toBe(422)
@@ -210,6 +210,40 @@ describe('Pix Module', () => {
 
       expect(response.statusCode).toBe(404)
       expect(JSON.parse(response.body).error.code).toBe('PIX_KEY_NOT_FOUND')
+    })
+
+    it('RN-01 | daily limit resets deterministically per day (on-the-fly sum)', async () => {
+      // Simulate: user transferred R$ 4.500 yesterday and R$ 0 today.
+      // With the old lazy reset, if `last_transfer_date` said yesterday, the check used 0.
+      // But if a transaction landed today via another path (webhook, etc.) it should count.
+      // New behavior: we simply sum today's debit/pix transactions.
+      const db = getDb()
+
+      // Insert an old pix debit from yesterday — must NOT count against today's limit
+      db.prepare(`
+        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, status, created_at)
+        VALUES ('old-tx', (SELECT id FROM accounts WHERE user_id = ?), 'debit', 'pix', 450000, 550000, 'Old Pix', 'completed', datetime('now', '-2 days'))
+      `).run(userId)
+
+      // Now the user transfers R$ 4.000 today — should pass (limit is R$ 5.000)
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/pix/transfer',
+        headers: { authorization: `Bearer ${token}` },
+        payload: { pixKey: 'second@email.com', amountCents: 400000 },
+      })
+
+      expect(response.statusCode).toBe(201)
+
+      // /accounts/me should report only today's amount (R$ 4.000)
+      const meResponse = await app.inject({
+        method: 'GET',
+        url: '/api/accounts/me',
+        headers: { authorization: `Bearer ${token}` },
+      })
+      expect(meResponse.statusCode).toBe(200)
+      const me = JSON.parse(meResponse.body)
+      expect(me.dailyTransferredCents).toBe(400000)
     })
 
     it('AC-21 | RN-07 should store amounts in integer cents', async () => {

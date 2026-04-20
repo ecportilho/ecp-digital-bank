@@ -9,8 +9,8 @@
     "start": "node dist/server.js",
     "db:migrate": "tsx src/database/migrations/run.ts",
     "db:seed": "tsx src/database/seed.ts",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
-    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
+    "test:watch": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch",
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
@@ -25,10 +25,14 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.8",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.12.7",
     "@types/uuid": "^9.0.8",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.9",
     "tsx": "^4.9.3",
     "typescript": "^5.5.3"
   }

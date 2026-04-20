@@ -1,5 +1,6 @@
 import { getDb } from '../../database/connection.js'
 import { Errors } from '../../shared/errors/app-error.js'
+import { getDailyTransferred } from '../pix/pix.service.js'
 import type { UpdateLimitInput } from './accounts.schema.js'
 
 interface AccountRow {
@@ -17,6 +18,10 @@ interface AccountRow {
 }
 
 function toAccountResponse(row: AccountRow) {
+  // `dailyTransferredCents` is computed live from today's debit transactions so users who open
+  // the screen after day rollover see an accurate reset. The column `daily_transferred_cents`
+  // is deprecated and no longer updated.
+  const dailyTransferredCents = getDailyTransferred(row.id)
   return {
     id: row.id,
     userId: row.user_id,
@@ -24,7 +29,7 @@ function toAccountResponse(row: AccountRow) {
     number: row.number,
     balanceCents: row.balance_cents,
     dailyTransferLimitCents: row.daily_transfer_limit_cents,
-    dailyTransferredCents: row.daily_transferred_cents,
+    dailyTransferredCents,
     lastTransferDate: row.last_transfer_date,
     isActive: Boolean(row.is_active),
     createdAt: row.created_at,

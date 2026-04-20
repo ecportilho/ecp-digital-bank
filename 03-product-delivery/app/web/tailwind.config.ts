@@ -12,6 +12,7 @@ const config: Config = {
         lime: {
           DEFAULT: '#b7ff2a',
           pressed: '#7ed100',
+          dim: 'rgb(183 255 42 / 0.1)',
         },
         'text-primary': '#eaf2ff',
         'text-secondary': '#a9b7cc',
@@ -24,6 +25,16 @@ const config: Config = {
       borderRadius: {
         card: '18px',
         control: '13px',
+      },
+      spacing: {
+        inline: '8px',
+        'card-gap': '16px',
+        section: '32px',
+      },
+      boxShadow: {
+        card: '0 1px 2px rgb(0 0 0 / 0.35)',
+        elevated: '0 8px 24px rgb(0 0 0 / 0.4)',
+        modal: '0 20px 48px rgb(0 0 0 / 0.55)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

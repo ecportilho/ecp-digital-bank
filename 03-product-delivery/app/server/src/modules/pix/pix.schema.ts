@@ -2,10 +2,15 @@ import { z } from 'zod'
 
 export const PixKeyTypeEnum = z.enum(['cpf', 'email', 'phone', 'random'])
 
-export const CreatePixKeySchema = z.object({
-  keyType: PixKeyTypeEnum,
-  keyValue: z.string().min(1),
-})
+export const CreatePixKeySchema = z
+  .object({
+    keyType: PixKeyTypeEnum,
+    keyValue: z.string().default(''),
+  })
+  .refine((data) => data.keyType === 'random' || data.keyValue.length >= 1, {
+    message: 'keyValue é obrigatório para tipos cpf/email/phone',
+    path: ['keyValue'],
+  })
 
 export const PixTransferSchema = z.object({
   pixKey: z.string().min(1, 'Chave Pix é obrigatória'),

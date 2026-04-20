@@ -4,9 +4,12 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const DATABASE_PATH = process.env.DATABASE_PATH
-  ? path.resolve(process.env.DATABASE_PATH)
-  : path.resolve(__dirname, '../../database.sqlite')
+const DATABASE_PATH =
+  process.env.DATABASE_PATH === ':memory:'
+    ? ':memory:'
+    : process.env.DATABASE_PATH
+      ? path.resolve(process.env.DATABASE_PATH)
+      : path.resolve(__dirname, '../../database.sqlite')
 
 let _db: Database.Database | null = null
 

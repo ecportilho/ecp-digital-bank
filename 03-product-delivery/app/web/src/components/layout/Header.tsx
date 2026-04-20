@@ -58,9 +58,36 @@ export function Header() {
   }, [])
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null
+
+    const startPolling = () => {
+      if (interval !== null) return
+      interval = setInterval(fetchUnreadCount, 30_000)
+    }
+
+    const stopPolling = () => {
+      if (interval === null) return
+      clearInterval(interval)
+      interval = null
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopPolling()
+      } else {
+        fetchUnreadCount()
+        startPolling()
+      }
+    }
+
     fetchUnreadCount()
-    const interval = setInterval(fetchUnreadCount, 30_000)
-    return () => clearInterval(interval)
+    if (!document.hidden) startPolling()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      stopPolling()
+    }
   }, [fetchUnreadCount])
 
   // Fetch recent notifications when dropdown opens
@@ -146,7 +173,7 @@ export function Header() {
           </button>
 
           {isOpen && (
-            <div className="absolute right-0 top-full mt-2 w-80 bg-surface border border-border rounded-card shadow-2xl z-50">
+            <div className="absolute right-0 top-full mt-2 w-80 bg-surface border border-border rounded-card shadow-elevated z-50">
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <h3 className="text-sm font-semibold text-text-primary">
