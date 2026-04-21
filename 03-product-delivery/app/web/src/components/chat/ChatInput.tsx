@@ -26,6 +26,32 @@ export function ChatInput({ onSend, isLoading, quickActions }: ChatInputProps) {
     setValue(merged)
   }, [voice.transcript, voice.interimTranscript, voice.listening])
 
+  // "Cambio" (acento opcional) no final da fala dispara envio automatico,
+  // como um walkie-talkie. Olhamos apenas o transcript FINALIZADO para nao
+  // disparar em meio a frase; a pontuacao opcional no fim cobre ". " e "!"
+  // que o Web Speech tende a inserir.
+  const CAMBIO_RE = /\s*c[aã]mbio\b\s*[.!?]*\s*$/i
+  useEffect(() => {
+    if (!voice.listening || !voice.transcript) return
+    const normalized = voice.transcript.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    if (!/\bcambio\b\s*[.!?]*\s*$/i.test(normalized)) return
+
+    const strippedTranscript = voice.transcript.replace(CAMBIO_RE, '').trim()
+    const finalMsg = baselineRef.current
+      ? (strippedTranscript ? baselineRef.current + ' ' + strippedTranscript : baselineRef.current)
+      : strippedTranscript
+    const trimmed = finalMsg.trim()
+    if (!trimmed || isLoading) return
+
+    voice.stop()
+    voice.reset()
+    baselineRef.current = ''
+    onSend(trimmed)
+    setValue('')
+    inputRef.current?.focus()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voice.transcript, voice.listening])
+
   const handleSend = useCallback(() => {
     const trimmed = value.trim()
     if (!trimmed || isLoading) return
@@ -121,7 +147,7 @@ export function ChatInput({ onSend, isLoading, quickActions }: ChatInputProps) {
       {voice.listening && !voice.error && (
         <div className="mt-2 text-xs text-text-tertiary flex items-center gap-1.5">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-danger animate-pulse" />
-          Ouvindo em pt-BR... clique no microfone para parar.
+          Ouvindo em pt-BR... diga <span className="font-semibold text-text-secondary">"câmbio"</span> para enviar, ou clique no microfone para parar.
         </div>
       )}
     </div>
