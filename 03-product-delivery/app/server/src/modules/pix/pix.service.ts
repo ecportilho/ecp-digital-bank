@@ -407,4 +407,89 @@ export class PixService {
       status: 'completed',
     }
   }
+
+  /**
+   * Credit a user's account by Pix key — used by ECP Emps service account to
+   * deliver a Pix from a PJ company to a PF recipient in ecp-digital-bank.
+   *
+   * The key can be:
+   *   - a registered pix_keys.key_value (email, phone, random)
+   *   - a CPF (matches users.cpf)
+   *   - an email (matches users.email, regardless of key being registered as Pix key)
+   */
+  creditByKey(input: {
+    key: string
+    amountCents: number
+    description: string
+    senderName: string
+  }) {
+    const db = getDb()
+    const key = input.key.trim()
+
+    // Resolve destination account via 3 paths, in priority order.
+    let accountRow: { id: string; user_id: string; balance_cents: number; name: string } | undefined
+
+    accountRow = db.prepare(`
+      SELECT a.id, a.user_id, a.balance_cents, u.name
+        FROM pix_keys pk
+        JOIN accounts a ON a.id = pk.account_id AND a.is_active = 1
+        JOIN users u ON u.id = a.user_id
+       WHERE pk.key_value = ? AND pk.is_active = 1
+       LIMIT 1
+    `).get(key) as typeof accountRow
+
+    if (!accountRow && key.includes('@')) {
+      accountRow = db.prepare(`
+        SELECT a.id, a.user_id, a.balance_cents, u.name
+          FROM users u
+          JOIN accounts a ON a.user_id = u.id AND a.is_active = 1
+         WHERE u.email = ?
+         LIMIT 1
+      `).get(key) as typeof accountRow
+    }
+
+    if (!accountRow) {
+      const cpfDigits = key.replace(/\D/g, '')
+      if (cpfDigits.length === 11) {
+        accountRow = db.prepare(`
+          SELECT a.id, a.user_id, a.balance_cents, u.name
+            FROM users u
+            JOIN accounts a ON a.user_id = u.id AND a.is_active = 1
+           WHERE u.cpf = ?
+           LIMIT 1
+        `).get(cpfDigits) as typeof accountRow
+      }
+    }
+
+    if (!accountRow) {
+      throw new AppError(ErrorCode.PIX_KEY_NOT_FOUND, 'Chave Pix / CPF / email nao encontrado', 404)
+    }
+
+    const newBalance = accountRow.balance_cents + input.amountCents
+    const transactionId = generateId()
+    const now = new Date().toISOString()
+
+    db.transaction(() => {
+      db.prepare(
+        "UPDATE accounts SET balance_cents = ?, updated_at = datetime('now') WHERE id = ?"
+      ).run(newBalance, accountRow!.id)
+
+      db.prepare(`
+        INSERT INTO transactions (id, account_id, type, category, amount_cents, balance_after_cents, description, counterpart_name, status, created_at)
+        VALUES (?, ?, 'credit', 'pix', ?, ?, ?, ?, 'completed', ?)
+      `).run(
+        transactionId, accountRow!.id, input.amountCents, newBalance,
+        input.description, input.senderName, now
+      )
+    })()
+
+    return {
+      transactionId,
+      userId: accountRow.user_id,
+      userName: accountRow.name,
+      amountCents: input.amountCents,
+      newBalanceCents: newBalance,
+      status: 'completed',
+    }
+  }
 }

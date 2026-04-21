@@ -79,4 +79,22 @@ export const pixRoutes: FastifyPluginAsync = async (app) => {
     const result = pixService.debitByCpf(input)
     return reply.status(201).send(result)
   })
+
+  // POST /api/pix/credit-by-key — Service account credits a PF account by Pix key / CPF / email.
+  // Used by ecp-digital-emps to deliver a PJ→PF Pix transfer.
+  app.post('/credit-by-key', { preHandler: [authenticate] }, async (request, reply) => {
+    if (request.currentUser.role !== 'system') {
+      return reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Apenas contas de serviço podem usar este endpoint' } })
+    }
+
+    const input = z.object({
+      key: z.string().min(1).max(100),
+      amountCents: z.number().int().positive(),
+      description: z.string().min(1).max(200),
+      senderName: z.string().min(1).max(100),
+    }).parse(request.body)
+
+    const result = pixService.creditByKey(input)
+    return reply.status(201).send(result)
+  })
 }
