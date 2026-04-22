@@ -1,7 +1,18 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { authenticate } from '../../shared/middleware/auth.js'
 import { PixService } from './pix.service.js'
-import { CreatePixKeySchema, PixTransferSchema, PixQrCodeSchema } from './pix.schema.js'
+import {
+  CreatePixKeySchema,
+  PixTransferSchema,
+  PixQrCodeSchema,
+  PixPayBrcodeSchema,
+  PixParseBrcodeSchema,
+} from './pix.schema.js'
+import {
+  InvalidBrcodeError,
+  InvalidCrcError,
+  UnsupportedBrcodeError,
+} from './brcode-parser.js'
 import { z } from 'zod'
 
 export const pixRoutes: FastifyPluginAsync = async (app) => {
@@ -61,6 +72,50 @@ export const pixRoutes: FastifyPluginAsync = async (app) => {
     const { key } = z.object({ key: z.string().min(1) }).parse(request.query)
     const result = pixService.lookupKey(key)
     return reply.send(result)
+  })
+
+  // POST /api/pix/parse-brcode — Decodifica BRCode/EMV para preview na UI
+  app.post('/parse-brcode', { preHandler: [authenticate] }, async (request, reply) => {
+    const input = PixParseBrcodeSchema.parse(request.body)
+    try {
+      const data = pixService.parseBrcodePreview(input.brcode)
+      return reply.send({ success: true, data })
+    } catch (err) {
+      if (
+        err instanceof InvalidBrcodeError ||
+        err instanceof InvalidCrcError ||
+        err instanceof UnsupportedBrcodeError
+      ) {
+        return reply
+          .status(400)
+          .send({ success: false, error: { code: err.code, message: err.message } })
+      }
+      throw err
+    }
+  })
+
+  // POST /api/pix/pay-by-brcode — Paga Pix a partir de código copia-e-cola
+  app.post('/pay-by-brcode', { preHandler: [authenticate] }, async (request, reply) => {
+    const input = PixPayBrcodeSchema.parse(request.body)
+    try {
+      const result = pixService.payByBrcode(
+        request.currentUser.id,
+        request.currentUser.accountId,
+        input
+      )
+      return reply.status(201).send(result)
+    } catch (err) {
+      if (
+        err instanceof InvalidBrcodeError ||
+        err instanceof InvalidCrcError ||
+        err instanceof UnsupportedBrcodeError
+      ) {
+        return reply
+          .status(400)
+          .send({ error: { code: err.code, message: err.message } })
+      }
+      throw err
+    }
   })
 
   // POST /api/pix/debit-by-cpf — Service account debits user account (simulates Pix payment)

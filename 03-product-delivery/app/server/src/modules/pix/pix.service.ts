@@ -3,7 +3,17 @@ import { AppError, Errors } from '../../shared/errors/app-error.js'
 import { ErrorCode } from '../../shared/errors/error-codes.js'
 import { generateId } from '../../shared/utils/uuid.js'
 import { ecpPayClient } from '../../services/ecp-pay-client.js'
-import type { CreatePixKeyInput, PixTransferInput } from './pix.schema.js'
+import type { CreatePixKeyInput, PixTransferInput, PixPayBrcodeInput } from './pix.schema.js'
+import {
+  parseBrcode,
+  validateCRC16,
+  InvalidBrcodeError,
+  InvalidCrcError,
+  UnsupportedBrcodeError,
+  type BrcodeData,
+} from './brcode-parser.js'
+
+export { InvalidBrcodeError, InvalidCrcError, UnsupportedBrcodeError }
 
 // Business rules constants
 const MAX_PIX_KEYS = 5                   // RN-05
@@ -491,5 +501,53 @@ export class PixService {
       newBalanceCents: newBalance,
       status: 'completed',
     }
+  }
+
+  /**
+   * Decodifica um BRCode/EMV Pix (copia-e-cola) e retorna os dados extraídos
+   * para a UI pré-visualizar antes do pagamento. Lança os erros tipados do parser.
+   */
+  parseBrcodePreview(brcode: string): BrcodeData {
+    // parseBrcode já valida CRC e lança erros tipados
+    return parseBrcode(brcode)
+  }
+
+  /**
+   * Paga um Pix a partir de um código BRCode/EMV (copia-e-cola).
+   * Reusa o fluxo de transfer() após resolver chave e valor a partir do payload.
+   *
+   * Regras:
+   *  - BRCode inválido ou CRC corrompido → erro tipado
+   *  - BRCode dinâmico (com valor) → usa o valor do payload; input.amountCents é ignorado
+   *  - BRCode estático (sem valor) → input.amountCents é obrigatório
+   */
+  payByBrcode(userId: string, accountId: string, input: PixPayBrcodeInput) {
+    const parsed = parseBrcode(input.brcode)
+    // parseBrcode já valida CRC, mas validamos explicitamente para segurança
+    if (!validateCRC16(input.brcode)) {
+      throw new InvalidCrcError()
+    }
+
+    // Resolve valor: dinâmico usa o embutido; estático exige input.amountCents
+    const finalAmount = parsed.amountCents ?? input.amountCents
+    if (!finalAmount || finalAmount <= 0) {
+      throw new AppError(
+        ErrorCode.PIX_INVALID_AMOUNT,
+        'BRCode estático sem valor — informe amountCents',
+        422
+      )
+    }
+
+    const description =
+      input.description ??
+      parsed.description ??
+      `Pagamento Pix - ${parsed.merchantName}`
+
+    return this.transfer(userId, accountId, {
+      pixKey: parsed.pixKey,
+      amountCents: finalAmount,
+      description,
+      reinforcedToken: input.reinforcedToken,
+    })
   }
 }

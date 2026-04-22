@@ -51,8 +51,26 @@ export const PixQrCodeSchema = z.object({
   description: z.string().max(140).optional(),
 })
 
+export const PixPayBrcodeSchema = z.object({
+  brcode: z.string().min(50, 'BRCode muito curto').max(1000, 'BRCode muito longo'),
+  // Obrigatório se o BRCode for estático (sem valor embutido); ignorado caso contrário
+  amountCents: z
+    .number()
+    .int('Valor deve ser inteiro (centavos)')
+    .positive('Valor deve ser positivo')
+    .optional(),
+  description: z.string().max(140).optional(),
+  reinforcedToken: z.string().optional(),
+})
+
+export const PixParseBrcodeSchema = z.object({
+  brcode: z.string().min(1, 'BRCode é obrigatório').max(1000),
+})
+
 export type CreatePixKeyInput = z.infer<typeof CreatePixKeySchema>
 export type PixTransferInput = z.infer<typeof PixTransferSchema>
 export type PixQrCodeInput = z.infer<typeof PixQrCodeSchema>
+export type PixPayBrcodeInput = z.infer<typeof PixPayBrcodeSchema>
+export type PixParseBrcodeInput = z.infer<typeof PixParseBrcodeSchema>
 export type PixKey = z.infer<typeof PixKeySchema>
 export type PixTransferResponse = z.infer<typeof PixTransferResponseSchema>

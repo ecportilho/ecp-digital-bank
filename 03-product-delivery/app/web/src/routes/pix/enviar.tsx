@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Zap, Search, ArrowRight, CheckCircle } from 'lucide-react'
+import { Zap, Search, ArrowRight, CheckCircle, ClipboardPaste } from 'lucide-react'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
@@ -20,7 +20,19 @@ interface TransferResult {
   counterpartName: string
 }
 
-type Step = 'key' | 'amount' | 'confirm' | 'success'
+interface BrcodeData {
+  pixKey: string
+  amountCents: number | null
+  merchantName: string
+  merchantCity: string
+  txid: string | null
+  description: string | null
+  isStatic: boolean
+  raw: string
+}
+
+type Mode = 'key' | 'brcode'
+type Step = 'key' | 'amount' | 'confirm' | 'success' | 'brcode-input' | 'brcode-confirm'
 
 const KEY_TYPE_LABELS: Record<string, string> = {
   cpf: 'CPF',
@@ -31,6 +43,7 @@ const KEY_TYPE_LABELS: Record<string, string> = {
 
 export function PixEnviarPage() {
   const navigate = useNavigate()
+  const [mode, setMode] = useState<Mode>('key')
   const [step, setStep] = useState<Step>('key')
   const [pixKey, setPixKey] = useState('')
   const [keyInfo, setKeyInfo] = useState<PixKeyInfo | null>(null)
@@ -39,6 +52,36 @@ export function PixEnviarPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<TransferResult | null>(null)
+
+  // BRCode state
+  const [brcodeInput, setBrcodeInput] = useState('')
+  const [brcodeData, setBrcodeData] = useState<BrcodeData | null>(null)
+  const [brcodeAmountReais, setBrcodeAmountReais] = useState('')
+
+  function resetAll() {
+    setStep(mode === 'key' ? 'key' : 'brcode-input')
+    setPixKey('')
+    setKeyInfo(null)
+    setAmountReais('')
+    setDescription('')
+    setResult(null)
+    setError(null)
+    setBrcodeInput('')
+    setBrcodeData(null)
+    setBrcodeAmountReais('')
+  }
+
+  function switchMode(next: Mode) {
+    if (next === mode) return
+    setMode(next)
+    setError(null)
+    setResult(null)
+    if (next === 'key') {
+      setStep('key')
+    } else {
+      setStep('brcode-input')
+    }
+  }
 
   async function handleLookupKey() {
     setError(null)
@@ -87,6 +130,70 @@ export function PixEnviarPage() {
     }
   }
 
+  async function handleDecodeBrcode() {
+    setError(null)
+    setIsLoading(true)
+    try {
+      const res = await api.post<{ success: boolean; data: BrcodeData }>(
+        '/api/pix/parse-brcode',
+        { brcode: brcodeInput.trim() }
+      )
+      setBrcodeData(res.data)
+      if (res.data.amountCents === null) {
+        setBrcodeAmountReais('')
+      } else {
+        setBrcodeAmountReais((res.data.amountCents / 100).toFixed(2).replace('.', ','))
+      }
+      setStep('brcode-confirm')
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message)
+      } else {
+        setError('Não foi possível decodificar o BRCode')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handlePayByBrcode() {
+    if (!brcodeData) return
+    setError(null)
+
+    // Para BRCode estático, usa o valor digitado; dinâmico usa o embutido
+    let payloadAmount: number | undefined
+    if (brcodeData.amountCents === null) {
+      const cents = Math.round(parseFloat(brcodeAmountReais.replace(',', '.')) * 100)
+      if (isNaN(cents) || cents <= 0) {
+        setError('Informe um valor válido')
+        return
+      }
+      payloadAmount = cents
+    }
+
+    setIsLoading(true)
+    try {
+      const data = await api.post<TransferResult>('/api/pix/pay-by-brcode', {
+        brcode: brcodeData.raw,
+        amountCents: payloadAmount,
+        description: description || undefined,
+      })
+      setResult(data)
+      setStep('success')
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message)
+      } else {
+        setError('Erro ao realizar pagamento')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const displayAmountCents = brcodeData?.amountCents
+    ?? (brcodeAmountReais ? Math.round(parseFloat(brcodeAmountReais.replace(',', '.')) * 100) : 0)
+
   return (
     <div className="max-w-md">
       <div className="flex items-center gap-3 mb-6">
@@ -96,8 +203,36 @@ export function PixEnviarPage() {
         <h1 className="text-2xl font-bold text-text-primary">Enviar Pix</h1>
       </div>
 
-      {/* Step: Enter Key */}
-      {step === 'key' && (
+      {/* Mode Tabs — escondido na tela de sucesso */}
+      {step !== 'success' && (
+        <div className="flex gap-1 mb-4 p-1 bg-secondary-bg rounded-control">
+          <button
+            type="button"
+            onClick={() => switchMode('key')}
+            className={`flex-1 py-2 px-3 text-sm font-medium rounded-control transition-colors ${
+              mode === 'key'
+                ? 'bg-primary-bg text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            Por chave
+          </button>
+          <button
+            type="button"
+            onClick={() => switchMode('brcode')}
+            className={`flex-1 py-2 px-3 text-sm font-medium rounded-control transition-colors ${
+              mode === 'brcode'
+                ? 'bg-primary-bg text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            Copia e cola
+          </button>
+        </div>
+      )}
+
+      {/* MODE: KEY — Step: Enter Key */}
+      {mode === 'key' && step === 'key' && (
         <Card>
           <h2 className="text-base font-semibold text-text-primary mb-4">Para quem você quer enviar?</h2>
           {error && (
@@ -126,8 +261,8 @@ export function PixEnviarPage() {
         </Card>
       )}
 
-      {/* Step: Enter Amount */}
-      {step === 'amount' && keyInfo && (
+      {/* MODE: KEY — Step: Enter Amount */}
+      {mode === 'key' && step === 'amount' && keyInfo && (
         <Card>
           <div className="mb-4 p-3 bg-secondary-bg rounded-control">
             <p className="text-xs text-text-tertiary mb-1">Destinatário</p>
@@ -173,8 +308,8 @@ export function PixEnviarPage() {
         </Card>
       )}
 
-      {/* Step: Confirm */}
-      {step === 'confirm' && keyInfo && (
+      {/* MODE: KEY — Step: Confirm */}
+      {mode === 'key' && step === 'confirm' && keyInfo && (
         <Card>
           <h2 className="text-base font-semibold text-text-primary mb-4">Confirmar transferência</h2>
 
@@ -218,7 +353,112 @@ export function PixEnviarPage() {
         </Card>
       )}
 
-      {/* Step: Success */}
+      {/* MODE: BRCODE — Step: Input */}
+      {mode === 'brcode' && step === 'brcode-input' && (
+        <Card>
+          <h2 className="text-base font-semibold text-text-primary mb-4">Colar código Pix copia-e-cola</h2>
+          {error && (
+            <div className="mb-4 p-3 bg-danger/10 border border-danger/30 rounded-control text-sm text-danger">
+              {error}
+            </div>
+          )}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-1">
+                Código Pix
+              </label>
+              <textarea
+                placeholder="Cole aqui o código Pix copia-e-cola"
+                value={brcodeInput}
+                onChange={(e) => setBrcodeInput(e.target.value)}
+                rows={5}
+                className="w-full px-3 py-2 bg-primary-bg border border-border rounded-control text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-lime/40 focus:border-lime font-mono"
+              />
+              <p className="text-xs text-text-tertiary mt-1">
+                O código começa com "0002..." e termina com 4 caracteres hexadecimais
+              </p>
+            </div>
+            <Button
+              onClick={handleDecodeBrcode}
+              isLoading={isLoading}
+              disabled={brcodeInput.trim().length < 50}
+              className="w-full"
+              leftIcon={<ClipboardPaste size={16} />}
+              rightIcon={<ArrowRight size={16} />}
+            >
+              Decodificar
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {/* MODE: BRCODE — Step: Confirm */}
+      {mode === 'brcode' && step === 'brcode-confirm' && brcodeData && (
+        <Card>
+          <h2 className="text-base font-semibold text-text-primary mb-4">Confirmar pagamento</h2>
+
+          <div className="mb-4 p-3 bg-secondary-bg rounded-control">
+            <p className="text-xs text-text-tertiary mb-1">Recebedor</p>
+            <p className="font-semibold text-text-primary">{brcodeData.merchantName}</p>
+            <p className="text-xs text-text-secondary mt-0.5">{brcodeData.merchantCity}</p>
+            <p className="text-xs text-text-secondary mt-0.5 break-all">Chave: {brcodeData.pixKey}</p>
+          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-danger/10 border border-danger/30 rounded-control text-sm text-danger">
+              {error}
+            </div>
+          )}
+
+          <div className="space-y-4 mb-6">
+            {brcodeData.amountCents !== null ? (
+              <div className="flex justify-between py-2 border-b border-border">
+                <span className="text-sm text-text-tertiary">Valor (fixo no código)</span>
+                <span className="text-lg font-bold text-text-primary">
+                  {formatCurrency(brcodeData.amountCents)}
+                </span>
+              </div>
+            ) : (
+              <Input
+                label="Valor (R$) — código sem valor definido"
+                placeholder="0,00"
+                value={brcodeAmountReais}
+                onChange={(e) => setBrcodeAmountReais(e.target.value)}
+                inputMode="decimal"
+              />
+            )}
+            <Input
+              label="Descrição (opcional)"
+              placeholder={brcodeData.description ?? 'Para que é esse pagamento?'}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setStep('brcode-input')
+                setError(null)
+              }}
+              className="flex-1"
+            >
+              Voltar
+            </Button>
+            <Button
+              onClick={handlePayByBrcode}
+              isLoading={isLoading}
+              disabled={displayAmountCents <= 0}
+              className="flex-1"
+            >
+              Confirmar pagamento
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {/* Step: Success (shared) */}
       {step === 'success' && result && (
         <Card variant="highlighted">
           <div className="text-center">
@@ -245,18 +485,7 @@ export function PixEnviarPage() {
               <Button variant="secondary" onClick={() => navigate('/')} className="flex-1">
                 Início
               </Button>
-              <Button
-                onClick={() => {
-                  setStep('key')
-                  setPixKey('')
-                  setKeyInfo(null)
-                  setAmountReais('')
-                  setDescription('')
-                  setResult(null)
-                  setError(null)
-                }}
-                className="flex-1"
-              >
+              <Button onClick={resetAll} className="flex-1">
                 Novo Pix
               </Button>
             </div>
