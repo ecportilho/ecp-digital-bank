@@ -101,4 +101,22 @@ export const ecpPayClient = {
       amount,
     })
   },
+
+  /**
+   * Notifica o ecp-pay que um Pix caiu na conta de uma plataforma ECP.
+   * Ecp-pay busca a transaction pendente correspondente (por pix_key + amount)
+   * e settla, disparando o webhook ao app consumidor (ex.: food).
+   * Idempotente — chamar múltiplas vezes é seguro.
+   */
+  notifyPixReceived(pixKey: string, amountCents: number, bankTransactionId: string) {
+    return ecpPayRequest<{ success: boolean; data?: { transaction_id: string; status: string } }>(
+      'POST',
+      '/pay/internal/pix-settled',
+      {
+        pix_key: pixKey,
+        amount_cents: amountCents,
+        bank_transaction_id: bankTransactionId,
+      }
+    )
+  },
 }

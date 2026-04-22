@@ -187,10 +187,10 @@ export class PixService {
       throw new AppError(ErrorCode.ACCOUNT_NOT_FOUND, 'Conta destinatária não encontrada', 404)
     }
 
-    // Get receiver user info
+    // Get receiver user info (+ role, usado pra detectar plataforma ECP)
     const receiverUser = db
-      .prepare('SELECT u.name, u.cpf FROM users u JOIN accounts a ON a.user_id = u.id WHERE a.id = ?')
-      .get(targetKey.account_id) as { name: string; cpf: string } | undefined
+      .prepare('SELECT u.name, u.cpf, u.role FROM users u JOIN accounts a ON a.user_id = u.id WHERE a.id = ?')
+      .get(targetKey.account_id) as { name: string; cpf: string; role?: string } | undefined
 
     // Get sender user info — for counterpart fields on the receiver's credit transaction
     const senderUser = db
@@ -255,6 +255,17 @@ export class PixService {
     })
 
     doTransfer()
+
+    // Se recebedor é plataforma ECP (role=system), notifica ecp-pay de forma
+    // fire-and-forget. Ecp-pay localiza a charge pendente e settla, disparando
+    // webhook ao app consumidor (ex.: ecp-food confirmar pedido).
+    if (receiverUser?.role === 'system') {
+      void ecpPayClient
+        .notifyPixReceived(input.pixKey, input.amountCents, transactionId)
+        .catch((err) => {
+          console.error('[pix.transfer] notifyPixReceived falhou (não bloqueia):', (err as Error).message)
+        })
+    }
 
     return {
       transactionId,
