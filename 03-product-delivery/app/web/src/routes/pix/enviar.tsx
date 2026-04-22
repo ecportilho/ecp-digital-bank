@@ -372,7 +372,7 @@ export function PixEnviarPage() {
                 value={brcodeInput}
                 onChange={(e) => setBrcodeInput(e.target.value)}
                 rows={5}
-                className="w-full px-3 py-2 bg-primary-bg border border-border rounded-control text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-lime/40 focus:border-lime font-mono"
+                className="w-full px-3 py-2 bg-secondary-bg border border-border rounded-control text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-lime/40 focus:border-lime font-mono"
               />
               <p className="text-xs text-text-tertiary mt-1">
                 O código começa com "0002..." e termina com 4 caracteres hexadecimais
