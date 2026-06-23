@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 02 — Product Discovery | ECP Pay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Pay docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html" class="active"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="../../en/index.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Phase 02 &mdash; Product Discovery</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITLs #2-#6 Approved</span>
+      <span>PO + Designer + PM</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-pay/fase-02.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Phase 02 &mdash; Product Discovery</h1>
+    <p class="subtitle">Opportunity prioritization, solution hypotheses, prototypes, structured backlog and risk assessment.</p>
+
+    <!-- PERSONAS -->
+    <h2>Synthetic Personas</h2>
+    <section class="section">
+      <p>3 personas representing the payment gateway users. Built based on the integration, operations and management roles of the ECP ecosystem.</p>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--lime);">
+        <div class="artifact-label" style="color: var(--lime);">P-01 &mdash; Primary Persona (MVP)</div>
+        <div class="artifact-title">Diego Moreira, 29 — Full-Stack Dev of the ECP Ecosystem</div>
+        <div class="artifact-body">
+          <p><strong>Role:</strong> Integrator developer | <strong>Apps:</strong> ecp-bank, ecp-food | <strong>Experience:</strong> 5 years TypeScript</p>
+          <p><strong>Context:</strong> Needs to integrate payments (Pix, card, boleto) in each ecosystem app. Today reimplements the Asaas integration in each project separately. Tests depend on unstable external gateway sandbox.</p>
+          <p><strong>Frustrations:</strong> Rework with every new app. Asaas sandbox fails and blocks development. No deterministic staging environment. Documentation spread across multiple systems.</p>
+          <p><strong>Goals:</strong> Single API with stable contract. Internal mode for tests without external dependency. Onboarding in hours, not weeks.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;Every time I create a new app in the ecosystem, I reimplement the entire payment integration from scratch. If there was a centralized API, I would do the integration in 1 day instead of 1 week.&rdquo;</p>
+          <p><strong>Opportunities:</strong> OPP-01, OPP-02, OPP-10, OPP-12 | <strong>KRs:</strong> KR-01, KR-03, KR-04</p>
+        </div>
+      </div>
+
+      <div class="artifact-card" style="border-left: 3px solid var(--lime);">
+        <div class="artifact-label" style="color: var(--lime);">P-02 &mdash; Primary Persona (MVP)</div>
+        <div class="artifact-title">Patricia Lopes, 33 — Ecosystem Operator / DevOps</div>
+        <div class="artifact-body">
+          <p><strong>Role:</strong> Operations and support | <strong>Focus:</strong> Monitor transactions, investigate failures | <strong>Experience:</strong> 4 years in fintech ops</p>
+          <p><strong>Context:</strong> Responsible for ensuring ecosystem payments flow smoothly. Investigates transaction failures, reprocesses webhooks and manages the active provider (internal vs Asaas).</p>
+          <p><strong>Frustrations:</strong> To investigate a failure, needs to access logs in 3 different systems. Has no unified view of a transaction's life cycle. No manual webhook retry &mdash; requires technical intervention.</p>
+          <p><strong>Goals:</strong> Unified dashboard with ecosystem KPIs. Complete timeline of each transaction. One-click webhook retry. Real-time failure alerts.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;When a transaction fails, it takes me 2 hours to investigate because I need to cross-reference logs from the app, gateway and webhooks. If everything was in one timeline, it would take 5 minutes.&rdquo;</p>
+          <p><strong>Opportunities:</strong> OPP-06, OPP-13, OPP-14 | <strong>KRs:</strong> KR-02, KR-05</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">P-03 &mdash; Secondary Persona (Cycle 2)</div>
+        <div class="artifact-title">Ricardo Tavares, 35 — Product Owner / Ecosystem Manager</div>
+        <div class="artifact-body">
+          <p><strong>Role:</strong> Product management | <strong>Focus:</strong> Strategic vision, metrics, costs | <strong>Experience:</strong> 8 years in digital products</p>
+          <p><strong>Context:</strong> Makes decisions about provider (internal vs Asaas), monitors transaction volumes and costs. Needs consolidated ecosystem view to plan evolutions.</p>
+          <p><strong>Frustrations:</strong> Has no view of transaction volume per app. Does not know how much each real vs simulated transaction costs. No audit of who did what in the admin panel.</p>
+          <p><strong>Goals:</strong> Dashboard with ecosystem metrics. Complete action audit. Provider control with switch history.</p>
+          <p style="font-style: italic; color: var(--muted); margin-top: 8px;">&ldquo;I need to know exactly how many real vs simulated transactions go through the gateway, what the volume per app is, and how much I'm paying in fees to Asaas. Today I have none of those views.&rdquo;</p>
+          <p><strong>Opportunities:</strong> OPP-06, OPP-08, OPP-09 | <strong>KRs:</strong> KR-02, KR-05</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY INSIGHTS -->
+    <h2>Key Insights</h2>
+    <section class="section">
+      <p>6 insights extracted from ECP ecosystem analysis, gateway benchmarks (Stripe, Adyen, PagSeguro) and real operational pain points.</p>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-01 &mdash; High confidence</div>
+        <div class="artifact-title">Reimplementing payment integration in each app is the biggest velocity bottleneck</div>
+        <div class="artifact-body">Each new ecosystem app spends 1&ndash;2 weeks integrating with a gateway. A unified API with stable contract reduces this time to hours. The Provider Pattern allows apps not to know which gateway is active.</div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-02 &mdash; High confidence</div>
+        <div class="artifact-title">Dependency on external sandbox blocks the development cycle</div>
+        <div class="artifact-body">Asaas sandbox fails intermittently. Payment tests become non-deterministic. Internal mode with deterministic simulation eliminates 100% of external dependency in dev/staging.</div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-03 &mdash; High confidence</div>
+        <div class="artifact-title">Investigating failures requires cross-referencing data across multiple systems</div>
+        <div class="artifact-body">Operators need to access app, gateway and database logs to investigate a failure. A unified TransactionTimeline (request &rarr; gateway &rarr; webhook &rarr; callback) reduces investigation from hours to minutes.</div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-04 &mdash; High confidence</div>
+        <div class="artifact-title">Retries without idempotency cause duplicate charges</div>
+        <div class="artifact-body">Network failures in production lead apps to resend requests. Without idempotency_key, the gateway creates duplicate transactions. Stripe standard: mandatory X-Idempotency-Key + UNIQUE constraint in database.</div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-05 &mdash; Medium confidence</div>
+        <div class="artifact-title">Silently undelivered webhooks compromise reliability</div>
+        <div class="artifact-body">When a callback fails, downstream apps end up with outdated status. Automatic retry with exponential backoff + manual retry via admin panel guarantees eventual delivery.</div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">INS-06 &mdash; Medium confidence</div>
+        <div class="artifact-title">Density-first admin panel (Stripe-inspired) is the standard for operational tools</div>
+        <div class="artifact-body">Payment operators need information density, not consumer aesthetics. Stripe/Datadog dashboards are the reference: powerful filters, dense tables, expandable details, correlated timeline.</div>
+      </div>
+    </section>
+
+    <!-- Prioritized Opportunities -->
+    <h2>Prioritized Opportunities (WSJF)</h2>
+    <section class="section">
+      <p>9 opportunities selected for discovery, organized across 3 strategic pillars. Framework: WSJF (Weighted Shortest Job First).</p>
+
+      <h3>Pillar 1: Core Infrastructure</h3>
+      <p>Unified API, stable contract and provider abstraction &mdash; the skeleton on which everything is built.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>ID</th><th>Opportunity</th><th>WSJF</th><th>Effort</th><th>KRs</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>OPP-01</td><td>Eliminate reimplementation of gateway integration in each app</td><td>10.0</td><td><span class="badge neutral">L</span></td><td>KR-01, KR-02, KR-03</td></tr>
+          <tr><td>2</td><td>OPP-09</td><td>API contractual stability for consumer apps</td><td>14.0</td><td><span class="badge neutral">M</span></td><td>KR-01, KR-03</td></tr>
+          <tr><td>3</td><td>OPP-08</td><td>Freedom to negotiate with multiple gateways without rework</td><td>13.0</td><td><span class="badge neutral">M</span></td><td>KR-03</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Pillar 2: Development Velocity</h3>
+      <p>Internal mode, deterministic staging and unified documentation eliminate external dependencies.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>ID</th><th>Opportunity</th><th>WSJF</th><th>Effort</th><th>KRs</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>4</td><td>OPP-10</td><td>Payment tests depend on unstable Asaas sandbox</td><td>13.0</td><td><span class="badge neutral">M</span></td><td>KR-04, KR-01</td></tr>
+          <tr><td>7</td><td>OPP-12</td><td>Staging needs to be deterministic and controllable</td><td>22.0</td><td><span class="badge neutral">S</span></td><td>KR-04</td></tr>
+          <tr><td>6</td><td>OPP-02</td><td>Devs need to understand each gateway API instead of a single contract</td><td>11.5</td><td><span class="badge neutral">M</span></td><td>KR-01, KR-03</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Pillar 3: Production Reliability</h3>
+      <p>Idempotency, guaranteed webhook delivery and complete transaction observability.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>ID</th><th>Opportunity</th><th>WSJF</th><th>Effort</th><th>KRs</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5</td><td>OPP-14</td><td>Without idempotency, retries cause duplicate charges</td><td>13.5</td><td><span class="badge neutral">M</span></td><td>KR-05, KR-02</td></tr>
+          <tr><td>8</td><td>OPP-13</td><td>Callbacks need to be delivered even on temporary failure</td><td>11.0</td><td><span class="badge neutral">M</span></td><td>KR-05, KR-02</td></tr>
+          <tr><td>9</td><td>OPP-06</td><td>Investigating failures requires accessing logs in multiple systems</td><td>9.5</td><td><span class="badge neutral">M</span></td><td>KR-02, KR-05</td></tr>
+        </tbody>
+      </table>
+
+      <div class="artifact-meta">
+        <span class="file-ref">prioritized-opportunities.json</span>
+      </div>
+    </section>
+
+    <!-- Hypotheses -->
+    <h2>Solution Hypotheses</h2>
+    <section class="section">
+      <p>7 hypotheses formulated by the Product Designer, each with critical assumptions validatable via prototype or interview.</p>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-01 &mdash; Core Infrastructure</div>
+        <div class="artifact-title">Unified API with stable contract in Dashboard and Transactions</div>
+        <div class="artifact-body">
+          <p>A unified API layer with versioned contract will give operators real-time visibility of all ecosystem payments, eliminating the need for each app to integrate directly with the gateway.</p>
+          <p><strong>Assumptions:</strong> CA-01 (Dashboard without overload), CA-02 (FilterBar covers 95% of workflows), CA-03 (single contract for Pix/Card/Boleto), CA-04 (source_app attribution sufficient).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-02 &mdash; Core Infrastructure</div>
+        <div class="artifact-title">Provider Pattern with ProviderToggle in admin panel</div>
+        <div class="artifact-body">
+          <p>A provider abstraction layer, surfaced by a dedicated Providers page with ProviderToggle, will allow the super admin to switch between Internal and External without impacting downstream apps.</p>
+          <p><strong>Assumptions:</strong> CA-05 (two-card toggle prevents accidents), CA-06 (confirmation modal), CA-07 (status in 3 persistent locations), CA-08 (swap history).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-03 &mdash; Development Velocity</div>
+        <div class="artifact-title">Internal Mode with simulation controls in Settings</div>
+        <div class="artifact-body">
+          <p>Internal Mode with simulation controls in the Settings page and contextual actions in the Transactions page will eliminate Asaas sandbox dependency, enabling deterministic testing.</p>
+          <p><strong>Assumptions:</strong> CA-09 (admin panel vs env vars), CA-10 (yellow banner sufficient), CA-11 (contextual simulation buttons), CA-12 (feature flags via Toggle).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-04 &mdash; Development Velocity</div>
+        <div class="artifact-title">Unified documentation via Apps page and interactive examples</div>
+        <div class="artifact-body">
+          <p>Accessible documentation from the admin panel (Apps page) with interactive examples using Internal mode will reduce onboarding from weeks to hours.</p>
+          <p><strong>Assumptions:</strong> CA-13 (Apps page as entry point), CA-14 (real payloads as learning material), CA-15 (self-service registration modal).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-05 &mdash; Production Reliability</div>
+        <div class="artifact-title">Idempotency visible in admin panel</div>
+        <div class="artifact-body">
+          <p>Showing idempotency_key per transaction, flagging deduplicated requests and duplicates in the timeline will give operators confidence that duplicate charges do not occur.</p>
+          <p><strong>Assumptions:</strong> CA-16 (idempotency_key visible), CA-17 (dedup event in timeline), CA-18 (no dedicated duplicates dashboard).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-06 &mdash; Production Reliability</div>
+        <div class="artifact-title">Webhooks page with Received/Sent tabs and manual retry</div>
+        <div class="artifact-body">
+          <p>Dedicated Webhooks page with received/sent tabs, delivery status tracking and one-click retry will give full control over event delivery.</p>
+          <p><strong>Assumptions:</strong> CA-19 (two-tab mental model), CA-20 (attempt count with timing), CA-21 (retry button sufficient), CA-22 (CodeBlock for debugging).</p>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">HYP-07 &mdash; Production Reliability</div>
+        <div class="artifact-title">TransactionTimeline with complete life cycle</div>
+        <div class="artifact-body">
+          <p>TransactionTimeline component showing the complete cycle (request &rarr; gateway &rarr; webhook &rarr; callback) with correlated timestamps will reduce investigation time from hours to minutes.</p>
+          <p><strong>Assumptions:</strong> CA-23 (clear vertical timeline), CA-24 (elapsed time between events), CA-25 (semantic colors), CA-26 (expandable nodes with payload).</p>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">ideation-output.json</span>
+      </div>
+    </section>
+
+    <!-- Prototypes -->
+    <h2>Prototypes</h2>
+    <section class="section">
+      <div class="two-col">
+        <a href="../02-product-discovery/prototype/low-fi.html" class="quick-link">
+          <span class="ql-icon">&#x1F4DD;</span> Low-fi Prototype (Wireframes)
+        </a>
+        <a href="../02-product-discovery/prototype/high-fi.html" class="quick-link">
+          <span class="ql-icon">&#x1F3A8;</span> High-fi Prototype (Visual)
+        </a>
+      </div>
+      <p style="margin-top: 12px;">8 prototyped screens: Dashboard, Transactions, Transaction Detail, Providers, Webhooks, Apps, Settings, Audit Log.</p>
+    </section>
+
+    <!-- Backlog -->
+    <h2>Structured Backlog</h2>
+    <section class="section">
+      <p>3 epics, 13 features and 29 user stories with BDD/Gherkin acceptance criteria.</p>
+
+      <!-- EP-01 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">EP-01</div>
+          <div class="epic-title">Core Payment Infrastructure</div>
+        </div>
+        <div class="epic-description">Unified API, Provider Pattern, app authentication, token vault and payment split. Serves KR-01, KR-02 and KR-03.</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-01</div>
+            <div class="feature-title">Unified Payment API (Pix, Card, Boleto)</div>
+            <div class="feature-description">POST /pay/pix, POST /pay/card, POST /pay/boleto, GET /pay/transactions/:id, POST /pay/transactions/:id/refund</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-01</span> Create Pix charge via API (QR Code + copy-paste)</div>
+              <div class="story-item"><span class="story-id">US-02</span> Charge credit card via API (new or tokenized)</div>
+              <div class="story-item"><span class="story-id">US-03</span> Issue registered boleto via API with embedded Pix QR Code</div>
+              <div class="story-item"><span class="story-id">US-04</span> Query status of any transaction</div>
+              <div class="story-item"><span class="story-id">US-05</span> Refund transaction fully or partially</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-02</div>
+            <div class="feature-title">Provider Pattern with Gateway Abstraction</div>
+            <div class="feature-description">PaymentProvider interface, AsaasAdapter, InternalAdapter, ProviderFactory with feature flag</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-06</span> Switch between Internal and Asaas provider via admin panel</div>
+              <div class="story-item"><span class="story-id">US-07</span> Identical API contract regardless of active provider</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-03</div>
+            <div class="feature-title">Authentication and Registration of Consumer Apps</div>
+            <div class="feature-description">X-API-Key, X-Source-App, rate limiting 100 tx/min per app</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-08</span> Register new app via admin panel</div>
+              <div class="story-item"><span class="story-id">US-09</span> Authentication via API key with rate limiting</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-04</div>
+            <div class="feature-title">Card Token Vault (Cross-App)</div>
+            <div class="feature-description">Secure tokenization, never persists sensitive data, reusable across apps</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-10</span> Tokenize card during charge for future reuse</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-05</div>
+            <div class="feature-title">Payment Split per Transaction</div>
+            <div class="feature-description">Split rules per transaction, validation sum = total, multi-party distribution</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-11</span> Define split rules when creating transaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP-02 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">EP-02</div>
+          <div class="epic-title">Ecosystem Development Velocity</div>
+        </div>
+        <div class="epic-description">Internal mode, deterministic staging and developer onboarding. Serves KR-04 and KR-01.</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-06</div>
+            <div class="feature-title">Internal Mode &mdash; Full Payment Simulation</div>
+            <div class="feature-description">InternalAdapter simulates Pix (auto-approve), Card (deterministic rules), Boleto (mock)</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-12</span> Pix auto-approved in internal mode</div>
+              <div class="story-item"><span class="story-id">US-13</span> Card with deterministic rules in internal mode</div>
+              <div class="story-item"><span class="story-id">US-14</span> Boleto with mock code in internal mode</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-07</div>
+            <div class="feature-title">Deterministic Staging Environment</div>
+            <div class="feature-description">Runtime-editable feature flags, internal mode banner, admin configuration</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-15</span> Configure simulation parameters via admin panel</div>
+              <div class="story-item"><span class="story-id">US-16</span> Clear visual banner when internal mode is active</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-08</div>
+            <div class="feature-title">App Management and Developer Onboarding</div>
+            <div class="feature-description">Apps page, self-service registration, request/response payloads as examples</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-17</span> View registered apps with metrics in admin panel</div>
+              <div class="story-item"><span class="story-id">US-18</span> See request/response payloads in transaction detail</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP-03 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">EP-03</div>
+          <div class="epic-title">Production Reliability and Operations</div>
+        </div>
+        <div class="epic-description">Idempotency, webhook retry, observability, audit and RBAC authentication. Serves KR-05 and KR-02.</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">FT-09</div>
+            <div class="feature-title">Idempotency and Transaction Deduplication</div>
+            <div class="feature-description">Mandatory X-Idempotency-Key, UNIQUE constraint, dedup in audit log</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-19</span> Retries with same idempotency_key return original result</div>
+              <div class="story-item"><span class="story-id">US-20</span> Idempotency_key and dedup events visible in detail</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-10</div>
+            <div class="feature-title">Webhook Delivery with Exponential Backoff Retry</div>
+            <div class="feature-description">Automatic callbacks, retry 3x (30s, 2min, 10min), manual retry via admin</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-21</span> Automatic callbacks when transaction status changes</div>
+              <div class="story-item"><span class="story-id">US-22</span> Failed callbacks retried with exponential backoff</div>
+              <div class="story-item"><span class="story-id">US-23</span> Manage webhooks with manual retry option in panel</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-11</div>
+            <div class="feature-title">Transaction Observability &mdash; Timeline and Dashboard</div>
+            <div class="feature-description">TransactionTimeline, 6 KPI cards, volume/type/success rate charts</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-24</span> Full transaction timeline in detail</div>
+              <div class="story-item"><span class="story-id">US-25</span> Dashboard with KPIs and ecosystem charts</div>
+              <div class="story-item"><span class="story-id">US-26</span> Filter and search transactions with multiple criteria</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-12</div>
+            <div class="feature-title">Audit and Structured Logging</div>
+            <div class="feature-description">Audit log for all admin actions, soft delete policy, structured logging</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-27</span> Every administrative action recorded in audit log</div>
+              <div class="story-item"><span class="story-id">US-28</span> Operational actions (reprocess, refund, cancel) in detail</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">FT-13</div>
+            <div class="feature-title">Admin Panel Authentication and RBAC</div>
+            <div class="feature-description">JWT login, 3 roles (admin, operator, viewer), RBAC on all routes</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-29</span> Login with email/password and role-based access control</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">backlog-and-risks.json</span>
+      </div>
+    </section>
+
+    <!-- 4 Risks -->
+    <h2>Cagan's 4 Risks Assessment</h2>
+    <section class="section">
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--success);">Customer Value</div>
+          <div class="risk-verdict">Approved <span class="badge approved">approved</span></div>
+          <div class="risk-body">
+            OST validated with 15 opportunities mapped to 5 KRs. 7 solution hypotheses with 26 critical assumptions. 3 personas with distinct needs. 9 opportunities prioritized via WSJF covering the full journey from integration to operations.
+          </div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--lime);">Business Value</div>
+          <div class="risk-verdict">Approved <span class="badge approved">approved</span></div>
+          <div class="risk-body">
+            All 5 KRs covered with full coverage. EP-01 + EP-02 serve KR-01 to KR-04. EP-03 serves KR-05 and KR-02. Residual risk: SQLite may be a bottleneck if volume exceeds expectations (AS-03).
+          </div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--warning);">Usability</div>
+          <div class="risk-verdict">Approved <span class="badge approved">approved</span></div>
+          <div class="risk-body">
+            8 screens, 7 flows and 8 interactions validated. Design follows density-first standard (Stripe/Datadog inspiration). Norman's principles applied: status visibility, feedback, constraints. Admin panel is an operational tool, not consumer-facing.
+          </div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--info);">Technical Feasibility</div>
+          <div class="risk-verdict">Approved <span class="badge approved">approved</span></div>
+          <div class="risk-body">
+            Stack identical to existing ecosystem (TypeScript + Fastify + SQLite + React + Vite). Provider Pattern is a well-documented standard. 29 endpoints, 8 SPA routes, 13 features &mdash; feasible scope. RBAC with JWT already proven in ecp-digital-bank.
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">backlog-and-risks.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

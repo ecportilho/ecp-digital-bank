@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 04 — Operations | ECP Digital Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Digital Bank docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html" class="active"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="ecp-ecosystem.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Installation Guide</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="topbar-title">Phase 04 &mdash; Product Operations</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITL #11 Approved</span>
+      <span>Operations</span>
+      <a href="../../ecp-bank/fase-04.html" style="margin-left: 16px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px;">🇧🇷 PT</a>
+    </div>
+  </header>
+
+  <main class="content">
+    <h1>Phase 04 &mdash; Product Operations</h1>
+    <p class="subtitle">CI/CD pipeline, GMUD, deployment strategy, SLOs and DORA metrics.</p>
+
+    <h2>CI/CD Pipeline &mdash; GitHub Actions</h2>
+    <section class="section">
+      <p>Pipeline with 6 jobs defined in <code>.github/workflows/ci.yml</code>. Adapted to the real stack: npm (not pnpm), Fastify 5.0 (not tRPC/Next.js), SQLite3 in-memory for tests (not Supabase/PostgreSQL), Vitest (not Playwright).</p>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 1</div>
+        <div class="artifact-title" style="color: var(--info);">code-quality</div>
+        <div class="artifact-body">
+          <p>Runs linting and TypeScript type checking on server and web.</p>
+          <ul>
+            <li><code>lint</code> &mdash; ESLint with standard rules</li>
+            <li><code>typecheck server</code> &mdash; tsc --noEmit in server/ directory</li>
+            <li><code>typecheck web</code> &mdash; tsc --noEmit in web/ directory</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 2 &mdash; depends on code-quality</div>
+        <div class="artifact-title" style="color: var(--success);">unit-tests</div>
+        <div class="artifact-body">
+          <p>Runs unit tests via Vitest with SQLite3 in-memory.</p>
+          <ul>
+            <li><code>server tests (Vitest)</code> &mdash; 4 test files, 29 test cases covering auth, pix, accounts, payments</li>
+            <li><code>web tests (Vitest)</code> &mdash; React component tests</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 3 &mdash; depends on unit-tests</div>
+        <div class="artifact-title" style="color: var(--warning);">build</div>
+        <div class="artifact-body">
+          <p>Production build of the React frontend.</p>
+          <ul>
+            <li><code>vite build</code> &mdash; generates web/dist/ with optimized static files (code splitting, tree shaking, minification)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 4 &mdash; conditional (main branch only)</div>
+        <div class="artifact-title" style="color: var(--lime);">change-gate</div>
+        <div class="artifact-body">
+          <p>Verifies GMUD approval before allowing production deploy.</p>
+          <ul>
+            <li><code>verify GMUD approval</code> &mdash; checks if the corresponding GMUD has status "Approved"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 5 &mdash; depends on build + change-gate</div>
+        <div class="artifact-title" style="color: var(--danger);">deploy-production</div>
+        <div class="artifact-body">
+          <p>Actual production deploy.</p>
+          <ul>
+            <li><code>install</code> &mdash; npm ci with production dependencies</li>
+            <li><code>build</code> &mdash; TypeScript server compilation</li>
+            <li><code>deploy server</code> &mdash; upload and restart Node.js process via PM2</li>
+            <li><code>deploy web</code> &mdash; upload static files (web/dist/)</li>
+            <li><code>migrations</code> &mdash; run SQLite3 database migrations</li>
+            <li><code>smoke test</code> &mdash; post-deploy health check verification</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="artifact-card">
+        <div class="artifact-label">Job 6 &mdash; always runs</div>
+        <div class="artifact-title">quality-gate</div>
+        <div class="artifact-body">
+          <p>Final gate that verifies all previous jobs passed. If any job fails, the pipeline is marked as failed.</p>
+        </div>
+      </div>
+    </section>
+
+    <h2>GMUD-001 &mdash; Initial Release</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Change Management</div>
+        <div class="artifact-title">GMUD-001: Initial Release &mdash; ECP Digital Bank v3.0 (MVP)</div>
+        <div class="artifact-body">
+          <table class="data-table" style="margin-top: 12px;">
+            <tbody>
+              <tr><td><strong>Type</strong></td><td>Normal</td></tr>
+              <tr><td><strong>Status</strong></td><td><span class="badge approved">Approved</span></td></tr>
+              <tr><td><strong>Risk</strong></td><td><span class="badge approved">Low</span> (6/30)</td></tr>
+              <tr><td><strong>Planned Execution</strong></td><td>2026-03-05 10:00 BRT</td></tr>
+              <tr><td><strong>Estimated Duration</strong></td><td>45 minutes</td></tr>
+              <tr><td><strong>Components</strong></td><td>Fastify API, React SPA, SQLite3, GitHub Actions, Environment variables</td></tr>
+              <tr><td><strong>Rollback</strong></td><td>SQLite backup + PM2 stop + static file replacement</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="artifact-meta">
+          <span class="file-ref">docs/gmud/GMUD-001.md</span>
+          <span class="file-ref">docs/gmud/registro.md</span>
+        </div>
+      </div>
+    </section>
+
+    <h2>Deployment Strategy</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">API Server</div>
+          <div class="artifact-title">Node.js + PM2</div>
+          <div class="artifact-body">
+            <p>Node.js process managed by PM2 on a VPS/VM or platform like Railway, Render, or Fly.io.</p>
+            <ul>
+              <li>PM2 manages automatic restart, logs, and clustering</li>
+              <li>SQLite3 as a local file on the same server</li>
+              <li>Database backup before each deploy</li>
+              <li>Rollback: PM2 rollback + restore SQLite file</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Frontend SPA</div>
+          <div class="artifact-title">Static Hosting</div>
+          <div class="artifact-body">
+            <p>Static files (web/dist/) served via Vercel, Netlify, Cloudflare Pages, or Fastify itself.</p>
+            <ul>
+              <li>Build generates optimized HTML/CSS/JS</li>
+              <li>CDN for global distribution</li>
+              <li>Cache headers for immutable assets</li>
+              <li>SPA fallback (index.html for all routes)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h3>Environment Variables &mdash; Production</h3>
+      <table class="data-table">
+        <thead><tr><th>Variable</th><th>Purpose</th><th>Required</th></tr></thead>
+        <tbody>
+          <tr><td><code>JWT_SECRET</code></td><td>Secret key for JWT token signing &mdash; NEVER use default value</td><td>Yes</td></tr>
+          <tr><td><code>DATABASE_PATH</code></td><td>Path to SQLite file in production</td><td>Yes</td></tr>
+          <tr><td><code>PORT</code></td><td>API port (default: 3333)</td><td>Yes</td></tr>
+          <tr><td><code>NODE_ENV</code></td><td>production</td><td>Yes</td></tr>
+          <tr><td><code>VITE_API_URL</code></td><td>Production API URL for frontend build</td><td>Yes (build)</td></tr>
+          <tr><td><code>VERCEL_TOKEN</code></td><td>Automatic frontend deploy (if using Vercel)</td><td>Optional</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2>Service Level Objectives (SLOs)</h2>
+    <section class="section">
+      <div class="slo-grid">
+        <div class="slo-card">
+          <div class="slo-name">Availability (API)</div>
+          <div class="slo-target">99.5%</div>
+          <div class="slo-desc">Percentage of requests answered successfully (excluding client 4xx). Measured by uptime monitoring.</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">Latency (P95)</div>
+          <div class="slo-target">&lt; 500ms</div>
+          <div class="slo-desc">95% of API requests answered in less than 500ms. Measured via APM or access logs.</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">Error Rate</div>
+          <div class="slo-target">&lt; 1%</div>
+          <div class="slo-desc">Rate of 5xx responses over total requests. Excludes validation errors (4xx).</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">Auth Success Rate</div>
+          <div class="slo-target">&gt; 99%</div>
+          <div class="slo-desc">Success rate of login attempts with valid credentials. Failures indicate infrastructure issues.</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">LCP (Frontend)</div>
+          <div class="slo-target">&lt; 2.5s</div>
+          <div class="slo-desc">Largest Contentful Paint of the dashboard after login. Measured via Core Web Vitals.</div>
+        </div>
+        <div class="slo-card">
+          <div class="slo-name">CI Pipeline Duration</div>
+          <div class="slo-target">&lt; 10min</div>
+          <div class="slo-desc">Total pipeline time (code-quality + tests + build). Fast feedback goal for developers.</div>
+        </div>
+      </div>
+    </section>
+
+    <h2>DORA Metrics &mdash; Targets (Elite Tier)</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Target</th><th>How to Measure</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Deployment Frequency</strong></td>
+            <td><span style="color: var(--lime);">On-demand (multiple per day)</span></td>
+            <td>Count of production deploys per day/week via GitHub Actions runs with success status on main branch.</td>
+          </tr>
+          <tr>
+            <td><strong>Lead Time for Changes</strong></td>
+            <td><span style="color: var(--lime);">&lt; 1 hour</span></td>
+            <td>Time between PR merge to main and completed production deploy. Measured via GitHub Actions timestamps.</td>
+          </tr>
+          <tr>
+            <td><strong>Change Failure Rate</strong></td>
+            <td><span style="color: var(--lime);">&lt; 5%</span></td>
+            <td>Percentage of deploys resulting in service degradation, rollback, or hotfix. Measured via GMUD registry.</td>
+          </tr>
+          <tr>
+            <td><strong>Time to Restore Service (MTTR)</strong></td>
+            <td><span style="color: var(--lime);">&lt; 1 hour</span></td>
+            <td>Time between incident detection and service restoration. Measured via incident log with timestamps.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2>Useful Links</h2>
+    <section class="section">
+      <div class="quick-links">
+        <a href="INSTALACAO.md" class="quick-link">
+          <span class="ql-icon">&#x1F4E6;</span> Complete Installation Guide
+        </a>
+        <a href="dashboard/index.html" class="quick-link">
+          <span class="ql-icon">&#x1F4CA;</span> Application Dashboard
+        </a>
+        <a href="gmud/GMUD-001.md" class="quick-link">
+          <span class="ql-icon">&#x1F4CB;</span> GMUD-001 Detailed
+        </a>
+        <a href="fase-03.html" class="quick-link">
+          <span class="ql-icon">&#x2699;</span> Phase 03 &mdash; Delivery
+        </a>
+      </div>
+    </section>
+
+    <h2>Phase 04 HITL</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>HITL</th><th>Scope</th><th>Agent</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td>#11</td><td>Operational infrastructure (CI/CD pipeline, GMUD-001, installation guide, SLOs)</td><td>Operations</td><td><span class="badge approved">Approved</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2>Generated Artifacts</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">04-product-operation/ops-output.json</span>
+        <span class="file-ref">04-product-operation/hitl-11.json</span>
+        <span class="file-ref">.github/workflows/ci.yml</span>
+        <span class="file-ref">docs/gmud/GMUD-001.md</span>
+        <span class="file-ref">docs/gmud/registro.md</span>
+        <span class="file-ref">docs/INSTALACAO.md</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECP Pay — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Pay docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html" class="active"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="../../en/index.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">ECP Pay &mdash; Product Documentation</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> All phases approved</span>
+      <span>v1.0</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-pay/index.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>ECP Pay</h1>
+    <p class="subtitle">Complete documentation of the 4 product cycle phases &mdash; from strategic context to operations.</p>
+
+    <!-- Product Summary -->
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Product Vision</div>
+        <div class="artifact-title">Make payments invisible to the ECP ecosystem</div>
+        <div class="artifact-body">
+          <p>Any app processes any payment method with a single call &mdash; without knowing gateways, without duplicating code, without depending on external services to develop.</p>
+          <p>ECP Pay centralizes Pix, Card and Boleto in a unified API with Provider Pattern &mdash; allowing the entire ecosystem (bank, emps, food) to integrate payments in hours, swap gateways without touching the apps, and test everything offline with Internal mode.</p>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-top: 20px;">
+        <div class="artifact-card">
+          <div class="artifact-label">Key Metric</div>
+          <div class="artifact-title" style="color: var(--lime);">Payment Centralization</div>
+          <div class="artifact-body">
+            <strong>100% of transactions via ECP Pay</strong><br>
+            Percentage of ECP ecosystem financial transactions that go through ECP Pay instead of direct gateway calls. Goal: 100% of bank, emps and food processed via unified API.
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Target Users</div>
+          <div class="artifact-title">3 Ecosystem Personas</div>
+          <div class="artifact-body">
+            <strong>ECP Developers</strong> &mdash; Integrate payments in apps via unified API.<br>
+            <strong>Financial Operators</strong> &mdash; Monitor transactions, webhooks and system health via admin panel.<br>
+            <strong>Super Admin</strong> &mdash; Configure providers, feature flags, register apps and manage the ecosystem.
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-grid" style="margin-top: 20px;">
+        <div class="stat-card">
+          <div class="stat-value">29</div>
+          <div class="stat-label">Endpoints</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">10</div>
+          <div class="stat-label">Tables</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">12</div>
+          <div class="stat-label">HITLs Approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Epics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">82/100</div>
+          <div class="stat-label">QA Score</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <h2>Phase Timeline</h2>
+    <section class="section">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 01</div>
+          <div class="timeline-title">Strategic Context <span class="badge approved">HITL #1 Approved</span></div>
+          <div class="timeline-desc">OKRs, 5 measurable Key Results, 6 product principles, OST with 15 opportunities mapped to 5 KRs, 4 open questions and 4 assumptions.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 02</div>
+          <div class="timeline-title">Product Discovery <span class="badge approved">HITLs #2-#6 Approved</span></div>
+          <div class="timeline-desc">9 opportunities prioritized via WSJF across 3 pillars, 7 hypotheses with 26 assumptions, low-fi and high-fi prototypes, 3 epics, 13 features, 29 user stories with BDD, evaluation of Cagan's 4 risks.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 03</div>
+          <div class="timeline-title">Product Delivery <span class="badge approved">HITLs #7-#10 Approved</span></div>
+          <div class="timeline-desc">DDD with 6 bounded contexts, 6 ADRs, Fastify API with 29 endpoints (9 payment + 20 admin), SQLite with 10 tables, React SPA with 8 pages, QA score 82/100.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 04</div>
+          <div class="timeline-title">Operations <span class="badge approved">HITLs #11-#12 Approved</span></div>
+          <div class="timeline-desc">Local deploy strategy, 3 SLOs defined, DORA metrics, 3 A/B experiments planned, monitoring endpoints.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Links -->
+    <h2>Quick Access</h2>
+    <section class="section">
+      <div class="quick-links">
+        <a href="fase-01.html" class="quick-link">
+          <span class="ql-icon">&#x1F3AF;</span> Phase 01 &mdash; Strategy
+        </a>
+        <a href="fase-02.html" class="quick-link">
+          <span class="ql-icon">&#x1F50D;</span> Phase 02 &mdash; Discovery
+        </a>
+        <a href="fase-03.html" class="quick-link">
+          <span class="ql-icon">&#x2699;</span> Phase 03 &mdash; Delivery
+        </a>
+        <a href="fase-04.html" class="quick-link">
+          <span class="ql-icon">&#x1F680;</span> Phase 04 &mdash; Operations
+        </a>
+        <a href="dashboard/index.html" class="quick-link">
+          <span class="ql-icon">&#x1F4CA;</span> Dashboard App
+        </a>
+      </div>
+    </section>
+
+    <!-- Phase summaries -->
+    <h2>Phase Summaries</h2>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 01 &mdash; Strategic Context</div>
+      <div class="artifact-title">OKRs, Principles and Opportunity Solution Tree</div>
+      <div class="artifact-body">
+        <p>Definition of strategic objective: <strong>"Make payments invisible to the ECP ecosystem"</strong>, with 5 measurable Key Results. OST with 15 opportunities mapped to 5 KRs. 6 product principles guide all decisions: contract above implementation, development without external dependencies, observability as a first-class citizen.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">phase-01-output.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 02 &mdash; Product Discovery</div>
+      <div class="artifact-title">Opportunities, Hypotheses and Structured Backlog</div>
+      <div class="artifact-body">
+        <p>9 opportunities prioritized via WSJF across 3 pillars (Core Infrastructure, Development Velocity, Production Reliability). 7 solution hypotheses with 26 critical assumptions. Backlog with 3 epics, 13 features and 29 user stories with BDD/Gherkin acceptance criteria. Cagan's 4 risks evaluated, all approved.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">prioritized-opportunities.json</span>
+        <span class="file-ref">ideation-output.json</span>
+        <span class="file-ref">backlog-and-risks.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 03 &mdash; Product Delivery</div>
+      <div class="artifact-title">Architecture, API, Frontend and QA</div>
+      <div class="artifact-body">
+        <p>DDD architecture with 6 bounded contexts. Stack: Fastify 5.0 + SQLite3 + React 18.3 + Vite 5.4 + Tailwind CSS. API with 29 endpoints (9 payment + 20 admin). Provider Pattern with InternalAdapter and AsaasAdapter. React SPA with 8 admin pages. QA score 82/100 &mdash; approved with observations.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">architecture-output.json</span>
+        <span class="file-ref">backend-status.json</span>
+        <span class="file-ref">frontend-status.json</span>
+        <span class="file-ref">qa-report.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 04 &mdash; Operations</div>
+      <div class="artifact-title">Deploy, SLOs and A/B Experiments</div>
+      <div class="artifact-body">
+        <p>Deploy strategy for local environment (v1). 3 SLOs defined: 99.9% availability, &gt;99% webhook delivery, p95 latency &lt;300ms. DORA metrics adapted for local development. 3 A/B experiments planned for continuous optimization.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">operations-output.json</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

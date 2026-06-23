@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECP Digital Bank — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Digital Bank docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html" class="active"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="ecp-ecosystem.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="INSTALACAO.md">&#x1F4E6; Installation Guide</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">ECP Digital Bank &mdash; Product Documentation</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> All phases approved</span>
+      <span>v3.0 MVP</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-bank/index.html" style="margin-left: 8px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: #8899aa; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">🇧🇷 PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>ECP Digital Bank</h1>
+    <p class="subtitle">Complete documentation of the 4 product lifecycle phases &mdash; from strategic context to operations.</p>
+
+    <!-- Product Summary -->
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Product Vision</div>
+        <div class="artifact-title">To be the digital bank that transforms how Brazilians relate to their money</div>
+        <div class="artifact-body">
+          <p>Delivering on the computer &mdash; where they work, decide, and build their future &mdash; the most intelligent, clear, and integrated financial experience in the country.</p>
+          <p>Millions of young Brazilian professionals spend eight hours a day in front of a computer, yet are forced to manage their finances on mobile, on small screens, with fragmented data and no context. ECP Digital Bank exists to eliminate that contradiction.</p>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-top: 20px;">
+        <div class="artifact-card">
+          <div class="artifact-label">North Star Metric</div>
+          <div class="artifact-title" style="color: var(--lime);">WAU-EFI</div>
+          <div class="artifact-body">
+            <strong>Weekly Active Users with Intelligent Financial Engagement</strong><br>
+            Number of unique users per week who perform at least one interaction with intelligent financial features &mdash; smart statement, proactive insights, or financial planning.
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Priority Segment</div>
+          <div class="artifact-title">Young Salaried Professionals</div>
+          <div class="artifact-body">
+            Ages 22-35, formal employment (CLT), R$2,500–8,000/month. Heavy Pix users, spend 8–10h/day on computers, dissatisfied with mobile-only banks. Represent 40–45% of SAM.
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-grid" style="margin-top: 20px;">
+        <div class="stat-card">
+          <div class="stat-value">R$ 180B</div>
+          <div class="stat-label">TAM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">R$ 72B</div>
+          <div class="stat-label">SAM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">14–18%</div>
+          <div class="stat-label">CAGR</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">11</div>
+          <div class="stat-label">HITLs Approved</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <h2>Phase Timeline</h2>
+    <section class="section">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 01</div>
+          <div class="timeline-title">Strategic Context <span class="badge approved">HITL #1 Approved</span></div>
+          <div class="timeline-desc">OKRs, North Star (WAU-EFI), product vision, 7 principles, OST with 15 opportunities, assumption map with 12 entries and 3 critical ones.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 02</div>
+          <div class="timeline-title">Product Discovery <span class="badge approved">HITLs #2–#6 Approved</span></div>
+          <div class="timeline-desc">10 prioritized opportunities, 7 insights, 10 hypotheses (4 selected), low-fi and high-fi prototypes (17 screens), 3 epics, 14 features, 25 user stories with BDD, assessment of Cagan's 4 risks.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 03</div>
+          <div class="timeline-title">Product Delivery <span class="badge approved">HITLs #7–#10 Approved</span></div>
+          <div class="timeline-desc">DDD with 5 bounded contexts, 7 ADRs, Fastify API with 9 modules and 27 endpoints, React SPA with 10 pages, 29 test cases, 10/10 quality gates.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">Phase 04</div>
+          <div class="timeline-title">Operations <span class="badge approved">HITL #11 Approved</span></div>
+          <div class="timeline-desc">CI/CD with GitHub Actions (6 jobs), GMUD-001 approved, deploy strategy (Node.js + PM2), installation guide, 6 SLOs defined.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Links -->
+    <h2>Quick Access</h2>
+    <section class="section">
+      <div class="quick-links">
+        <a href="fase-01.html" class="quick-link">
+          <span class="ql-icon">&#x1F3AF;</span> Phase 01 &mdash; Strategy
+        </a>
+        <a href="fase-02.html" class="quick-link">
+          <span class="ql-icon">&#x1F50D;</span> Phase 02 &mdash; Discovery
+        </a>
+        <a href="fase-03.html" class="quick-link">
+          <span class="ql-icon">&#x2699;</span> Phase 03 &mdash; Delivery
+        </a>
+        <a href="fase-04.html" class="quick-link">
+          <span class="ql-icon">&#x1F680;</span> Phase 04 &mdash; Operations
+        </a>
+        <a href="INSTALACAO.md" class="quick-link">
+          <span class="ql-icon">&#x1F4E6;</span> Installation Guide
+        </a>
+        <a href="dashboard/index.html" class="quick-link">
+          <span class="ql-icon">&#x1F4CA;</span> Dashboard App
+        </a>
+      </div>
+    </section>
+
+    <!-- Phase summaries -->
+    <h2>Phase Summaries</h2>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 01 &mdash; Strategic Context</div>
+      <div class="artifact-title">OKRs, North Star and Positioning</div>
+      <div class="artifact-body">
+        <p>Definition of strategic objective: <strong>"Win the first users who adopt ECP as their primary digital bank on the computer"</strong>, with 5 measurable Key Results. Competitive analysis of 6 rivals revealed a universal gap &mdash; none offers a robust web-first experience.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">market-research.json</span>
+        <span class="file-ref">product-vision.json</span>
+        <span class="file-ref">product-strategy.json</span>
+        <span class="file-ref">metrics.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 02 &mdash; Product Discovery</div>
+      <div class="artifact-title">Opportunities, Hypotheses and Structured Backlog</div>
+      <div class="artifact-body">
+        <p>10 opportunities prioritized across 3 pillars (Entry, Daily Use, Intelligence). 4 hypotheses selected for prototyping (H1–H4). Backlog with 3 epics, 14 features and 25 user stories with BDD/Gherkin acceptance criteria. 4 risks assessed, all approved.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">opportunity-prioritization.json</span>
+        <span class="file-ref">insight-synthesis-and-ideation.json</span>
+        <span class="file-ref">backlog-estruturado.json</span>
+        <span class="file-ref">four-risks-assessment.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 03 &mdash; Product Delivery</div>
+      <div class="artifact-title">Architecture, API, Frontend and QA</div>
+      <div class="artifact-body">
+        <p>DDD architecture with 5 bounded contexts. Stack: Fastify 5.0 + SQLite3 + React 18.3 + Vite 5.4 + Tailwind CSS 3.4. API with 9 modules and 27 endpoints. Frontend with 10 pages and 9 components. QA with 29 test cases and 10/10 quality gates passing.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">architect-output.json</span>
+        <span class="file-ref">backend-output.json</span>
+        <span class="file-ref">frontend-output.json</span>
+        <span class="file-ref">qa-report.json</span>
+      </div>
+    </div>
+
+    <div class="artifact-card">
+      <div class="artifact-label">Phase 04 &mdash; Operations</div>
+      <div class="artifact-title">CI/CD, GMUD and Deployment</div>
+      <div class="artifact-body">
+        <p>GitHub Actions pipeline with 6 jobs (code-quality, unit-tests, build, change-gate, deploy-production, quality-gate). GMUD-001 approved for initial release. Deploy strategy: Node.js + PM2 for API, static hosting for SPA.</p>
+      </div>
+      <div class="artifact-meta">
+        <span class="file-ref">ops-output.json</span>
+        <span class="file-ref">GMUD-001.md</span>
+        <span class="file-ref">INSTALACAO.md</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

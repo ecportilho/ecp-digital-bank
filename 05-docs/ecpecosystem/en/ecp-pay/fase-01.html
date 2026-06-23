@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 01 — Strategic Context | ECP Pay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Pay docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html" class="active"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="../../en/index.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Phase 01 &mdash; Strategic Context</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITL #1 Approved</span>
+      <span>Product Manager</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-pay/fase-01.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Phase 01 &mdash; Strategic Context</h1>
+    <p class="subtitle">OKRs, product principles, Opportunity Solution Tree and assumptions map.</p>
+
+    <!-- OKR -->
+    <h2>Main OKR</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Objective</div>
+        <div class="artifact-title">Make payments invisible to the ECP ecosystem &mdash; any app processes any payment method with a single call, without knowing gateways, without duplicating code, without depending on external services to develop.</div>
+        <div class="artifact-body">
+          <p>Timeline: Q2-Q3 2026 | 5 measurable Key Results</p>
+        </div>
+      </div>
+
+      <div class="kr-grid">
+        <!-- KR-01 -->
+        <div class="kr-card">
+          <div class="kr-id">KR-01</div>
+          <div class="kr-description">Reduce integration time for a new app with payments from weeks to hours</div>
+          <div class="kr-meta">Baseline: 2-3 weeks &rarr; Target: &lt; 4 hours</div>
+          <div class="kr-metric">Average time for a new app to process its first payment via ECP Pay (from first import to confirmed payment in staging)</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 85%;"></div></div>
+          <div class="progress-label"><span>Q2 2026</span><span>85%</span></div>
+        </div>
+
+        <!-- KR-02 -->
+        <div class="kr-card">
+          <div class="kr-id">KR-02</div>
+          <div class="kr-description">Centralize 100% of ecosystem transactions in a single observable ledger</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Target: 100% via ECP Pay</div>
+          <div class="kr-metric">Percentage of ECP ecosystem financial transactions that pass through ECP Pay (vs. direct gateway calls)</div>
+          <div class="progress-bar"><div class="progress-fill mid" style="width: 60%;"></div></div>
+          <div class="progress-label"><span>Q3 2026</span><span>60%</span></div>
+        </div>
+
+        <!-- KR-03 -->
+        <div class="kr-card">
+          <div class="kr-id">KR-03</div>
+          <div class="kr-description">Ensure gateway swap requires no changes to any consumer app</div>
+          <div class="kr-meta">Baseline: Undetermined &rarr; Target: Zero lines changed</div>
+          <div class="kr-metric">Number of lines of code changed in consumer apps when switching provider (e.g., Asaas to Stripe)</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 100%;"></div></div>
+          <div class="progress-label"><span>Q2 2026</span><span>100%</span></div>
+        </div>
+
+        <!-- KR-04 -->
+        <div class="kr-card">
+          <div class="kr-id">KR-04</div>
+          <div class="kr-description">Eliminate dependency on external services for development and testing</div>
+          <div class="kr-meta">Baseline: 0% &rarr; Target: 100% testable offline</div>
+          <div class="kr-metric">Percentage of payment test scenarios that run without internet connection (internal mode)</div>
+          <div class="progress-bar"><div class="progress-fill high" style="width: 100%;"></div></div>
+          <div class="progress-label"><span>Q2 2026</span><span>100%</span></div>
+        </div>
+
+        <!-- KR-05 -->
+        <div class="kr-card">
+          <div class="kr-id">KR-05</div>
+          <div class="kr-description">Achieve production reliability measured by availability and event delivery</div>
+          <div class="kr-meta">Baseline: N/A &rarr; Target: 99.9% uptime, &gt;99% webhook delivery</div>
+          <div class="kr-metric">API availability (uptime) and webhook delivery rate on first attempt</div>
+          <div class="progress-bar"><div class="progress-fill mid" style="width: 70%;"></div></div>
+          <div class="progress-label"><span>Q3 2026</span><span>70%</span></div>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">phase-01-output.json</span>
+      </div>
+    </section>
+
+    <!-- Product Principles -->
+    <h2>Product Principles</h2>
+    <section class="section">
+      <div class="rules-list">
+        <div class="rule-item">
+          <div class="rule-id">PP-01</div>
+          <div class="rule-text"><strong>Contract above implementation</strong> &mdash; ECP Pay's value lies in API contract stability. Internal provider changes MUST NEVER leak to consumers.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">PP-02</div>
+          <div class="rule-text"><strong>Development without external dependencies</strong> &mdash; Internal mode is a first-class feature ensuring any dev runs the full ecosystem with a single command.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">PP-03</div>
+          <div class="rule-text"><strong>Observability as a first-class citizen</strong> &mdash; Every operation must be auditable, every failure investigable, every webhook traceable.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">PP-04</div>
+          <div class="rule-text"><strong>Security by design, not by checklist</strong> &mdash; Sensitive data is never stored. Tokens replace real data. Security is in the architecture.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">PP-05</div>
+          <div class="rule-text"><strong>Operational before beautiful</strong> &mdash; The admin panel prioritizes information density, powerful filters and quick actions over aesthetics. Inspiration: Stripe Dashboard.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">PP-06</div>
+          <div class="rule-text"><strong>Idempotency is non-negotiable</strong> &mdash; In financial systems, processing an operation twice is worse than not processing it. Every mutation must be idempotent by design.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OST -->
+    <h2>Opportunity Solution Tree (OST)</h2>
+    <section class="section">
+      <p>15 opportunities mapped to 5 Key Results, organized by type (pain, need, desire). Each opportunity identified from product briefing and tech spec evidence.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Opportunity</th>
+            <th>Type</th>
+            <th>KRs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OPP-01</td>
+            <td>Each app reimplements all Asaas integration logic, generating weeks of repetitive work</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-01</td>
+          </tr>
+          <tr>
+            <td>OPP-02</td>
+            <td>Developers need to understand each gateway's proprietary API instead of consuming a single contract</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-01</td>
+          </tr>
+          <tr>
+            <td>OPP-03</td>
+            <td>New devs need a quick path to run the ecosystem and test payments without complex setup</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-01</td>
+          </tr>
+          <tr>
+            <td>OPP-04</td>
+            <td>Operators have no consolidated view of transactions &mdash; must access separate dashboards per gateway</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-02</td>
+          </tr>
+          <tr>
+            <td>OPP-05</td>
+            <td>Owner needs to understand how much each app transacts and the distribution across payment methods</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-02</td>
+          </tr>
+          <tr>
+            <td>OPP-06</td>
+            <td>Investigating failures requires accessing logs in multiple systems, with no correlation between order and gateway status</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-02</td>
+          </tr>
+          <tr>
+            <td>OPP-07</td>
+            <td>If Asaas changes fees or API, all apps need to be updated simultaneously</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-03</td>
+          </tr>
+          <tr>
+            <td>OPP-08</td>
+            <td>Ecosystem wants freedom to negotiate with multiple gateways without rework in the apps</td>
+            <td><span class="badge lime">desire</span></td>
+            <td>KR-03</td>
+          </tr>
+          <tr>
+            <td>OPP-09</td>
+            <td>Consumer apps need contractual stability &mdash; the contract cannot break due to infra decisions</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-03</td>
+          </tr>
+          <tr>
+            <td>OPP-10</td>
+            <td>Automated tests depend on Asaas sandbox that is slow, unstable and requires credentials per dev</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-04</td>
+          </tr>
+          <tr>
+            <td>OPP-11</td>
+            <td>Demos and presentations are held hostage to connectivity and sandbox availability</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-04</td>
+          </tr>
+          <tr>
+            <td>OPP-12</td>
+            <td>Staging needs to be deterministic and controllable for validation before production</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-04</td>
+          </tr>
+          <tr>
+            <td>OPP-13</td>
+            <td>Apps need guarantee that callbacks will be delivered even in temporary failure scenarios</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-05</td>
+          </tr>
+          <tr>
+            <td>OPP-14</td>
+            <td>Without idempotency, retries can cause duplicate charges or inconsistent processing</td>
+            <td><span class="badge danger">pain</span></td>
+            <td>KR-05</td>
+          </tr>
+          <tr>
+            <td>OPP-15</td>
+            <td>Operators need webhook replay, reprocessing and refunds accessible without engineering</td>
+            <td><span class="badge info">need</span></td>
+            <td>KR-05</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Open Questions -->
+    <h2>Open Questions</h2>
+    <section class="section">
+      <div class="kr-grid">
+        <div class="artifact-card">
+          <div class="artifact-label">OQ-01</div>
+          <div class="artifact-body">What is the expected transaction volume in the first quarter? This impacts infrastructure decisions and the availability target.</div>
+          <div class="artifact-meta"><span>Impacts: KR-05</span></div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">OQ-02</div>
+          <div class="artifact-body">Is there a forecast for when the Stripe adapter will be needed, or is Asaas sufficient for the 2026 roadmap?</div>
+          <div class="artifact-meta"><span>Impacts: KR-03</span></div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">OQ-03</div>
+          <div class="artifact-body">Will payment split be used only in ecp-food or is there demand in other apps?</div>
+          <div class="artifact-meta"><span>Impacts: OPP-05</span></div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">OQ-04</div>
+          <div class="artifact-body">How will the KR-01 baseline be measured? Use ecp-food's integration time with Asaas as reference?</div>
+          <div class="artifact-meta"><span>Impacts: KR-01</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assumptions -->
+    <h2>Assumptions</h2>
+    <section class="section">
+      <div class="kr-grid">
+        <div class="artifact-card">
+          <div class="artifact-label">AS-01</div>
+          <div class="artifact-title">The three initial apps will migrate to consume ECP Pay</div>
+          <div class="artifact-body">Risk: If any app chooses to keep direct integration, KR-02 (100% centralization) will not be achieved.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">AS-02</div>
+          <div class="artifact-title">Internal mode will have complete functional parity with Asaas in the API contract</div>
+          <div class="artifact-body">Risk: If there is a contract divergence between modes, apps will behave differently in dev vs. production.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">AS-03</div>
+          <div class="artifact-title">Transaction volume compatible with SQLite in the first year</div>
+          <div class="artifact-body">Risk: If volume grows beyond expectations, SQLite may become a bottleneck sooner than planned.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">AS-04</div>
+          <div class="artifact-title">Asaas will be the only production gateway in v1</div>
+          <div class="artifact-body">Risk: Low &mdash; the provider interface guarantees extensibility even if Stripe is delayed.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

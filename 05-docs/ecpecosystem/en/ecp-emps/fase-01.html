@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 01 — Strategic Context | ECP Emps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span> ECP Emps docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html" class="active"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="../../en/index.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="invest.html">&#x1F4B0; Investment</a>
+      <a href="fase-04.html">&#x1F4CA; Ops Dashboard</a>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="topbar-title">Phase 01 &mdash; Strategic Context</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot yellow"></span> Awaiting HITL #1</span>
+      <span>Product Manager</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-emps/fase-01.html" style="margin-left: 8px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: #8899aa; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <main class="content">
+    <h1>Phase 01 &mdash; Strategic Context</h1>
+    <p class="subtitle">OKRs, OST (Opportunity Solution Tree), North Star Metric and product principles defined by the Product Manager Agent.</p>
+
+    <h2>Product Vision</h2>
+    <div class="vision-card">
+      <div class="vision-label">3&ndash;5 Year Vision</div>
+      <blockquote>
+        For Brazilian micro-entrepreneurs who lose time and money with banks that ignore their business needs, <strong>ECP Emps</strong> is the web-first digital bank that automates business financial management with intelligence, unlike existing PJ digital banks because it is the only one that integrates personal (PF) and business (PJ) accounts in one place with AI-powered automatic categorization and a native desktop experience.
+      </blockquote>
+    </div>
+
+    <p><strong>Opportunity window:</strong> 12&ndash;18 months of first-mover advantage in the web-first PJ segment before competitors react.</p>
+    <p><strong>Beachhead segment:</strong> Digital Freelancer MEI (ages 22&ndash;35, digital services, natural desktop affinity, lowest CAC, highest product-market fit for MVP).</p>
+
+    <h2>North Star Metric</h2>
+    <div class="ns-card">
+      <div class="ns-main">
+        <div class="ns-label">North Star</div>
+        <div class="ns-name">EFAS &mdash; Financially Active Companies per Week</div>
+        <div class="ns-definition">Number of companies with 3+ financial operations in the last 7 days. Captures the moment when the company uses ECP Emps as its primary bank.</div>
+        <div class="ns-formula">COUNT(DISTINCT company_id FROM pj_transactions WHERE created_at >= 7d ago GROUP BY company_id HAVING COUNT >= 3)</div>
+      </div>
+      <div class="ns-input">
+        <div class="input-name">Activation Rate</div>
+        <div class="input-target">35%+</div>
+        <div class="input-desc">3+ ops in 7 days after opening</div>
+      </div>
+      <div class="ns-input">
+        <div class="input-name">Invoices/company</div>
+        <div class="input-target">2+/month</div>
+        <div class="input-desc">Usage as a billing tool</div>
+      </div>
+      <div class="ns-input">
+        <div class="input-name">Toggle PF&#x2194;PJ</div>
+        <div class="input-target">2+/session</div>
+        <div class="input-desc">PF-PJ integration value</div>
+      </div>
+      <div class="ns-input">
+        <div class="input-name">ARPAC</div>
+        <div class="input-target">R$ 70/month</div>
+        <div class="input-desc">Average revenue per company</div>
+      </div>
+      <div class="ns-input">
+        <div class="input-name">D30 Retention</div>
+        <div class="input-target">45%+</div>
+        <div class="input-desc">Login 30 days after opening</div>
+      </div>
+    </div>
+
+    <h2>OKRs &mdash; Q2 2026 (April&ndash;June)</h2>
+
+    <h3>Objective</h3>
+    <div class="vision-card" style="border-color: var(--border);">
+      <div class="vision-label">Objective</div>
+      <blockquote style="font-size: 16px;">
+        Make ECP Emps the digital bank that freelancer MEIs trust to separate, organize, and bill &mdash; replacing spreadsheets, bad banks, and the PF/PJ financial mess.
+      </blockquote>
+    </div>
+
+    <h3>Key Results</h3>
+    <div class="kr-grid">
+
+      <div class="kr-card">
+        <div class="kr-id">KR-01</div>
+        <div class="kr-description">Reach an activation rate of 35% (companies with 3+ operations in 7 days after opening)</div>
+        <div class="kr-meta">
+          <span>Baseline: 0%</span>
+          <span class="target">Target: 35%</span>
+        </div>
+        <div class="kr-metric">Activation Rate = companies_3tx_7d / companies_created * 100</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+        <span class="kr-status measurable">Measurable</span>
+      </div>
+
+      <div class="kr-card">
+        <div class="kr-id">KR-02</div>
+        <div class="kr-description">Achieve an average of 2+ invoices issued per active company per month</div>
+        <div class="kr-meta">
+          <span>Baseline: 0</span>
+          <span class="target">Target: 2+</span>
+        </div>
+        <div class="kr-metric">invoices(status!=cancelled, parent=null) / active_companies</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+        <span class="kr-status measurable">Measurable (with refinement)</span>
+      </div>
+
+      <div class="kr-card">
+        <div class="kr-id">KR-03</div>
+        <div class="kr-description">Achieve an average of 2+ PF&#x2194;PJ toggles per session</div>
+        <div class="kr-meta">
+          <span>Baseline: 0</span>
+          <span class="target">Target: 2+</span>
+        </div>
+        <div class="kr-metric">toggle_events / sessions_with_toggle</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+        <span class="kr-status blocked">Requires analytics_events</span>
+      </div>
+
+      <div class="kr-card">
+        <div class="kr-id">KR-04</div>
+        <div class="kr-description">Achieve D30 retention of 45% (login 30 days after opening)</div>
+        <div class="kr-meta">
+          <span>Baseline: 0%</span>
+          <span class="target">Target: 45%</span>
+        </div>
+        <div class="kr-metric">companies_login_d28_32 / companies_created_30d_ago * 100</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+        <span class="kr-status measurable">Measurable</span>
+      </div>
+
+    </div>
+
+    <h2>Opportunity Solution Tree (OST)</h2>
+    <p>12 mapped opportunities (pains, needs, and desires) &mdash; <strong>no solutions</strong>, following Teresa Torres.</p>
+
+    <div class="ost-section">
+      <div class="ost-kr-header">
+        <span class="ost-kr-badge">KR-01</span>
+        <span class="ost-kr-title">Activation Rate 35%</span>
+      </div>
+      <div class="opp-list">
+        <div class="opp-item">
+          <span class="opp-id">OPP-01</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs cannot open a PJ account quickly because banks require excessive documentation and slow bureaucratic processes</div>
+            <div class="opp-evidence">Personas: Ana Beatriz, Lucas &middot; 73% of MEIs have no formal financial control</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-02</span>
+          <span class="opp-type necessidade">Need</span>
+          <div class="opp-content">
+            <div class="opp-desc">Entrepreneurs need to immediately understand the value of the PJ account in the first session to justify switching banks</div>
+            <div class="opp-evidence">Ana: &ldquo;Inter PJ account does not work well on desktop&rdquo; &mdash; if value is not seen quickly, they abandon</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-03</span>
+          <span class="opp-type desejo">Desire</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs want the PJ account to come pre-configured with the tools they need, without manual setup</div>
+            <div class="opp-evidence">Product principle: &ldquo;Automation beats configuration&rdquo;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ost-section">
+      <div class="ost-kr-header">
+        <span class="ost-kr-badge">KR-02</span>
+        <span class="ost-kr-title">2+ invoices/company/month</span>
+      </div>
+      <div class="opp-list">
+        <div class="opp-item">
+          <span class="opp-id">OPP-04</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">Issuing a billing invoice is bureaucratic and expensive in current banks, making MEIs give up on formal billing</div>
+            <div class="opp-evidence">Ana pays R$ 2/invoice at Inter &middot; Lucas finds B2B invoices complicated</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-05</span>
+          <span class="opp-type necessidade">Need</span>
+          <div class="opp-content">
+            <div class="opp-desc">Freelancers need to charge clients professionally (with company details) without losing time configuring each billing</div>
+            <div class="opp-evidence">Ana: 8&ndash;12 active clients per month &middot; Agency with multiple clients</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-06</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs don&rsquo;t know when a client paid or stopped paying because reconciliation between billing and statement is manual</div>
+            <div class="opp-evidence">Lucas: &ldquo;reconciliation of iFood with the statement is manual&rdquo;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ost-section">
+      <div class="ost-kr-header">
+        <span class="ost-kr-badge">KR-03</span>
+        <span class="ost-kr-title">2+ PF&#x2194;PJ toggles/session</span>
+      </div>
+      <div class="opp-list">
+        <div class="opp-item">
+          <span class="opp-id">OPP-07</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs mix personal and business expenses because having two accounts in separate apps is too inconvenient</div>
+            <div class="opp-evidence">42% do not separate PF/PJ &middot; Ana mixes expenses on PF card</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-08</span>
+          <span class="opp-type necessidade">Need</span>
+          <div class="opp-content">
+            <div class="opp-desc">Entrepreneurs need to see the complete financial picture (personal + business) for decisions like owner&rsquo;s draw withdrawals</div>
+            <div class="opp-evidence">Market gap: no competitor offers a consolidated PF+PJ dashboard</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-09</span>
+          <span class="opp-type desejo">Desire</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs want to instantly transfer money between personal and business accounts without bureaucracy</div>
+            <div class="opp-evidence">BR-13: instant PF-PJ transfer same ownership</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ost-section">
+      <div class="ost-kr-header">
+        <span class="ost-kr-badge">KR-04</span>
+        <span class="ost-kr-title">D30 Retention 45%</span>
+      </div>
+      <div class="opp-list">
+        <div class="opp-item">
+          <span class="opp-id">OPP-10</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">MEIs don&rsquo;t know how much the business actually earns per month because they have no accessible cash flow tool</div>
+            <div class="opp-evidence">Ana doesn&rsquo;t know how much she profits &middot; Lucas feels he&rsquo;s losing money &middot; 58% use spreadsheets</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-11</span>
+          <span class="opp-type necessidade">Need</span>
+          <div class="opp-content">
+            <div class="opp-desc">Entrepreneurs who work on computer need a bank that fully works on desktop</div>
+            <div class="opp-evidence">No PJ competitor offers a complete desktop experience &middot; Ana works 100% on computer</div>
+          </div>
+        </div>
+        <div class="opp-item">
+          <span class="opp-id">OPP-12</span>
+          <span class="opp-type dor">Pain</span>
+          <div class="opp-content">
+            <div class="opp-desc">Companies with more than one person cannot give partial account access without sharing passwords</div>
+            <div class="opp-evidence">Mariana and Thiago: &ldquo;Cora doesn&rsquo;t allow giving partial access to the assistant&rdquo;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Product Principles</h2>
+
+    <div class="principles-grid">
+
+      <div class="principle-card">
+        <div class="principle-num">01</div>
+        <div class="principle-name">Desktop first, mobile always</div>
+        <div class="principle-desc">The primary experience is designed for desktop (1280px+), with mobile as a companion.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Every feature is designed first for large screen; mobile receives a simplified version.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We give up mobile-only market share to gain productivity with the audience that works on computer.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">02</div>
+        <div class="principle-name">Automation beats configuration</div>
+        <div class="principle-desc">The system makes the right choice automatically instead of asking the user to configure.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Automatic categorization; CNPJ Pix key registered at opening; invoice with intelligent defaults.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We give up flexibility for power users in favor of simplicity for the majority.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">03</div>
+        <div class="principle-name">Financial clarity above all</div>
+        <div class="principle-desc">The entrepreneur must know exactly how much they have, how much comes in and how much goes out &mdash; without mental calculation.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Dashboard shows real profit; clear business categories; cash flow charts always visible.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We prioritize transparency even if it reveals the business is doing poorly.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">04</div>
+        <div class="principle-name">PF and PJ are one entrepreneur</div>
+        <div class="principle-desc">The person and the business coexist; the bank must reflect this reality.</div>
+        <div class="principle-practice"><strong>In practice:</strong> PF/PJ toggle in the same app; instant PF-PJ transfer; consolidated view.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We give up total independence between PF and PJ in favor of an integrated experience.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">05</div>
+        <div class="principle-name">Free at core, premium for extras</div>
+        <div class="principle-desc">Essential operations (Pix, invoices, account) are free; advanced features may be premium.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Unlimited Pix for free, free invoices, no monthly account fee.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We give up immediate per-operation revenue in favor of adoption and volume.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">06</div>
+        <div class="principle-name">Entrepreneur&rsquo;s data belongs to the entrepreneur</div>
+        <div class="principle-desc">Full access and export of financial data, without lock-in.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Statement export in CSV/PDF, downloadable reports, open API (future).</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We make client departure easy, betting that superior experience ensures retention.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">07</div>
+        <div class="principle-name">Security without unnecessary friction</div>
+        <div class="principle-desc">Protect the entrepreneur without them feeling like they&rsquo;re fighting against their own bank.</div>
+        <div class="principle-practice"><strong>In practice:</strong> Additional confirmation only above R$ 5K; automatic nighttime limit; RBAC by profile.</div>
+        <div class="principle-tradeoff"><strong>Trade-off:</strong> We accept that smaller limits pass without extra confirmation in favor of fluidity.</div>
+      </div>
+
+    </div>
+
+    <h2>Outcome Roadmap</h2>
+
+    <div class="roadmap">
+      <div class="roadmap-col">
+        <div class="roadmap-header now">
+          <div class="roadmap-period">Now &mdash; Apr/May 2026</div>
+          <div class="roadmap-theme">The entrepreneur opens the account, operates and feels the bank understands their business</div>
+        </div>
+        <ul class="roadmap-outcomes">
+          <li>MEIs open PJ account in &lt; 3 min and make first operation the same day</li>
+          <li>Entrepreneurs charge clients with invoice+Pix without another system</li>
+          <li>Entrepreneur perceives the PF-PJ connection in the same environment</li>
+        </ul>
+        <div class="roadmap-krs">
+          <span class="roadmap-kr-tag">KR-01</span>
+          <span class="roadmap-kr-tag">KR-02</span>
+          <span class="roadmap-kr-tag">KR-03</span>
+        </div>
+      </div>
+
+      <div class="roadmap-col">
+        <div class="roadmap-header next">
+          <div class="roadmap-period">Next &mdash; Jun/Jul 2026</div>
+          <div class="roadmap-theme">The entrepreneur understands where the money goes and makes better decisions</div>
+        </div>
+        <ul class="roadmap-outcomes">
+          <li>MEIs know how much they profited without a spreadsheet</li>
+          <li>AI automatic categorization eliminates manual work</li>
+          <li>Entrepreneurs with partners delegate access with confidence</li>
+        </ul>
+        <div class="roadmap-krs">
+          <span class="roadmap-kr-tag">KR-01</span>
+          <span class="roadmap-kr-tag">KR-02</span>
+          <span class="roadmap-kr-tag">KR-04</span>
+        </div>
+      </div>
+
+      <div class="roadmap-col">
+        <div class="roadmap-header later">
+          <div class="roadmap-period">Later &mdash; Aug/Oct 2026</div>
+          <div class="roadmap-theme">ECP Emps becomes indispensable for the business&rsquo;s financial health</div>
+        </div>
+        <ul class="roadmap-outcomes">
+          <li>Entrepreneurs trust ECP Emps to anticipate cash flow problems</li>
+          <li>ARPAC reaches R$ 70/month via premium services</li>
+          <li>Accountants recommend it as the best PJ account for MEIs</li>
+        </ul>
+        <div class="roadmap-krs">
+          <span class="roadmap-kr-tag">KR-02</span>
+          <span class="roadmap-kr-tag">KR-04</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>Competitive Analysis</h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>PJ Clients</th>
+          <th>Web Desktop</th>
+          <th>Free Pix</th>
+          <th>Free Invoice</th>
+          <th>E-Invoice (NF-e)</th>
+          <th>AI Management</th>
+          <th>PF-PJ Integration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Nubank PJ</strong></td>
+          <td>15M+</td>
+          <td class="partial">Partial</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+          <td class="partial">Basic</td>
+        </tr>
+        <tr>
+          <td><strong>Cora</strong></td>
+          <td>1.4M+</td>
+          <td class="partial">CoraWeb</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="partial">Paid</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+        </tr>
+        <tr>
+          <td><strong>Inter PJ</strong></td>
+          <td>5M+</td>
+          <td class="partial">Partial</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+        </tr>
+        <tr>
+          <td><strong>C6 Bank PJ</strong></td>
+          <td>3M+</td>
+          <td class="cross">&#10007;</td>
+          <td class="check">&#10003;</td>
+          <td class="cross">Paid</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+        </tr>
+        <tr>
+          <td><strong>PagBank PJ</strong></td>
+          <td>8M+</td>
+          <td class="partial">Partial</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+        </tr>
+        <tr>
+          <td><strong>Conta Simples</strong></td>
+          <td>200K+</td>
+          <td class="check">&#10003; Web</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+          <td class="cross">&#10007;</td>
+        </tr>
+        <tr style="background: var(--lime-dim);">
+          <td><strong style="color: var(--lime);">ECP Emps</strong></td>
+          <td>MVP</td>
+          <td class="check" style="color: var(--lime);"><strong>&#10003; Web-first</strong></td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="check" style="color: var(--lime);"><strong>&#10003; AI</strong></td>
+          <td class="check" style="color: var(--lime);"><strong>&#10003; Native</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Critical Assumptions</h2>
+    <p>The 4 highest-risk assumptions are all about <strong>desirability</strong>. If invalidated, the product loses its reason to exist.</p>
+
+    <table class="assumptions-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Assumption</th>
+          <th>Opportunity</th>
+          <th>Risk</th>
+          <th>Validation Method</th>
+          <th>Success Criterion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>A-01</strong></td>
+          <td>MEIs truly want to separate PF/PJ expenses (not just say they do)</td>
+          <td>OPP-07</td>
+          <td><span class="risk-badge high">High</span></td>
+          <td>Interview 10 freelancer MEIs</td>
+          <td>7/10 demonstrate active separation behavior</td>
+        </tr>
+        <tr>
+          <td><strong>A-03</strong></td>
+          <td>MEIs prefer to charge via invoice if it is simple and free</td>
+          <td>OPP-04</td>
+          <td><span class="risk-badge high">High</span></td>
+          <td>Survey 30 MEIs</td>
+          <td>60%+ would use for 2+ clients/month</td>
+        </tr>
+        <tr>
+          <td><strong>A-05</strong></td>
+          <td>MEIs would make different decisions with cash flow visibility</td>
+          <td>OPP-10</td>
+          <td><span class="risk-badge high">High</span></td>
+          <td>Interview 8 MEIs + mock dashboard</td>
+          <td>6/8 identify a concrete decision they would change</td>
+        </tr>
+        <tr>
+          <td><strong>A-08</strong></td>
+          <td>MEIs with a PF account at ECP would open a PJ account in the same ecosystem</td>
+          <td>OPP-01</td>
+          <td><span class="risk-badge high">High</span></td>
+          <td>Interest banner in the ecp-digital-bank PF</td>
+          <td>5%+ click; 30%+ fill out pre-registration</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Issues &amp; Open Items</h2>
+
+    <div class="alert blocking">
+      <strong>BLOCKING &mdash; KR-03 (Toggle PF&#x2194;PJ)</strong>
+      There is no <code>analytics_events</code> table in the tech_spec to track PF/PJ toggles on the frontend. There is also no definition of &ldquo;session&rdquo; in the schema. Cross-app tracking (PJ&#x2192;PF on port 5173) adds complexity.<br>
+      <strong>Remediation:</strong> Add <code>analytics_events</code> table to tech_spec or extend <code>pj_audit_logs</code> with <code>action='profile_switch'</code>.
+    </div>
+
+    <div class="alert warning">
+      <strong>LOW &mdash; KR-02 (Invoices)</strong>
+      Installment invoices (<code>type='installment'</code>) may inflate the count. Formula must filter <code>parent_invoice_id IS NULL</code>.
+    </div>
+
+    <div class="alert warning">
+      <strong>LOW &mdash; KR-04 (D30 Retention)</strong>
+      No explicit PJ login tracking. Using <code>pj_audit_logs</code> as proxy requires passive actions (GET /pj/dashboard) to generate log.
+    </div>
+
+    <h2>Open Questions</h2>
+
+    <ul class="questions-list">
+      <li>KR-03 requires an <code>analytics_events</code> table not planned in the tech_spec. Include in Phase 03?</li>
+      <li>Desirability assumptions (A-01, A-03, A-05, A-08) should be validated before development, or do we assume the risk?</li>
+      <li>The target of 2+ PF/PJ toggles per session may be too aggressive &mdash; revisit after first data?</li>
+    </ul>
+
+    <div class="hitl-box">
+      <div class="hitl-title">HITL #1 &mdash; Approval Decision</div>
+      <div class="hitl-question">Are the OKRs correct? Does the OST contain only opportunities (no solutions)? Do the principles reflect the desired strategy?</div>
+      <ul class="hitl-options">
+        <li><strong>&#x2705; Approved</strong> &mdash; Strategic context validated. Advance to Phase 02 (Product Discovery).</li>
+        <li><strong>&#x26A0;&#xFE0F; Approved with reservations</strong> &mdash; Context ok, but with specific adjustments before advancing.</li>
+        <li><strong>&#x274C; Rejected</strong> &mdash; Return to Product Manager with specific feedback.</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

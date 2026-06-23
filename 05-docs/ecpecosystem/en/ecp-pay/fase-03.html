@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 03 — Product Delivery | ECP Pay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', themeVariables: { primaryColor: '#131c28', primaryTextColor: '#eaf2ff', lineColor: '#b7ff2a', secondaryColor: '#0f1620' }});
+  </script>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Pay docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html" class="active"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+      <li class="sidebar-section-title">Ecosystem</li>
+      <li><a href="../../en/index.html"><span class="nav-icon">&#x2B21;</span> ECP Ecosystem</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Phase 03 &mdash; Product Delivery</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITLs #7-#10 Approved</span>
+      <span>Architect + Back End + Front End + QA</span>
+      <a href="../../index.html" style="margin-left: 16px; padding: 6px 14px; font-size: 0.85rem; font-weight: 600; color: var(--lime); border: 1px solid var(--lime); border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-pay/fase-03.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Phase 03 &mdash; Product Delivery</h1>
+    <p class="subtitle">Architecture, ADRs, API, database, business rules, security and QA.</p>
+
+    <!-- Stat Grid -->
+    <section class="section">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Bounded Contexts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">6</div>
+          <div class="stat-label">ADRs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">29</div>
+          <div class="stat-label">Endpoints</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">10</div>
+          <div class="stat-label">Tables</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Admin Pages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">82/100</div>
+          <div class="stat-label">QA Score</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <h2>Architecture &mdash; Provider Pattern</h2>
+    <section class="section">
+      <p>ECP Pay uses the <strong>Provider Pattern</strong> to abstract payment gateways. Ecosystem apps call a single API &mdash; the factory selects the active adapter (Internal or Asaas) via feature flag, without the apps knowing which is active.</p>
+
+      <pre class="mermaid">
+graph TD
+    A["ecp-bank :3333"] -->|X-API-Key| B["ECP Pay API :3335"]
+    C["ecp-emps :3334"] -->|X-API-Key| B
+    D["ecp-food :3000"] -->|X-API-Key| B
+    B --> E["Payment Service"]
+    E --> F["Provider Factory"]
+    F -->|"feature flag"| G["Internal Adapter"]
+    F -->|"feature flag"| H["Asaas Adapter"]
+    G --> I[("SQLite")]
+    H --> J["Asaas API"]
+    B --> K["Admin Panel :5176"]
+      </pre>
+
+      <h3>Bounded Contexts</h3>
+      <div class="kr-grid">
+        <div class="artifact-card">
+          <div class="artifact-label">Payment Processing</div>
+          <div class="artifact-body">Core domain: processes Pix, Card and Boleto via provider abstraction layer. Aggregates: Transaction, Refund.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Provider Abstraction</div>
+          <div class="artifact-body">Provider Pattern &mdash; abstracts internal simulation vs. external gateway (Asaas). Switchable via feature flag at runtime.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Card Vault</div>
+          <div class="artifact-body">Tokenized card storage. Never persists full numbers. Reusable tokens cross-app.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Split Engine</div>
+          <div class="artifact-body">Payment split logic for multi-party transactions (platform + seller + delivery).</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Webhook &amp; Callback</div>
+          <div class="artifact-body">Inbound webhook processing (Asaas) and outbound callback delivery (apps) with retry and backoff.</div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Admin Panel</div>
+          <div class="artifact-body">Support subdomain: dashboard, transaction management, provider config, feature flags, audit logs.</div>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">architecture-output.json</span>
+      </div>
+    </section>
+
+    <!-- ADRs -->
+    <h2>Architecture Decision Records (ADRs)</h2>
+    <section class="section">
+      <div class="adr-card">
+        <div class="adr-id">ADR-001</div>
+        <div class="adr-title">Provider Pattern for payment gateway abstraction</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> Ecosystem needs to work offline (dev/staging) and with real gateways (production). Apps must not know which gateway is active.<br>
+          <strong>Decision:</strong> PaymentProvider interface with two adapters (InternalAdapter, AsaasAdapter). Factory selects via feature flag PAYMENT_PROVIDER, switchable at runtime via admin panel.<br>
+          <strong>Consequences:</strong> Adding a new gateway = implementing one adapter. Zero changes in consumer apps.
+        </div>
+      </div>
+
+      <div class="adr-card">
+        <div class="adr-id">ADR-002</div>
+        <div class="adr-title">SQLite as embedded single-file database</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> ECP Pay is a monorepo service for local dev, staging and small-scale production. Needs zero-config database.<br>
+          <strong>Decision:</strong> better-sqlite3 with WAL mode. Single file database-pay.sqlite. Migrations run at startup.<br>
+          <strong>Consequences:</strong> No external DB server. One npm install and the service runs. Trade-off: not suitable for high-scale horizontal deployment.
+        </div>
+      </div>
+
+      <div class="adr-card">
+        <div class="adr-id">ADR-003</div>
+        <div class="adr-title">Dual authentication: API Key for apps, JWT for admin</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> Two distinct user groups: ecosystem apps (machine-to-machine) and human admins (web panel).<br>
+          <strong>Decision:</strong> Apps authenticate via X-API-Key. Admin via JWT issued at login. Separate middlewares.<br>
+          <strong>Consequences:</strong> Clean separation of concerns. Apps never need user credentials.
+        </div>
+      </div>
+
+      <div class="adr-card">
+        <div class="adr-id">ADR-004</div>
+        <div class="adr-title">Idempotency via unique key per transaction</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> Network failures can cause duplicate payment requests. Must guarantee payment is created exactly once.<br>
+          <strong>Decision:</strong> Mandatory X-Idempotency-Key header on all mutation endpoints. Stored as UNIQUE in transactions table. Duplicate returns existing result.<br>
+          <strong>Consequences:</strong> Safe retries for all apps. UNIQUE constraint prevents double-charging at database level.
+        </div>
+      </div>
+
+      <div class="adr-card">
+        <div class="adr-id">ADR-005</div>
+        <div class="adr-title">Card data never persisted &mdash; token-only vault</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> PCI compliance and security: card numbers and CVVs must not be stored.<br>
+          <strong>Decision:</strong> Only token + last4 + brand + holder_name in card_tokens table. Raw data passed to provider and immediately discarded.<br>
+          <strong>Consequences:</strong> Secure by design. Reusable token cross-app. Trade-off: cannot display full card number.
+        </div>
+      </div>
+
+      <div class="adr-card">
+        <div class="adr-id">ADR-006</div>
+        <div class="adr-title">Webhook deduplication via event_id</div>
+        <div class="adr-status">Accepted</div>
+        <div class="adr-body">
+          <strong>Context:</strong> External providers (Asaas) may resend webhooks, causing duplicate processing.<br>
+          <strong>Decision:</strong> event_id as UNIQUE in webhook_events table. Check before processing. If duplicate, return 200 without reprocessing.<br>
+          <strong>Consequences:</strong> Idempotent webhook handling. No duplicate status changes or callbacks.
+        </div>
+      </div>
+    </section>
+
+    <!-- SEQUENCE DIAGRAMS -->
+    <h2>Sequence Diagrams</h2>
+    <section class="section">
+
+      <h3>Pix Payment &mdash; Full Flow (Internal Provider)</h3>
+      <pre class="mermaid">
+sequenceDiagram
+    participant App as App (ecp-food)
+    participant Pay as ECP Pay API :3335
+    participant Svc as Payment Service
+    participant Prov as Internal Adapter
+    participant DB as SQLite
+
+    App->>Pay: POST /pay/pix
+    Note over Pay: Headers: X-API-Key, X-Idempotency-Key
+
+    Pay->>Pay: Validate API Key (app_registrations)
+    Pay->>DB: SELECT WHERE idempotency_key = ?
+    DB-->>Pay: null (new)
+
+    Pay->>Svc: createPixPayment(data)
+    Svc->>Prov: ProviderFactory.get("internal")
+    Prov->>Prov: Generate QR Code + copy-paste
+
+    Note over Svc,DB: Atomic transaction
+    Svc->>DB: INSERT transactions (status: pending)
+    Svc->>DB: INSERT splits (if defined)
+    DB-->>Svc: transactionId
+
+    Prov->>Prov: Configurable delay (3-5s)
+    Prov->>DB: UPDATE transactions SET status = paid
+
+    Svc->>App: POST callback_url (status: paid)
+    Note over App: Webhook delivery with retry
+
+    Pay-->>App: { id, status: pending, qrCode, copyPaste }
+      </pre>
+
+      <h3>Card Payment &mdash; Asaas Provider (External)</h3>
+      <pre class="mermaid">
+sequenceDiagram
+    participant App as App (ecp-bank)
+    participant Pay as ECP Pay API
+    participant Svc as Payment Service
+    participant Prov as Asaas Adapter
+    participant Asaas as Asaas API
+    participant DB as SQLite
+
+    App->>Pay: POST /pay/card
+    Note over Pay: { amount, card: {number, cvv, ...}, customer }
+
+    Pay->>Pay: Validate API Key + Idempotency
+    Pay->>Svc: createCardPayment(data)
+    Svc->>Prov: ProviderFactory.get("external")
+
+    Prov->>DB: SELECT card_tokens WHERE customer_document
+    alt New card
+        Prov->>Asaas: POST /payments (card data)
+        Asaas-->>Prov: { id, status, token }
+        Prov->>DB: INSERT card_tokens (token, last4, brand)
+    else Tokenized card
+        Prov->>Asaas: POST /payments (token)
+        Asaas-->>Prov: { id, status }
+    end
+
+    Svc->>DB: INSERT transactions (status: pending)
+
+    Note over Asaas,Pay: Async webhook
+    Asaas->>Pay: POST /pay/webhooks/asaas
+    Pay->>DB: INSERT webhook_events (dedup event_id)
+    Pay->>DB: UPDATE transactions SET status = paid
+    Pay->>App: POST callback_url (status: paid)
+      </pre>
+
+      <h3>Provider Switch &mdash; Internal &#x2194; External</h3>
+      <pre class="mermaid">
+sequenceDiagram
+    participant Admin as Admin (Browser)
+    participant Panel as Admin Panel :5176
+    participant API as Admin API
+    participant DB as SQLite
+
+    Admin->>Panel: Opens Providers page
+    Panel->>API: GET /admin/providers
+    API->>DB: SELECT feature_flags WHERE key = PAYMENT_PROVIDER
+    DB-->>API: { value: "internal" }
+    API-->>Panel: { active: "internal", available: ["internal", "external"] }
+    Panel-->>Admin: Two-card with toggle (Internal active)
+
+    Admin->>Panel: Clicks "Activate External"
+    Panel-->>Admin: Confirmation modal
+    Admin->>Panel: Confirms switch
+
+    Panel->>API: POST /admin/providers/switch
+    Note over API: Middleware: requireRole("admin")
+    API->>DB: UPDATE feature_flags SET value = "external"
+    API->>DB: INSERT audit_logs (action: provider_switch)
+    API-->>Panel: { active: "external", switchedAt }
+
+    Panel-->>Admin: Updated banner + confirmation toast
+    Note over Admin: All new transactions use Asaas
+      </pre>
+
+      <h3>Webhook Delivery &mdash; Exponential Backoff Retry</h3>
+      <pre class="mermaid">
+sequenceDiagram
+    participant Pay as ECP Pay
+    participant DB as SQLite
+    participant App as App callback_url
+
+    Note over Pay,App: Transaction status changed
+
+    Pay->>DB: SELECT callback_url FROM transactions
+    Pay->>App: POST callback_url (attempt 1)
+
+    alt Success (2xx)
+        App-->>Pay: 200 OK
+        Pay->>DB: UPDATE: delivery_status = delivered
+    else Failure (timeout/5xx)
+        App-->>Pay: 500 / timeout
+
+        Note over Pay: Retry 1: wait 30s
+        Pay->>App: POST callback_url (attempt 2)
+        App-->>Pay: 500 / timeout
+
+        Note over Pay: Retry 2: wait 2min
+        Pay->>App: POST callback_url (attempt 3)
+        App-->>Pay: 500 / timeout
+
+        Note over Pay: Retry 3: wait 10min
+        Pay->>App: POST callback_url (attempt 4)
+
+        alt Success
+            App-->>Pay: 200 OK
+            Pay->>DB: UPDATE: delivery_status = delivered
+        else Final failure
+            Pay->>DB: UPDATE: delivery_status = failed
+            Note over Pay: Admin can perform manual retry
+        end
+    end
+      </pre>
+    </section>
+
+    <!-- API Endpoints -->
+    <h2>API Endpoints</h2>
+    <section class="section">
+      <h3>Payment API (app-facing) &mdash; <code>/pay</code></h3>
+      <p>Authentication via <code>X-API-Key</code> header. 9 endpoints.</p>
+      <div class="artifact-card">
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/pay/pix</span> &mdash; Create Pix charge (QR code + copy-paste)</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/pay/card</span> &mdash; Charge credit card (new or tokenized)</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/pay/boleto</span> &mdash; Issue boleto with barcode + Pix QR</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/pay/transactions/:id</span> &mdash; Transaction status</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/pay/transactions/:id/refund</span> &mdash; Full or partial refund</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/pay/cards/:customer_document</span> &mdash; List saved cards</div>
+        <div class="endpoint"><span class="method delete">DELETE</span><span class="path">/pay/cards/tokens/:token_id</span> &mdash; Remove card token</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/pay/webhooks/asaas</span> &mdash; Receive Asaas webhook</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/pay/health</span> &mdash; Health check + active provider</div>
+      </div>
+
+      <h3>Admin API (web panel) &mdash; <code>/admin</code></h3>
+      <p>Authentication via JWT Bearer token. 20 endpoints.</p>
+      <div class="artifact-card">
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/admin/auth/login</span> &mdash; Admin login</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/auth/me</span> &mdash; Current admin user</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/dashboard</span> &mdash; KPIs and aggregated data</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/transactions</span> &mdash; Paginated transaction list</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/transactions/summary</span> &mdash; Summary by type/app/period</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/transactions/:id</span> &mdash; Transaction detail</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/admin/transactions/:id/simulate-payment</span> &mdash; Simulate payment (internal)</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/providers</span> &mdash; Active provider info</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/admin/providers/switch</span> &mdash; Switch internal/external</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/feature-flags</span> &mdash; List feature flags</div>
+        <div class="endpoint"><span class="method patch">PATCH</span><span class="path">/admin/feature-flags/:key</span> &mdash; Update feature flag</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/config</span> &mdash; General configuration</div>
+        <div class="endpoint"><span class="method patch">PATCH</span><span class="path">/admin/config</span> &mdash; Update configuration</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/apps</span> &mdash; Registered apps</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/admin/apps</span> &mdash; Register new app</div>
+        <div class="endpoint"><span class="method patch">PATCH</span><span class="path">/admin/apps/:id</span> &mdash; Update app config</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/webhooks</span> &mdash; List webhooks</div>
+        <div class="endpoint"><span class="method post">POST</span><span class="path">/admin/webhooks/:id/retry</span> &mdash; Manual webhook retry</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/audit-logs</span> &mdash; Audit logs</div>
+        <div class="endpoint"><span class="method get">GET</span><span class="path">/admin/splits</span> &mdash; List transaction splits</div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">architecture-output.json</span>
+      </div>
+    </section>
+
+    <!-- DB Schema -->
+    <h2>Database Schema</h2>
+    <section class="section">
+      <p>10 tables + 16 indexes. SQLite with WAL mode via better-sqlite3. Migration: <code>001-initial.sql</code>.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Table</th><th>Description</th><th>Key Columns</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>transactions</td><td>Central registry of all transactions (Pix, Card, Boleto)</td><td>id, type, status, amount, source_app, idempotency_key, provider, callback_url</td></tr>
+          <tr><td>refunds</td><td>Full or partial refunds linked to transactions</td><td>id, transaction_id, amount, status, reason</td></tr>
+          <tr><td>card_tokens</td><td>Token vault (never raw data). Cross-app via customer_document</td><td>id, customer_document, token, last4, brand, holder_name, is_active</td></tr>
+          <tr><td>splits</td><td>Split rules per transaction (platform, seller, delivery)</td><td>id, transaction_id, account_id, amount, type</td></tr>
+          <tr><td>webhook_events</td><td>Webhooks received from provider (Asaas). Dedup via UNIQUE event_id</td><td>id, event_id, event_type, payload, processed, transaction_id</td></tr>
+          <tr><td>app_registrations</td><td>Registered ecosystem apps with API key and callback URL</td><td>id, app_name, api_key, callback_base_url, is_active</td></tr>
+          <tr><td>admin_users</td><td>Admin panel users with roles (admin, operator, viewer)</td><td>id, name, email, password_hash, role</td></tr>
+          <tr><td>feature_flags</td><td>Runtime-editable feature flags (PAYMENT_PROVIDER, etc.)</td><td>id, key, value, description</td></tr>
+          <tr><td>audit_logs</td><td>Audit log of all administrative actions</td><td>id, user_id, action, resource, metadata, ip_address, timestamp</td></tr>
+          <tr><td>config</td><td>General system configuration (simulation delay, etc.)</td><td>id, key, value, description</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ER Diagram -->
+    <h3>Entity-Relationship Diagram</h3>
+    <pre class="mermaid">
+erDiagram
+    transactions {
+        TEXT id PK
+        TEXT type "pix|card|boleto"
+        TEXT status "pending|paid|failed|refunded|cancelled"
+        INTEGER amount_cents
+        TEXT source_app FK
+        TEXT idempotency_key UK
+        TEXT provider "internal|asaas"
+        TEXT external_id
+        TEXT callback_url
+        TEXT delivery_status
+        TEXT customer_name
+        TEXT customer_document
+        TEXT metadata
+        TEXT created_at
+    }
+
+    refunds {
+        TEXT id PK
+        TEXT transaction_id FK
+        INTEGER amount_cents
+        TEXT status
+        TEXT reason
+        TEXT created_at
+    }
+
+    card_tokens {
+        TEXT id PK
+        TEXT customer_document
+        TEXT token UK
+        TEXT last4
+        TEXT brand
+        TEXT holder_name
+        INTEGER is_active
+    }
+
+    splits {
+        TEXT id PK
+        TEXT transaction_id FK
+        TEXT account_id
+        INTEGER amount_cents
+        TEXT type "platform|seller|delivery"
+    }
+
+    webhook_events {
+        TEXT id PK
+        TEXT event_id UK
+        TEXT event_type
+        TEXT payload
+        INTEGER processed
+        TEXT transaction_id FK
+        TEXT created_at
+    }
+
+    app_registrations {
+        TEXT id PK
+        TEXT app_name UK
+        TEXT api_key UK
+        TEXT callback_base_url
+        INTEGER is_active
+    }
+
+    admin_users {
+        TEXT id PK
+        TEXT name
+        TEXT email UK
+        TEXT password_hash
+        TEXT role "admin|operator|viewer"
+    }
+
+    feature_flags {
+        TEXT id PK
+        TEXT key UK
+        TEXT value
+        TEXT description
+    }
+
+    audit_logs {
+        TEXT id PK
+        TEXT user_id FK
+        TEXT action
+        TEXT resource
+        TEXT metadata
+        TEXT ip_address
+        TEXT created_at
+    }
+
+    config {
+        TEXT id PK
+        TEXT key UK
+        TEXT value
+        TEXT description
+    }
+
+    transactions ||--o{ refunds : "has"
+    transactions ||--o{ splits : "has"
+    transactions ||--o{ webhook_events : "triggers"
+    app_registrations ||--o{ transactions : "creates"
+    admin_users ||--o{ audit_logs : "performs"
+    </pre>
+
+    <!-- Business Rules -->
+    <h2>Business Rules</h2>
+    <section class="section">
+      <div class="rules-list">
+        <div class="rule-item">
+          <div class="rule-id">BR-01</div>
+          <div class="rule-text"><strong>Idempotency</strong> &mdash; Every transaction requires a UUID idempotency_key. Resend returns existing result.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-02</div>
+          <div class="rule-text"><strong>Amounts in cents</strong> &mdash; All monetary values in cents (integer). NEVER float.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-03</div>
+          <div class="rule-text"><strong>Provider flag</strong> &mdash; PAYMENT_PROVIDER (internal/external) switchable at runtime via admin panel.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-04</div>
+          <div class="rule-text"><strong>Internal: Pix auto-approve</strong> &mdash; Pix auto-approved after configurable delay (default 3-5s).</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-05</div>
+          <div class="rule-text"><strong>Internal: Card approved</strong> &mdash; Approved if amount &lt; R$10,000 and last4 &ne; 9999.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-06</div>
+          <div class="rule-text"><strong>Internal: Card declined</strong> &mdash; Declined if last4 = 9999 (CARD_DECLINED) or amount &gt; R$10,000 (LIMIT_EXCEEDED).</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-07</div>
+          <div class="rule-text"><strong>Internal: Mock boleto</strong> &mdash; Boleto with mock FEBRABAN barcode. Payable via button in admin panel.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-08</div>
+          <div class="rule-text"><strong>Token vault</strong> &mdash; Token linked to CPF/CNPJ. Reusable cross-app. Never stores raw data.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-09</div>
+          <div class="rule-text"><strong>Split</strong> &mdash; Sum of parts MUST equal total transaction. Mandatory validation.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-10</div>
+          <div class="rule-text"><strong>Webhook retry</strong> &mdash; 3 attempts with exponential backoff: 30s, 2min, 10min. After 3 failures: delivery_failed.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-11</div>
+          <div class="rule-text"><strong>Soft delete</strong> &mdash; No record is physically deleted. Uses is_active/deleted_at.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-12</div>
+          <div class="rule-text"><strong>Audit log</strong> &mdash; Every administrative action logged with user_id, action, resource, IP and timestamp.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-13</div>
+          <div class="rule-text"><strong>Rate limiting</strong> &mdash; 100 transactions/minute per app. X-RateLimit-* headers in responses.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-14</div>
+          <div class="rule-text"><strong>Service-to-service auth</strong> &mdash; Apps authenticate via X-API-Key validated against app_registrations.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-15</div>
+          <div class="rule-text"><strong>Panel auth</strong> &mdash; JWT with roles: admin (full), operator (transactions + webhooks), viewer (read-only).</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-16</div>
+          <div class="rule-text"><strong>Card data</strong> &mdash; Full number and CVV are NEVER persisted. Only token, last4 and brand.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-17</div>
+          <div class="rule-text"><strong>Refund</strong> &mdash; Card and Pix allow refund (full or partial). Boleto does not allow refund.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-id">BR-18</div>
+          <div class="rule-text"><strong>Callback URL</strong> &mdash; Per-transaction callback URL overrides app default. Fallback to callback_base_url.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security Model -->
+    <h2>Security Model</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">App Authentication</div>
+          <div class="artifact-body">
+            <ul>
+              <li>X-API-Key header validated against <code>app_registrations</code></li>
+              <li>X-Source-App header validated against registered app</li>
+              <li>Rate limiting: 100 tx/min per app</li>
+              <li>Inactive app returns 403</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Admin Authentication</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Login via email/password with bcrypt</li>
+              <li>JWT with 24h expiration</li>
+              <li>3 roles: admin, operator, viewer</li>
+              <li>requireRole() middleware for RBAC</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="two-col" style="margin-top: 16px;">
+        <div class="artifact-card">
+          <div class="artifact-label">Data Protection</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Card vault: only token + last4 + brand</li>
+              <li>Full number and CVV never persisted</li>
+              <li>Soft delete on all records</li>
+              <li>Audit log for traceability</li>
+            </ul>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">Transactional Integrity</div>
+          <div class="artifact-body">
+            <ul>
+              <li>Idempotency key UNIQUE in database</li>
+              <li>Webhook dedup via UNIQUE event_id</li>
+              <li>Values always in cents (integer)</li>
+              <li>UUID v4 for all primary keys</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QA Report -->
+    <h2>QA Report</h2>
+    <section class="section">
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">Quality Score</div>
+        <div class="artifact-title">82/100 &mdash; Approved with observations <span class="badge approved">approved</span></div>
+        <div class="artifact-body">
+          <p>ECP Pay v1 is solid and production-ready in internal mode. The core payment flow (Pix, Card, Boleto), provider pattern, security model, database schema and admin panel are well built.</p>
+          <p><strong>Identified gaps:</strong> 4 missing admin endpoints (splits, tokens, webhooks admin, webhook retry), 3 missing frontend pages (splits, card-vault, audit-log as standalone routes), and minor business rule gaps. None block v1 launch in internal mode.</p>
+        </div>
+        <div class="artifact-meta">
+          <span>Business rules: 14/18 implemented, 3 partial, 1 missing</span>
+          <span>Technical rules: 6/6 implemented</span>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Business Rule Coverage</div>
+          <div class="artifact-body">
+            <p><strong>Implemented (14):</strong> BR-01 to BR-08, BR-10 to BR-16</p>
+            <p><strong>Partial (3):</strong> BR-09 (split without flow integration), BR-17 (refund without 90-day limit), BR-18 (incomplete callback URL fallback)</p>
+            <p><strong>Missing (1):</strong> 90-day refund limit (BR-17)</p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">API Coverage</div>
+          <div class="artifact-body">
+            <p><strong>Payment endpoints:</strong> 9/9 implemented (100%)</p>
+            <p><strong>Admin endpoints:</strong> 17/20 implemented (85%)</p>
+            <p><strong>Total:</strong> 26/29 implemented (90%)</p>
+            <p><strong>Missing:</strong> GET /admin/splits, GET /admin/webhooks, POST /admin/webhooks/:id/retry</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="artifact-meta">
+        <span class="file-ref">qa-report.json</span>
+        <span class="file-ref">backend-status.json</span>
+        <span class="file-ref">frontend-status.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

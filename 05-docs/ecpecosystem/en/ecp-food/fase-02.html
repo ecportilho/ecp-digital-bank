@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 02 &mdash; Product Discovery | ECP Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">&#x2B21;</span>
+      ECP Food docs
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html"><span class="nav-icon">&#x25C9;</span> Overview</a></li>
+      <li class="sidebar-section-title">Product Phases</li>
+      <li><a href="fase-01.html"><span class="nav-icon">01</span> Strategic Context</a></li>
+      <li><a href="fase-02.html" class="active"><span class="nav-icon">02</span> Product Discovery</a></li>
+      <li><a href="fase-03.html"><span class="nav-icon">03</span> Product Delivery</a></li>
+      <li><a href="fase-04.html"><span class="nav-icon">04</span> Operations</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="../../en/index.html">&#x2B21; ECP Ecosystem</a>
+      <a href="dashboard/index.html">&#x1F4CA; Dashboard App</a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">Phase 02 &mdash; Product Discovery</div>
+    <div class="topbar-meta">
+      <span><span class="status-dot green"></span> HITLs #2-#6 Approved</span>
+      <span>PO + Designer + PM</span>
+      <a href="../../index.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x2190; Ecosystem</a>
+      <a href="../../ecp-food/fase-02.html" style="margin-left: 8px; font-size: 0.82rem; font-weight: 600; color: #8899aa; padding: 6px 12px; border: 1px solid #1c2836; border-radius: 8px; text-decoration: none;">&#x1F1E7;&#x1F1F7; PT</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+    <h1>Phase 02 &mdash; Product Discovery</h1>
+    <p class="subtitle">Prioritized opportunities, insights, hypotheses, prototypes, structured backlog and assessment of Cagan&rsquo;s 4 risks.</p>
+
+    <!-- ============================================================ -->
+    <!-- OPPORTUNITIES                                                 -->
+    <!-- ============================================================ -->
+    <h2>Opportunities Prioritized for MVP</h2>
+    <section class="section">
+      <p>13 opportunities selected (from 19 mapped in the OST), organized into 5 strategic themes:</p>
+      <div class="artifact-card highlighted">
+        <div class="artifact-label">MVP Narrative</div>
+        <div class="artifact-body">
+          <strong>5 pillars:</strong>
+          (1) <span style="color:var(--lime)">CURATED DISCOVERY</span> &mdash; visual curation, categories, filters and quality evidence;
+          (2) <span style="color:var(--info)">TRANSPARENT CHECKOUT</span> &mdash; zero price surprises, frictionless payment via ecp-digital-bank;
+          (3) <span style="color:var(--warning)">RETENTION &amp; HABIT</span> &mdash; repeat order, return incentives, favorites;
+          (4) <span style="color:var(--danger)">RESTAURANT EMPOWERMENT</span> &mdash; visibility by quality, management autonomy, fast onboarding;
+          (5) <span style="color:var(--success)">PREMIUM TICKET</span> &mdash; premium visual menu, free delivery as lever.
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Opportunity</th><th>KR</th><th>Type</th><th>RICE</th></tr></thead>
+        <tbody>
+          <tr><td><strong>OPP-12</strong></td><td>Delivery fee as ticket lever &mdash; communicate free delivery &gt; R$120</td><td>KR3</td><td><span class="badge lime">desire</span></td><td>80.0</td></tr>
+          <tr><td><strong>OPP-02</strong></td><td>Checkout with no price surprises &mdash; users abandon when final price surprises</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>41.7</td></tr>
+          <tr><td><strong>OPP-07</strong></td><td>Return incentives &mdash; lack of them sends users back to iFood</td><td>KR2</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>40.0</td></tr>
+          <tr><td><strong>OPP-06</strong></td><td>Ultra-fast repeat order without redoing the entire journey</td><td>KR2</td><td><span class="badge info">need</span></td><td>37.5</td></tr>
+          <tr><td><strong>OPP-03</strong></td><td>Filters and categories connected to consumer intent</td><td>KR1</td><td><span class="badge info">need</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-04</strong></td><td>Visual quality evidence (photos, badges, ratings)</td><td>KR1</td><td><span class="badge lime">desire</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-10</strong></td><td>Visual menus that justify premium prices</td><td>KR3</td><td><span class="badge info">need</span></td><td>32.0</td></tr>
+          <tr><td><strong>OPP-01</strong></td><td>Visual curation that reduces decision fatigue</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>26.7</td></tr>
+          <tr><td><strong>OPP-05</strong></td><td>Frictionless payment flow via ecp-digital-bank</td><td>KR1</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>25.0</td></tr>
+          <tr><td><strong>OPP-13</strong></td><td>Premium menus for artisan restaurants to communicate value</td><td>KR3</td><td><span class="badge info">need</span></td><td>24.0</td></tr>
+          <tr><td><strong>OPP-14</strong></td><td>Real visibility for artisan restaurants &mdash; ranking by quality</td><td>KR4</td><td><span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger);">pain</span></td><td>20.0</td></tr>
+          <tr><td><strong>OPP-18</strong></td><td>Simple and fast onboarding for restaurants</td><td>KR4</td><td><span class="badge info">need</span></td><td>13.3</td></tr>
+          <tr><td><strong>OPP-15</strong></td><td>Autonomy to manage menu and promotions</td><td>KR4</td><td><span class="badge info">need</span></td><td>10.7</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-19</td><td>Discovery of curated new items</td><td>KR2</td><td><span class="badge neutral">Deferred</span></td><td>9.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-09</td><td>Consistency in the delivery experience</td><td>KR2</td><td><span class="badge neutral">Deferred</span></td><td>8.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-11</td><td>Combo deals and complementary suggestions</td><td>KR3</td><td><span class="badge neutral">Deferred</span></td><td>6.8</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-16</td><td>Behavioral analytics for restaurants</td><td>KR4</td><td><span class="badge neutral">Deferred</span></td><td>6.0</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-08</td><td>Personalization based on order history</td><td>KR2</td><td><span class="badge neutral">Deferred</span></td><td>4.5</td></tr>
+          <tr style="opacity: 0.55;"><td>OPP-17</td><td>Competitive commissions for restaurants</td><td>KR4</td><td><span class="badge neutral">Deferred</span></td><td>&mdash;</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- INSIGHTS                                                      -->
+    <!-- ============================================================ -->
+    <h2>Key Insights</h2>
+    <section class="section">
+      <div class="artifact-card">
+        <div class="artifact-label">INS-01 &mdash; High confidence</div>
+        <div class="artifact-title">Premium UX gap in delivery is the largest available competitive differentiator</div>
+        <div class="artifact-body">All competitors (iFood, Rappi, 99food, Keeta) prioritize volume over curation. App store reviews repeatedly mention &ldquo;cluttered UI&rdquo; and &ldquo;decision fatigue&rdquo; as recurring pain points. FoodFlow is born to solve this with premium visual curation (Midnight Express).</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-02 &mdash; High confidence</div>
+        <div class="artifact-title">Pix as validated payment infrastructure &mdash; but inline integration is a usability risk</div>
+        <div class="artifact-body">150M+ Pix users in Brazil validate the infrastructure. However, requiring authentication in ecp-digital-bank adds an extra step. Assumption A3 from Phase 01 flagged this as medium risk. Inline flow (no redirect) is critical to maintain conversion.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-03 &mdash; High confidence</div>
+        <div class="artifact-title">Curation &gt; volume for segments C1 and C2</div>
+        <div class="artifact-body">C1 (Gastronomic Explorer, ticket R$50-80) and C2 (Practical Regular, ticket R$40-60) together represent the core target. Both have explicit pain points with endless catalogs. FoodFlow should offer 50 curated restaurants instead of 500 generic ones.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-04 &mdash; High confidence</div>
+        <div class="artifact-title">Checkout is sacred &mdash; highest RICE score in the portfolio</div>
+        <div class="artifact-body">OPP-02 (checkout without surprises) has RICE 41.7 and OPP-12 (free delivery as lever) has RICE 80.0. Abandoning checkout is the most expensive way to lose a customer. Price transparency from the restaurant card is a prerequisite.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-05 &mdash; High confidence</div>
+        <div class="artifact-title">Repeat Order is the central retention mechanism</div>
+        <div class="artifact-body">C2 explicitly states &ldquo;uses repeat order frequently&rdquo; and complains about &ldquo;no real shortcut for reordering.&rdquo; RICE 37.5 with low effort &mdash; best ratio in the portfolio. Leading indicator for KR2 (&gt; 15% of orders via repeat).</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-06 &mdash; High confidence</div>
+        <div class="artifact-title">Partner restaurant, not a hostage &mdash; quality ranking is the supply-side value proposition</div>
+        <div class="artifact-body">Artisan restaurants pay 12-27% commission on iFood with limited visibility without paid media. The positioning &ldquo;ranking by quality, not by payment&rdquo; is the reason artisan restaurants would choose FoodFlow.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-07 &mdash; Medium confidence</div>
+        <div class="artifact-title">Cold start is the existential risk &mdash; supply-side first</div>
+        <div class="artifact-body">Classic marketplace chicken-and-egg. Strategy: 0% commission for the first 3 months, assisted onboarding in target neighborhoods of SP (Pinheiros, Vila Madalena, Itaim). Without 50 restaurants, there is no perceived variety.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-label">INS-08 &mdash; Medium confidence</div>
+        <div class="artifact-title">Midnight Express emotional design elevates value perception without raising prices</div>
+        <div class="artifact-body">The dark premium theme with gradients, Inter typography and dramatically lit food photography generates a visceral reaction (Norman). Consumers assign 15% higher WTP to dishes with narrative descriptions vs ingredient lists. Sustains ticket &gt; R$45 without discounting.</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SYNTHETIC PERSONAS                                            -->
+    <!-- ============================================================ -->
+    <h2>Synthetic Personas</h2>
+    <section class="section">
+      <p>5 synthetic personas derived from market segments (Phase 01): 3 consumers (C1-C3) and 2 restaurants (R1-R2). Each persona captures JTBD, behaviors, pain points and willingness to pay.</p>
+
+      <h3>Consumers</h3>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #7b61ff, #ff5fa2);">&#x1F9D1;&#x200D;&#x1F373;</div>
+          <div>
+            <div class="persona-name">C1 &mdash; Gastronomic Explorer</div>
+            <div class="persona-demo">22-35 y/o | A/B class | Urban SP | Income R$ 5-15k/month | Single or couple without kids</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;When I&rsquo;m bored of the same old options, I want to discover new and interesting restaurants near me to experience gastronomic variety.&rdquo;</div>
+        <div class="persona-section-title">Behaviors</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Orders delivery 3-5x/week from different restaurants</span>
+          <span class="persona-tag behavior">Browses categories and promotions before deciding</span>
+          <span class="persona-tag behavior">Influenced by photos, reviews and badges</span>
+          <span class="persona-tag behavior">Shares discoveries on social media</span>
+        </div>
+        <div class="persona-section-title">Pain Points</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Decision fatigue with long uncurated lists</span>
+          <span class="persona-tag pain">Doesn&rsquo;t trust restaurants with few reviews</span>
+          <span class="persona-tag pain">Confusing promotions &mdash; can&rsquo;t tell if they&rsquo;re saving money</span>
+        </div>
+        <div class="persona-section-title">Willingness to Pay</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">High: average ticket R$ 50-80 | Promo-sensitive but not promo-dependent</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #59d8ff, #2fd387);">&#x1F4BC;</div>
+          <div>
+            <div class="persona-name">C2 &mdash; Practical Regular</div>
+            <div class="persona-demo">28-40 y/o | Salaried/Freelance | Urban SP | Income R$ 6-20k/month | Intense routine</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;When I need a quick dinner after work, I want to repeat an order I already know is good, spending minimal time and energy deciding.&rdquo;</div>
+        <div class="persona-section-title">Behaviors</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">3-5 fixed favorite restaurants</span>
+          <span class="persona-tag behavior">Uses &ldquo;repeat order&rdquo; frequently</span>
+          <span class="persona-tag behavior">Orders 2-4x/week, almost always dinner</span>
+          <span class="persona-tag behavior">Values checkout speed above all</span>
+        </div>
+        <div class="persona-section-title">Pain Points</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Slow checkout with multiple steps</span>
+          <span class="persona-tag pain">No real shortcut for reordering</span>
+          <span class="persona-tag pain">Address and payment not saved between sessions</span>
+        </div>
+        <div class="persona-section-title">Willingness to Pay</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Medium-high: ticket R$ 40-60 | Loyal when experience is frictionless</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #ffcc00, #ff6b81);">&#x1F3AF;</div>
+          <div>
+            <div class="persona-name">C3 &mdash; Deal Hunter</div>
+            <div class="persona-demo">22-32 y/o | Students and young professionals | Income R$ 2-6k/month | Price-sensitive</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;When I want to order delivery without blowing my budget, I want to find real promotions and coupons so I feel like I&rsquo;m getting a good deal.&rdquo;</div>
+        <div class="persona-section-title">Behaviors</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Compares prices across apps before deciding</span>
+          <span class="persona-tag behavior">Actively hunts coupons and promotions</span>
+          <span class="persona-tag behavior">Orders 1-3x/week, usually during promos</span>
+          <span class="persona-tag behavior">Installs multiple delivery apps</span>
+        </div>
+        <div class="persona-section-title">Pain Points</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Confusing coupon rules or codes that don&rsquo;t work</span>
+          <span class="persona-tag pain">Delivery fee that cancels out the discount</span>
+          <span class="persona-tag pain">Fake promos &mdash; price inflated before discount</span>
+        </div>
+        <div class="persona-section-title">Willingness to Pay</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Medium: ticket R$ 30-45 | High price elasticity | Retains when perceiving real savings</span>
+        </div>
+      </div>
+
+      <h3>Restaurants</h3>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #2fd387, #59d8ff);">&#x1F37D;&#xFE0F;</div>
+          <div>
+            <div class="persona-name">R1 &mdash; Artisan Restaurant in Growth</div>
+            <div class="persona-demo">1-3 locations | Revenue R$ 50-300k/month | Chef/owner involved | Curated menu 15-40 items</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;When my restaurant doesn&rsquo;t appear at the top of iFood without paying for media, I want a platform that values my product quality to attract customers who truly appreciate well-crafted food.&rdquo;</div>
+        <div class="persona-section-title">Behaviors</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Invests in visual presentation of dishes</span>
+          <span class="persona-tag behavior">Wants control over pricing, promotions and brand</span>
+          <span class="persona-tag behavior">Seeks performance data to optimize</span>
+        </div>
+        <div class="persona-section-title">Pain Points</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Invisibility on platforms dominated by large chains</span>
+          <span class="persona-tag pain">High commissions compressing margins</span>
+          <span class="persona-tag pain">No access to consumer behavior data</span>
+        </div>
+        <div class="persona-section-title">Willingness to Pay</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Accepts 10-18% commission if there is real visibility and control over the experience</span>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: linear-gradient(135deg, #ff5fa2, #ffcc00);">&#x1F3ED;</div>
+          <div>
+            <div class="persona-name">R2 &mdash; Dark Kitchen / Delivery-First</div>
+            <div class="persona-demo">Delivery-only | 1-5 virtual brands | Lean team | Revenue R$ 30-150k/month</div>
+          </div>
+        </div>
+        <div class="persona-jtbd">&ldquo;When I operate exclusively via delivery, I want a platform with detailed analytics and strong exposure to optimize my menu and operations based on real data.&rdquo;</div>
+        <div class="persona-section-title">Behaviors</div>
+        <div class="persona-tags">
+          <span class="persona-tag behavior">Operates on multiple platforms simultaneously</span>
+          <span class="persona-tag behavior">Frequently tests menu items and prices</span>
+          <span class="persona-tag behavior">100% data-driven</span>
+          <span class="persona-tag behavior">High operational adaptability</span>
+        </div>
+        <div class="persona-section-title">Pain Points</div>
+        <div class="persona-tags">
+          <span class="persona-tag pain">Fragmented data across platforms</span>
+          <span class="persona-tag pain">Cost of maintaining presence on multiple apps</span>
+          <span class="persona-tag pain">Difficulty building own brand in generic marketplaces</span>
+        </div>
+        <div class="persona-section-title">Willingness to Pay</div>
+        <div class="persona-tags">
+          <span class="persona-tag wtp">Accepts 15-22% commission if volume and data justify it</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- HYPOTHESES                                                    -->
+    <!-- ============================================================ -->
+    <h2>Hypotheses</h2>
+    <section class="section">
+      <p>14 hypotheses organized into 5 strategic themes. 6 selected for prototyping (H01, H04, H05, H07, H10, H13).</p>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Hypothesis</th><th>Opps</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>H01</strong></td><td>Context-Aware Curated Home &mdash; visual categories, hero banner, live metrics</td><td>OPP-01, OPP-03</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td>H02</td><td>Visual Trust Cards with Social Proof</td><td>OPP-04, OPP-01</td><td><span class="badge neutral">Embedded in H01</span></td></tr>
+          <tr><td>H03</td><td>Multi-Criteria Predictive Search</td><td>OPP-03, OPP-01</td><td><span class="badge neutral">Embedded in H01</span></td></tr>
+          <tr><td><strong>H04</strong></td><td>Transparent Pricing from the First Card &mdash; zero checkout surprises</td><td>OPP-02, OPP-12</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td><strong>H05</strong></td><td>2-Tap Payment with ECP Virtual Card &mdash; inline auth without redirect</td><td>OPP-05, OPP-02</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td>H06</td><td>Pix with Contextual QR Code and Real-Time Feedback via SSE</td><td>OPP-05, OPP-02</td><td><span class="badge neutral">Embedded in H05</span></td></tr>
+          <tr><td><strong>H07</strong></td><td>1-Tap Repeat Order &mdash; habit shortcut in order history</td><td>OPP-06</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td>H08</td><td>Visible and Contextual Return Incentives &mdash; coupon MVP10, promos</td><td>OPP-07</td><td><span class="badge neutral">Cycle 2</span></td></tr>
+          <tr><td>H09</td><td>Favorites as Emotional Loyalty Shortcut</td><td>OPP-06, OPP-07</td><td><span class="badge neutral">Cycle 2</span></td></tr>
+          <tr><td><strong>H10</strong></td><td>4-Step Guided Onboarding &mdash; from sign-up to first item in 30 min</td><td>OPP-18, OPP-15</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td>H11</td><td>Restaurant Panel &mdash; full control without complexity</td><td>OPP-15, OPP-13, OPP-14</td><td><span class="badge neutral">Embedded in H10</span></td></tr>
+          <tr><td>H12</td><td>Visibility by Quality &mdash; fair ranking without pay-to-play</td><td>OPP-14, OPP-13</td><td><span class="badge neutral">Embedded in H10</span></td></tr>
+          <tr><td><strong>H13</strong></td><td>Visual Menu That Generates Desire &mdash; mouth-watering photos, Midnight Express</td><td>OPP-10, OPP-13</td><td><span class="badge approved">Selected</span></td></tr>
+          <tr><td>H14</td><td>Free Delivery Lever as Ticket Gamification</td><td>OPP-10</td><td><span class="badge neutral">Embedded in H04</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PROTOTYPES                                                    -->
+    <!-- ============================================================ -->
+    <h2>Prototypes</h2>
+    <section class="section">
+      <div class="two-col">
+        <div class="artifact-card">
+          <div class="artifact-label">Low-fi Prototype &mdash; HITL #4 Approved</div>
+          <div class="artifact-title">17 Wireframe Screens</div>
+          <div class="artifact-body">
+            <p>Wireframes of all screens in the primary flow, covering consumer, restaurant and admin journeys:</p>
+            <ul>
+              <li>Login / Sign Up</li>
+              <li>Home with Hero Banner, Categories and Catalog</li>
+              <li>Restaurant Page with Menu</li>
+              <li>Cart with Financial Summary and Free Delivery Bar</li>
+              <li>Checkout with Address and Coupon</li>
+              <li>ECP Card Payment (inline auth + card selection)</li>
+              <li>Pix QR Code Payment with Timer and SSE</li>
+              <li>Order Confirmation</li>
+              <li>Real-Time Status Tracking</li>
+              <li>Order History with Repeat</li>
+              <li>Favorites with Dynamic Status</li>
+              <li>Profile and Addresses</li>
+              <li>Restaurant Panel &mdash; Menu</li>
+              <li>Restaurant Panel &mdash; Orders</li>
+              <li>Restaurant Panel &mdash; Profile</li>
+              <li>Admin &mdash; Dashboard and Restaurants</li>
+              <li>Admin &mdash; Categories and Promotions</li>
+            </ul>
+            <p><a href="../02-product-discovery/prototype/low-fi.html">View low-fi prototype &rarr;</a></p>
+          </div>
+        </div>
+        <div class="artifact-card">
+          <div class="artifact-label">High-fi Prototype &mdash; HITL #5 Approved</div>
+          <div class="artifact-title">17 Full Design Screens &mdash; Midnight Express</div>
+          <div class="artifact-body">
+            <p>Complete design in premium dark mode with visual identity applied:</p>
+            <ul>
+              <li>Midnight Express theme (#181A20 bg, per-restaurant gradients)</li>
+              <li>Inter typography + emojis as visual icons</li>
+              <li>Cards with cover_gradient, rating, ETA, promo badge</li>
+              <li>Visual menu with premium photos and narrative descriptions</li>
+              <li>Checkout with transparent price breakdown</li>
+              <li>Pix QR Code with timer, instructions and SSE status</li>
+              <li>Gamified free delivery progress bar</li>
+              <li>WCAG AA contrast validated on all components</li>
+            </ul>
+            <p><a href="../02-product-discovery/prototype/high-fi.html">View high-fi prototype &rarr;</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- BACKLOG                                                       -->
+    <!-- ============================================================ -->
+    <h2>Structured Backlog</h2>
+    <section class="section">
+      <p>7 epics, 19 features, 51 user stories with acceptance criteria in BDD/Gherkin. Distribution: S=15, M=24, L=8, XL=1.</p>
+
+      <!-- EP E01 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">E01</div>
+          <div class="epic-title">Discovery &amp; Navigation</div>
+        </div>
+        <div class="epic-description">Allow consumers to discover restaurants and dishes quickly, visually and with curation, reducing decision fatigue and connecting intent to choice in under 2 minutes. Goal: conversion &gt; 8% (KR1).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F01.1</div>
+            <div class="feature-title">Curated Home with Hero Banner and Live Metrics</div>
+            <div class="feature-description">Promotional hero banner, integrated search bar, live metrics and visual category grid.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-001</span> View hero banner with daily promotion</div>
+              <div class="story-item"><span class="story-id">US-002</span> View live metrics on home (restaurants online, coupons, delivery)</div>
+              <div class="story-item"><span class="story-id">US-003</span> Filter restaurants by category via visual chips</div>
+              <div class="story-item"><span class="story-id">US-004</span> View catalog in visual cards (photo, rating, ETA, delivery fee, badge)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F01.2</div>
+            <div class="feature-title">Multi-Criteria Search by Restaurant, Dish and Category</div>
+            <div class="feature-description">Search bar with instant suggestions grouped by type and 300ms debounce.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-005</span> Search restaurant by name</div>
+              <div class="story-item"><span class="story-id">US-006</span> Search by dish name or category</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F01.3</div>
+            <div class="feature-title">Restaurant Detail and Visual Menu</div>
+            <div class="feature-description">Screen with banner, complete info and premium item grid that generates desire.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-007</span> View restaurant detail (rating, ETA, delivery fee, promo)</div>
+              <div class="story-item"><span class="story-id">US-008</span> Browse menu with photos, descriptions and badges</div>
+              <div class="story-item"><span class="story-id">US-009</span> Add item to cart from the menu</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E02 -->
+      <div class="epic-block" style="border-left-color: var(--info);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--info);">E02</div>
+          <div class="epic-title">Cart &amp; Checkout</div>
+        </div>
+        <div class="epic-description">Ensure the journey from cart to confirmed order is fluid, transparent and free of price surprises. Free delivery progress bar as ticket lever. Goal: abandonment &lt; 15% (KR1, KR3).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F02.1</div>
+            <div class="feature-title">Persistent Cart with Real-Time Financial Summary</div>
+            <div class="feature-description">Sidebar (desktop) / bottom sheet (mobile) with items, +/-, summary and free delivery bar.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-010</span> View cart with added items</div>
+              <div class="story-item"><span class="story-id">US-011</span> Change item quantity in cart (+/-)</div>
+              <div class="story-item"><span class="story-id">US-012</span> View detailed financial summary (subtotal, delivery, discount, total)</div>
+              <div class="story-item"><span class="story-id">US-013</span> View progress toward free delivery (&ldquo;R$X more for free delivery&rdquo;)</div>
+              <div class="story-item"><span class="story-id">US-014</span> Item count badge on cart (global)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F02.2</div>
+            <div class="feature-title">Checkout with Summary and Coupon Application</div>
+            <div class="feature-description">Order summary, delivery address, coupon field with real-time validation.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-015</span> View order summary at checkout</div>
+              <div class="story-item"><span class="story-id">US-016</span> Apply discount coupon (MVP10)</div>
+              <div class="story-item"><span class="story-id">US-017</span> Confirm delivery address at checkout</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F02.3</div>
+            <div class="feature-title">Order Status Tracking</div>
+            <div class="feature-description">Order protocol and timeline (Confirmed &rarr; Preparing &rarr; On its way &rarr; Delivered).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-018</span> View order confirmation with protocol number</div>
+              <div class="story-item"><span class="story-id">US-019</span> Track order status in real time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E03 -->
+      <div class="epic-block" style="border-left-color: var(--warning);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--warning);">E03</div>
+          <div class="epic-title">Integrated ECP Digital Bank Payment</div>
+        </div>
+        <div class="epic-description">Integrate payment with ecp-digital-bank via virtual card (inline auth) and Pix QR Code with webhook + SSE. Goal: 85% complete payment without assistance (KR1).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F03.1</div>
+            <div class="feature-title">Payment with ECP Digital Bank Virtual Card</div>
+            <div class="feature-description">Inline auth, card listing with balance, selection and debit confirmation.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-020</span> Authenticate in ECP Digital Bank for payment (inline)</div>
+              <div class="story-item"><span class="story-id">US-021</span> Select virtual card and confirm payment</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F03.2</div>
+            <div class="feature-title">Pix Payment with QR Code and Real-Time Feedback</div>
+            <div class="feature-description">QR Code with amount, step-by-step instructions, timer and automatic confirmation via SSE.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-022</span> Generate Pix QR Code for payment</div>
+              <div class="story-item"><span class="story-id">US-023</span> Receive Pix payment confirmation in real time (SSE) <span class="badge" style="background: rgba(255,77,77,0.12); color: var(--danger); font-size: 0.7em;">XL</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E04 -->
+      <div class="epic-block">
+        <div class="epic-header">
+          <div class="epic-id">E04</div>
+          <div class="epic-title">Retention &amp; Recurrence</div>
+        </div>
+        <div class="epic-description">Create mechanisms that turn the first order into a habit: quick reorder, favorites as personal curation and return incentives. Goal: repurchase &gt; 25% in 30 days (KR2).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F04.1</div>
+            <div class="feature-title">Order History with Quick Repeat</div>
+            <div class="feature-description">List of past orders with &ldquo;Repeat&rdquo; button that pre-populates cart in 1 tap.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-024</span> View order history (date, restaurant, items, amount)</div>
+              <div class="story-item"><span class="story-id">US-025</span> Repeat previous order in 1 tap (pre-populates cart)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F04.2</div>
+            <div class="feature-title">Favorites System with Real-Time Status</div>
+            <div class="feature-description">Heart to favorite, favorites screen with dynamic status (online/offline, promo, ETA).</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-026</span> Favorite and unfavorite a restaurant</div>
+              <div class="story-item"><span class="story-id">US-027</span> View favorites screen with dynamic status</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F04.3</div>
+            <div class="feature-title">Return Incentives and Welcome Coupon</div>
+            <div class="feature-description">Celebratory MVP10 coupon on first access, next order incentive shown at confirmation.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-028</span> Receive welcome coupon on first access (MVP10)</div>
+              <div class="story-item"><span class="story-id">US-029</span> See next order incentive at confirmation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E05 -->
+      <div class="epic-block" style="border-left-color: var(--info);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--info);">E05</div>
+          <div class="epic-title">Onboarding &amp; Authentication</div>
+        </div>
+        <div class="epic-description">Simple sign-up (email/password), fast login with persistent session via JWT and address setup. Goal: time to first order &lt; 5 min (KR1, KR2).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F05.1</div>
+            <div class="feature-title">Consumer Sign Up and Login</div>
+            <div class="feature-description">Sign-up flow with email/password, login with persistent JWT session.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-030</span> Create consumer account (name, email, password)</div>
+              <div class="story-item"><span class="story-id">US-031</span> Log in with email and password (persistent JWT)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F05.2</div>
+            <div class="feature-title">Delivery Address Management</div>
+            <div class="feature-description">Register and manage addresses with free text and postal code.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-032</span> Set delivery address (street, number, postal code)</div>
+              <div class="story-item"><span class="story-id">US-033</span> Manage saved addresses (edit, delete)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F05.3</div>
+            <div class="feature-title">Consumer Profile</div>
+            <div class="feature-description">Personal data, available coupons and logout.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-034</span> View and edit personal data</div>
+              <div class="story-item"><span class="story-id">US-035</span> View available coupons</div>
+              <div class="story-item"><span class="story-id">US-036</span> Log out</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E06 -->
+      <div class="epic-block" style="border-left-color: var(--warning);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--warning);">E06</div>
+          <div class="epic-title">Restaurant Management</div>
+        </div>
+        <div class="epic-description">Empower artisan restaurants with tools to manage menu, orders and profile autonomously. Guided onboarding in 4 steps (&lt; 30 min). Goal: 50+ active restaurants (KR4).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F06.1</div>
+            <div class="feature-title">Menu Management (Item CRUD)</div>
+            <div class="feature-description">Add, edit, activate/deactivate and sort items with visual preview.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-037</span> Add item to menu (name, description, price, badge, emoji)</div>
+              <div class="story-item"><span class="story-id">US-038</span> Edit menu item</div>
+              <div class="story-item"><span class="story-id">US-039</span> Activate and deactivate menu item (toggle)</div>
+              <div class="story-item"><span class="story-id">US-040</span> Reorder items in menu</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F06.2</div>
+            <div class="feature-title">Real-Time Order Management</div>
+            <div class="feature-description">List with pulsing &ldquo;New&rdquo; badge, order details and sequential action buttons.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-041</span> Receive and view orders in real time</div>
+              <div class="story-item"><span class="story-id">US-042</span> Update order status (Confirm &rarr; Preparing &rarr; Ready)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F06.3</div>
+            <div class="feature-title">Restaurant Data and Profile</div>
+            <div class="feature-description">Edit public information, delivery fee, minimum order and promotions.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-043</span> Edit restaurant information (name, photo, cuisine)</div>
+              <div class="story-item"><span class="story-id">US-044</span> Configure delivery fee and minimum order</div>
+              <div class="story-item"><span class="story-id">US-045</span> Manage active promotions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP E07 -->
+      <div class="epic-block" style="border-left-color: var(--lime);">
+        <div class="epic-header">
+          <div class="epic-id" style="color: var(--lime);">E07</div>
+          <div class="epic-title">Platform Administration</div>
+        </div>
+        <div class="epic-description">Global administration tools: restaurant approval, category management, global promotions and marketplace health metrics (KR4).</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-id">F07.1</div>
+            <div class="feature-title">Restaurant Management by Platform</div>
+            <div class="feature-description">Approve/reject registrations, suspend/reactivate, general metrics dashboard.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-046</span> Approve or reject restaurant registration</div>
+              <div class="story-item"><span class="story-id">US-047</span> Suspend and reactivate restaurant</div>
+              <div class="story-item"><span class="story-id">US-048</span> View general platform metrics</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F07.2</div>
+            <div class="feature-title">Marketplace Category Management</div>
+            <div class="feature-description">CRUD of cuisine categories with name, icon and ordering.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-049</span> Manage marketplace categories (CRUD)</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-id">F07.3</div>
+            <div class="feature-title">Platform Global Promotion Management</div>
+            <div class="feature-description">CRUD of coupons, free delivery rules and hero banner highlights.</div>
+            <div class="story-list">
+              <div class="story-item"><span class="story-id">US-050</span> Manage discount coupons (create, deactivate)</div>
+              <div class="story-item"><span class="story-id">US-051</span> Configure promotion for hero banner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOUR RISKS                                                    -->
+    <!-- ============================================================ -->
+    <h2>Cagan&rsquo;s 4 Risk Assessment</h2>
+    <section class="section">
+      <div class="risk-grid">
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--success);">Customer Value</div>
+          <div class="risk-verdict"><span class="badge approved">Approved with caveats</span></div>
+          <div class="risk-confidence">Confidence: High (80%)</div>
+          <div class="risk-body">Food delivery market in Brazil reaches R$75B/year (TAM). 5 segments validated with distinct JTBDs. 13 opportunities prioritized via RICE covering 4 KRs. OPP-02 has highest RICE (41.7) and OPP-12 highest adjusted RICE (80.0). <strong>Caveat:</strong> cold start problem &mdash; consumers with iFood history may not migrate without critical mass of restaurants. Mitigation: coupon MVP10, free delivery &gt; R$120 and premium UX as incentives.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--info);">Business Value</div>
+          <div class="risk-verdict"><span class="badge approved">Approved</span></div>
+          <div class="risk-confidence">Confidence: High (85%)</div>
+          <div class="risk-body">4 KRs with measurable targets: KR1 conversion &gt; 8%, KR2 repurchase &gt; 25%, KR3 ticket &gt; R$45, KR4 50+ restaurants. SOM of R$18M/year with 10-18% commission. Integration with ecp-digital-bank is a unique differentiator. Quality-based ranking creates a value proposition iFood cannot replicate without cannibalizing media revenue.</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--warning);">Usability</div>
+          <div class="risk-verdict"><span class="badge approved">Approved with caveats</span></div>
+          <div class="risk-confidence">Confidence: High (78%)</div>
+          <div class="risk-body">14 hypotheses with 38 falsifiable assumptions, 15 usability risk assumptions. Two prototyping rounds approved: low-fi (17 screens) and high-fi (17 Midnight Express screens). 7 Norman principles applied with traceability. <strong>Caveat:</strong> inline ecp-digital-bank authentication (phishing perception risk) and waiting for Pix via SSE (anxiety).</div>
+        </div>
+        <div class="risk-card">
+          <div class="risk-type" style="color: var(--danger);">Technical Feasibility</div>
+          <div class="risk-verdict"><span class="badge approved">Approved with caveats</span></div>
+          <div class="risk-confidence">Confidence: Medium-High (72%)</div>
+          <div class="risk-body">Stack identical to ecp-digital-bank (Node.js + Fastify + SQLite + React) &mdash; team with proven experience. 51 stories (S=15, M=24, L=8, XL=1). <strong>Caveat:</strong> ecp-digital-bank integration (latency, SSE + webhook for Pix) requires technical spike in Delivery week 1. Responsive parity (desktop + mobile + tablet) with a lean team is a challenge.</div>
+        </div>
+      </div>
+      <p style="margin-top: 16px;"><strong>Overall verdict:</strong> Approved with caveats &mdash; confidence 79%. Recommendation: proceed to Delivery with 5 conditions, 1 of which is a blocker (ecp-digital-bank technical spike).</p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- HITL HISTORY                                                  -->
+    <!-- ============================================================ -->
+    <h2>Phase 02 HITLs</h2>
+    <section class="section">
+      <table class="data-table">
+        <thead><tr><th>HITL</th><th>Scope</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td>#2</td><td>Opportunity prioritization (13 of 19 for MVP, 5 themes, RICE scores)</td><td><span class="badge approved">Approved</span></td></tr>
+          <tr><td>#3</td><td>Insights and hypotheses (8 insights, 14 hypotheses in 5 themes, 6 selected)</td><td><span class="badge approved">Approved</span></td></tr>
+          <tr><td>#4</td><td>Low-fi prototype (17 wireframe screens, 3 journeys)</td><td><span class="badge approved">Approved</span></td></tr>
+          <tr><td>#5</td><td>High-fi prototype (17 full design Midnight Express screens)</td><td><span class="badge approved">Approved</span></td></tr>
+          <tr><td>#6</td><td>Structured backlog (7 epics, 19 features, 51 stories) + 4 risks assessed</td><td><span class="badge approved">Approved</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FILES                                                         -->
+    <!-- ============================================================ -->
+    <h2>Generated Artifacts</h2>
+    <section class="section">
+      <div class="artifact-meta" style="gap: 8px;">
+        <span class="file-ref">02-product-discovery/priorizacao-oportunidades.json</span>
+        <span class="file-ref">02-product-discovery/ideacao-hipoteses.json</span>
+        <span class="file-ref">02-product-discovery/backlog.json</span>
+        <span class="file-ref">02-product-discovery/four-risks-assessment.json</span>
+        <span class="file-ref">02-product-discovery/prototype/low-fi.html</span>
+        <span class="file-ref">02-product-discovery/prototype/high-fi.html</span>
+        <span class="file-ref">02-product-discovery/hitl-02.json</span>
+        <span class="file-ref">02-product-discovery/hitl-03.json</span>
+        <span class="file-ref">02-product-discovery/hitl-04.json</span>
+        <span class="file-ref">02-product-discovery/hitl-05.json</span>
+        <span class="file-ref">02-product-discovery/hitl-06.json</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>
